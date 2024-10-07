@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<!--
+	Telephasic by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+    <header th:replace="layouts/header::header"></header>
+
+    <div class="content-wrapper">
+        <a href="#" class="button">목록</a>
+        <hr>
+        <form action="/application/submit" method="POST" enctype="multipart/form-data">
+            <label class="title">제목: </label><br>
+            <input type="text" id="title" name="title" required><br><br>
+
+            <label class="startDate">시작 날짜: </label><br>
+            <input type="date" id="startDate" name="startDate" required><br><br>
+
+            <label class="endDate">마감 날짜: </label><br>
+            <input type="date" id="endDate" name="endDate" required><br><br>
+
+            <label class="goal">목표 금액: </label><br>
+            <input type="text" id="goal" name="goal" required><br><br>
+
+            <label class="enterName">기업: </label><br>
+            <input type="text" id="enterName" name="enterName" required><br><br>
+
+            <!--
+            <label class="list">물건 리스트: </label><br>
+            <input type="text" id="list" name="author" required><br><br>-->
+
+            <label class="descript">설명: </label><br>
+            <textarea id="descript" name="descript" rows="10" cols="50" required></textarea><br><br>
+
+            <!--<label class="image">파일 첨부:</label><br>
+            <input type="file" id="image" name="image"><br><br>-->
+
+            <input type="submit" value="신청">
+        </form>
+    </div>
+</div>
+
+<header th:replace="layouts/footer::footer"></header>
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>
