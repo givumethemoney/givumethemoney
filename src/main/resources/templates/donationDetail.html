@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<!--
+	Telephasic by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="css/main.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+    <div th:replace="layouts/header::header"></div>
+
+    <div class="content-wrapper">
+        <a href="#" class="button">목록</a>
+        <hr>
+        <table>
+            <tbody>
+            <tr>
+                <th>기부 id</th>
+                <td th:text="${id}">1</td>
+                <th>날짜</th>
+                <td>2024-10-05</td>
+            </tr>
+            <tr>
+                <th>기업 이름</th>
+                <td colspan="3">hey</td>
+            </tr>
+            <tr>
+                <th>제목</th>
+                <td colspan="3">기부 제목</td>
+            </tr>
+            <tr>
+                <th colspan="4">설명</th>
+            </tr>
+            <tr>
+                <td colspan="4">내용 여기에 이미지도 들어가겠지</td>
+            </tr>
+            <!-- 추가 행은 여기서부터 작성 -->
+            </tbody>
+        </table>
+        </div>
+    <header th:replace="layouts/footer::footer"></header>
+    </div>
+
+    <!-- Scripts -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/util.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+</body>
+</html>
