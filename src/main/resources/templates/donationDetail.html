@@ -9,7 +9,7 @@
     <title>Givu Me The Money</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="/css/main.css" />
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -18,33 +18,59 @@
 
     <div class="content-wrapper">
         <a href="#" class="button">목록</a>
+        <!-- 사용자 테이블 추가되면 admin인지 확인
+        <th:block th:if="${donation.isConfirmed()}">-->
+        <th:block>
         <hr>
         <table>
             <tbody>
             <tr>
-                <th>기부 id</th>
-                <td th:text="${id}">1</td>
-                <th>날짜</th>
-                <td>2024-10-05</td>
+                <th>기부 번호</th>
+                <td th:text="${donation.getId()}">1</td>
+                <th>시작 날짜</th>
+                <td th:text="${donation.getStartDate()}">2024-10-05</td>
+                <th>시작 날짜</th>
+                <td th:text="${donation.getEndDate()}">2024-10-05</td>
             </tr>
             <tr>
                 <th>기업 이름</th>
-                <td colspan="3">hey</td>
+                <td colspan="5" th:text="${donation.getEnterName()}">hey</td>
             </tr>
             <tr>
                 <th>제목</th>
-                <td colspan="3">기부 제목</td>
+                <td colspan="5" th:text="${donation.getTitle()}">기부 제목</td>
             </tr>
             <tr>
-                <th colspan="4">설명</th>
+                <th>목표 금액</th>
+                <td colspan="2" th:text="${donation.getGoal()}">0</td>
+                <th>현재 금액</th>
+                <td colspan="2" th:text="${donation.getCurrentAmount()}">0</td>
             </tr>
             <tr>
-                <td colspan="4">내용 여기에 이미지도 들어가겠지</td>
+                <th>참여자 수</th>
+                <td colspan="5" th:text="${donation.getParticipant()}">0</td>
+            </tr>
+            <tr>
+                <th>설명</th>
+            </tr>
+            <tr>
+                <td colspan="6" th:text="${donation.getDescription()}">내용 여기에 이미지도 들어가겠지</td>
             </tr>
             <!-- 추가 행은 여기서부터 작성 -->
             </tbody>
         </table>
-        </div>
+        </th:block>
+    </div>
+    <!-- 사용자 테이블 추가 후 admin인지 확인되면
+    승인 버튼 추가
+    <th:block th:if="${!user.isAdmin() && !donation.isConfirmed()}">
+        <button class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">신청</button>
+    </th:block>
+    -->
+    <th:block th:if="${!donation.isConfirmed()}">
+        <a class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">신청</a>
+    </th:block>
+
     <header th:replace="layouts/footer::footer"></header>
     </div>
 

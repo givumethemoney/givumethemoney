@@ -3079,7 +3079,9 @@ input, select, textarea {
 }
 
 .content-wrapper table {
+	table-layout: fixed;
 	border: 1px solid #919191;
+	padding: 20px;
 }
 
 .content-wrapper th {
@@ -3089,6 +3091,12 @@ input, select, textarea {
 
 .content-wrapper td {
 	border: 1px solid #919191;
-	padding-left: 20px;
-	padding-right: 20px;
+}
+
+.denied {
+	padding: 100px;
+	font-weight: bold;
+	text-align: center;
+	color: #40534c;
+	font-size: 30px;
 }

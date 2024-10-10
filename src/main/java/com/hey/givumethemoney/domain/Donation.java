@@ -1,70 +1,29 @@
 package com.hey.givumethemoney.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.time.LocalDate;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "donation")
-@Getter
-@Setter
+@Table(name = "donation_confirmed")
 @NoArgsConstructor
-public class Donation {
+@SuperBuilder
+public class Donation extends DonationBase {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    //@Builder
+    public Donation(WaitingDonation waitingDonation) {
+        this.title = waitingDonation.getTitle();
+        this.startDate = waitingDonation.getStartDate();
+        this.endDate = waitingDonation.getEndDate();
+        this.goal = waitingDonation.getGoal();
+        this.currentAmount = waitingDonation.getCurrentAmount();
+        this.description = waitingDonation.getDescription();
+        this.participant = waitingDonation.getParticipant();
+        this.enterName = waitingDonation.getEnterName();
+        this.image = waitingDonation.getImage();
+        this.isConfirmed = !waitingDonation.isConfirmed();
+        this.userId = waitingDonation.getUserId();
 
-    @Column(name = "title", nullable = false)
-    private String title;
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
-
-    @Column(name = "goal", nullable = false)
-    private int goal;
-
-    @Column(name = "current_amount")
-    private int currentAmount;
-
-    @Column(name = "descript")
-    private String descript;
-
-    @Column(name = "participant")
-    private int participant;
-
-    @Column(name = "enter_name", nullable = false)
-    private String enterName;
-
-    @Column(name = "image")
-    @Lob
-    private byte[] image;
-
-    @Column(name = "is_confirmed")
-    private boolean isConfirmed;
-
-    @Column(name = "user_id")
-    private String userId;
-
-    @Builder
-    public Donation(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String descript, int participant, String enterName, byte[] image, boolean isConfirmed, String userId) {
-        this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.goal = goal;
-        this.currentAmount = currentAmount;
-        this.descript = descript;
-        this.participant = participant;
-        this.enterName = enterName;
-        this.image = image;
-        this.isConfirmed = isConfirmed;
-        this.userId = userId;
+        //this.id = waitingDonation.getId();
     }
 }
