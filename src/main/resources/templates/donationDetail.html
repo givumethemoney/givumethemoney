@@ -53,6 +53,9 @@
             <tr>
                 <th>설명</th>
             </tr>
+            <tr th:each="i : ${images}">
+                <td colspan="6"><img th:src="|/images/${i.getId()}|"/></td>
+            </tr>
             <tr>
                 <td colspan="6" th:text="${donation.getDescription()}">내용 여기에 이미지도 들어가겠지</td>
             </tr>

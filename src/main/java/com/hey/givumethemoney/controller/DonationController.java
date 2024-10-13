@@ -1,16 +1,20 @@
 package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.Donation;
+import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.domain.WaitingDonation;
 import com.hey.givumethemoney.service.DonationService;
+import com.hey.givumethemoney.service.ImageService;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,10 +25,12 @@ public class DonationController {
     final int LIST_COUNT = 10;
 
     DonationService donationService;
+    ImageService imageService;
 
     @Autowired
-    public DonationController(DonationService donationService) {
+    public DonationController(ImageService imageService, DonationService donationService) {
         this.donationService = donationService;
+        this.imageService = imageService;
     }
 
     @GetMapping("/detail/{id}")
@@ -33,13 +39,17 @@ public class DonationController {
         Optional<Donation> donation = donationService.getDonationById(id);
         Optional<WaitingDonation> notConfirmed = donationService.getWaitingDonationById(id);
 
+        List<Image> images = List.of();
+
         if (donation.isPresent() && !notConfirmed.isPresent()) {
             model.addAttribute("donation", donation.get());
+            images = imageService.findImagesByDonationId(donation.get().getId());
         }
         else if (notConfirmed.isPresent()) {
             model.addAttribute("donation", notConfirmed.get());
+            images = imageService.findImagesByDonationId(notConfirmed.get().getId());
         }
-
+        model.addAttribute("images", images);
 
         return "donationDetail";
     }
@@ -63,9 +73,14 @@ public class DonationController {
     }
 
     @PostMapping("/application/submit")
-    public String submitApplication(DonationForm form) {
-        WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), null, false, "test");
+    public String submitApplication(@RequestParam(value = "images", required = false) List<MultipartFile> files, DonationForm form) throws IOException {
+        WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), false, "test");
         donationService.saveWaitingDonation(waitingDonation);
+
+        for (MultipartFile file : files) {
+            imageService.saveImages(file, waitingDonation.getId());
+        }
+
         return "redirect:/application";
     }
 
@@ -84,5 +99,18 @@ public class DonationController {
         model.addAttribute("donationsToConfirm", donationsToConfirm);
 
         return "applicationList";
+    }
+
+    @GetMapping("images/{id}")
+    @ResponseBody
+    public UrlResource showImage(@PathVariable Long id, Model model) throws IOException {
+        Optional<Image> image = imageService.findImageById(id);
+        if (image.isPresent()) {
+            return new UrlResource("file:" + image.get().getSavedPath());
+
+        }
+        else {
+            return null;
+        }
     }
 }

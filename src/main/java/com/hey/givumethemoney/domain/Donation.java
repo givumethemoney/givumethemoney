@@ -20,10 +20,7 @@ public class Donation extends DonationBase {
         this.description = waitingDonation.getDescription();
         this.participant = waitingDonation.getParticipant();
         this.enterName = waitingDonation.getEnterName();
-        this.image = waitingDonation.getImage();
         this.isConfirmed = !waitingDonation.isConfirmed();
         this.userId = waitingDonation.getUserId();
-
-        //this.id = waitingDonation.getId();
     }
 }

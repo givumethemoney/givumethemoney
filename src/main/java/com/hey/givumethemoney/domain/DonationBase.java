@@ -43,10 +43,6 @@ public abstract class DonationBase {
     @Column(name = "enter_name", nullable = false)
     protected String enterName;
 
-    @Column(name = "image")
-    @Lob
-    protected byte[] image;
-
     @Column(name = "is_confirmed")
     protected boolean isConfirmed;
 
@@ -54,7 +50,7 @@ public abstract class DonationBase {
     protected String userId;
 
 //    //@Builder
-    public DonationBase(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, byte[] image, boolean isConfirmed, String userId) {
+    public DonationBase(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, boolean isConfirmed, String userId) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -63,7 +59,6 @@ public abstract class DonationBase {
         this.description = description;
         this.participant = participant;
         this.enterName = enterName;
-        this.image = image;
         this.isConfirmed = isConfirmed;
         this.userId = userId;
     }

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class WaitingDonation extends DonationBase {
 
     //@Builder
-    public WaitingDonation(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, byte[] image, boolean isConfirmed, String userId) {
+    public WaitingDonation(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, boolean isConfirmed, String userId) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -22,7 +22,6 @@ public class WaitingDonation extends DonationBase {
         this.description = description;
         this.participant = participant;
         this.enterName = enterName;
-        this.image = image;
         this.isConfirmed = isConfirmed;
         this.userId = userId;
     }
