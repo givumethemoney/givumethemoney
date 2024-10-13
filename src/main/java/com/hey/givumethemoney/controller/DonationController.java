@@ -5,8 +5,6 @@ import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.domain.WaitingDonation;
 import com.hey.givumethemoney.service.DonationService;
 import com.hey.givumethemoney.service.ImageService;
-import jakarta.annotation.Resource;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -78,7 +76,11 @@ public class DonationController {
         donationService.saveWaitingDonation(waitingDonation);
 
         for (MultipartFile file : files) {
-            imageService.saveImages(file, waitingDonation.getId());
+            if (imageService.saveImages(file, waitingDonation.getId()) == null) {
+                // 이미지 확장자 외 파일 오류
+                System.out.println("다른 확장자");
+            }
+
         }
 
         return "redirect:/application";
