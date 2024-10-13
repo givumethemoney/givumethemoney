@@ -3,9 +3,7 @@ package com.hey.givumethemoney.service;
 import com.hey.givumethemoney.domain.Donation;
 import com.hey.givumethemoney.domain.WaitingDonation;
 import com.hey.givumethemoney.repository.DonationRepository;
-import com.hey.givumethemoney.repository.JPADonationRepository;
 import com.hey.givumethemoney.repository.WaitingDonationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -51,7 +51,7 @@
                 <td colspan="5" th:text="${donation.getParticipant()}">0</td>
             </tr>
             <tr>
-                <th>설명</th>
+                <th colspan="6">설명</th>
             </tr>
             <tr th:each="i : ${images}">
                 <td colspan="6"><img th:src="|/images/${i.getId()}|"/></td>
