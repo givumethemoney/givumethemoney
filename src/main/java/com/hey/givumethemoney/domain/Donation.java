@@ -1,6 +1,7 @@
 package com.hey.givumethemoney.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -8,7 +9,12 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "donation_confirmed")
 @NoArgsConstructor
 @SuperBuilder
+@Getter
 public class Donation extends DonationBase {
+
+    @Id
+    @Column(name = "id", nullable = false)
+    protected Long id;
 
     //@Builder
     public Donation(WaitingDonation waitingDonation) {
@@ -22,5 +28,7 @@ public class Donation extends DonationBase {
         this.enterName = waitingDonation.getEnterName();
         this.isConfirmed = !waitingDonation.isConfirmed();
         this.userId = waitingDonation.getUserId();
+
+        this.id = waitingDonation.getId();
     }
 }

@@ -15,10 +15,6 @@ import java.time.LocalDate;
 @SuperBuilder
 public abstract class DonationBase {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    protected Long id;
-
     @Column(name = "title", nullable = false)
     protected String title;
 
