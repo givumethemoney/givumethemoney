@@ -2,7 +2,6 @@ package com.hey.givumethemoney.controller;
 
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 

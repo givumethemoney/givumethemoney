@@ -19,9 +19,16 @@ public class Image implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "origin_name", nullable = false)
     private String originName;
+
+    @Column(name = "saved_name", nullable = false)
     private String savedName;
+
+    @Column(name = "saved_path", nullable = false)
     private String savedPath;
+
+    @Column(name = "donation_id", nullable = false)
     private Long donationId;
 
     @Builder
