@@ -2,9 +2,11 @@ package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.Donation;
 import com.hey.givumethemoney.domain.Image;
+import com.hey.givumethemoney.domain.Product;
 import com.hey.givumethemoney.domain.WaitingDonation;
 import com.hey.givumethemoney.service.DonationService;
 import com.hey.givumethemoney.service.ImageService;
+import com.hey.givumethemoney.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -24,11 +26,13 @@ public class DonationController {
 
     DonationService donationService;
     ImageService imageService;
+    ProductService productService;
 
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService) {
+    public DonationController(ImageService imageService, DonationService donationService, ProductService productService) {
         this.donationService = donationService;
         this.imageService = imageService;
+        this.productService = productService;
     }
 
     @GetMapping("/detail/{id}")
@@ -38,16 +42,22 @@ public class DonationController {
         Optional<WaitingDonation> notConfirmed = donationService.getWaitingDonationById(id);
 
         List<Image> images = List.of();
+        Long donationId = 0L;
 
-        if (donation.isPresent() && !notConfirmed.isPresent()) {
+        if (donation.isPresent() && notConfirmed.isEmpty()) {
             model.addAttribute("donation", donation.get());
             images = imageService.findImagesByDonationId(donation.get().getId());
+            donationId = donation.get().getId();
         }
         else if (notConfirmed.isPresent()) {
             model.addAttribute("donation", notConfirmed.get());
             images = imageService.findImagesByDonationId(notConfirmed.get().getId());
+            donationId = notConfirmed.get().getId();
         }
         model.addAttribute("images", images);
+
+        List<Product> productList = productService.getProductsByDonationId(donationId);
+        model.addAttribute("productList", productList);
 
         return "donationDetail";
     }
@@ -71,7 +81,7 @@ public class DonationController {
     }
 
     @PostMapping("/application/submit")
-    public String submitApplication(@RequestParam(value = "images", required = false) List<MultipartFile> files, DonationForm form) throws IOException {
+    public String submitApplication(@RequestParam(value = "images", required = false) List<MultipartFile> files, @RequestParam(value = "productName") List<String> productName, @RequestParam(value = "productPrice") List<Long> productPrice, DonationForm form) throws IOException {
         WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), false, "test");
         donationService.saveWaitingDonation(waitingDonation);
 
@@ -80,26 +90,62 @@ public class DonationController {
                 // 이미지 확장자 외 파일 오류
                 System.out.println("다른 확장자");
             }
+        }
 
+        List<Product> productList = new ArrayList<>();
+        if (!productName.isEmpty() && !productPrice.isEmpty()) {
+            if (productName.size() != productPrice.size()) {
+                // 오류 메시지
+            }
+            else {
+                for (int i = 0; i < productName.size(); i++) {
+                    Product p = new Product(productName.get(i), productPrice.get(i), waitingDonation.getId());
+                    productList.add(p);
+                }
+
+                productService.saveProducts(productList);
+            }
         }
 
         return "redirect:/application";
     }
 
+    // user 테이블 생성되면 userType 받아서 applicationList 두 개 합치기
     @GetMapping("/admin/applicationList/{page}")
     public String confirmApplicationList(@PathVariable int page, Model model) {
         List<WaitingDonation> waitingDonations = donationService.getWaitingDonations();
 
-        List<WaitingDonation> donationsToConfirm = new ArrayList<>();
+        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
         for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
             if (i >= waitingDonations.size()) {
                 break;
             }
-            donationsToConfirm.add(waitingDonations.get(i));
+            waitingDonationsByPage.add(waitingDonations.get(i));
         }
 
-        model.addAttribute("donationsToConfirm", donationsToConfirm);
+        model.addAttribute("donationsToConfirm", waitingDonationsByPage);
 
+        return "applicationList";
+    }
+
+    @GetMapping("/enterprise/applicationList/{page}")
+    public String showApplicationList(@PathVariable int page, Model model) {
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = "Test";
+
+        List<WaitingDonation> waitingDonations = donationService.getWaitingDonationsByUserId(currentUserId);
+        
+        // 보여질 리스트
+        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
+        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+            if (i >= waitingDonations.size()) {
+                break;
+            }
+            waitingDonationsByPage.add(waitingDonations.get(i));
+        }
+
+        model.addAttribute("donationsToConfirm", waitingDonationsByPage);
+        
         return "applicationList";
     }
 
