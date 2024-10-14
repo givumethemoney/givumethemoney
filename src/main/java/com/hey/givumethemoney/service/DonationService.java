@@ -7,6 +7,7 @@ import com.hey.givumethemoney.repository.WaitingDonationRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,19 @@ public class DonationService {
     }
     public Optional<Donation> getDonationById(Long id) {
         return donationRepository.findById(id);
+    }
+
+    public List<WaitingDonation> getWaitingDonationsByUserId(String userId) {
+        List<WaitingDonation> donations = getWaitingDonations();
+        List<WaitingDonation> result = new ArrayList<>();
+
+        for (WaitingDonation d : donations) {
+            if (d.getUserId().equals(userId)) {
+                result.add(d);
+            }
+        }
+
+        return result;
     }
 
     public void deleteWaitingDonationById(Long id) {
