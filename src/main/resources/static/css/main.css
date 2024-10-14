@@ -3100,3 +3100,9 @@ input, select, textarea {
 	color: #40534c;
 	font-size: 30px;
 }
+
+#progress {
+    width: 95%;
+    color: #40534c;
+    height: 50px;
+}

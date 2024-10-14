@@ -46,6 +46,14 @@
                 <th>현재 금액</th>
                 <td colspan="2" th:text="${donation.getCurrentAmount()}">0</td>
             </tr>
+                <td colspan="6"><progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress></td>
+            </tr>
+            <tr>
+                <th colspan="6">기부 품목 목록</th>
+            </tr>
+            <tr th:each="p : ${productList}">
+                <td colspan="6" th:text="${p.getProductName()}">품목 이름</td>
+            </tr>
             <tr>
                 <th>참여자 수</th>
                 <td colspan="5" th:text="${donation.getParticipant()}">0</td>

@@ -35,9 +35,15 @@
             <label class="enterName">기업: </label><br>
             <input type="text" id="enterName" name="enterName" required><br><br>
 
-            <!--
-            <label class="list">물건 리스트: </label><br>
-            <input type="text" id="list" name="author" required><br><br>-->
+            <label class="product" id="productList">물건 리스트: </label><br>
+            <div id="product">
+
+                <input type="text" id="productName" name="productName" required>
+                <input type="text" id="productPrice" name="productPrice" required>
+            </div>
+            <a class="button" onclick="addProduct()">추가</a>
+
+            <br><br>
 
             <label class="descript">설명: </label><br>
             <textarea id="descript" name="descript" rows="10" cols="50" required></textarea><br><br>
@@ -60,5 +66,13 @@
 <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript">
+    function addProduct() {
+        const productElement = document.getElementById('product');
+
+        const clone = productElement.cloneNode(true);
+        productElement.after(clone);
+    }
+</script>
 </body>
 </html>
