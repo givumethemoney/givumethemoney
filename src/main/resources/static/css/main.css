@@ -1,5 +1,4 @@
 @import url("fontawesome-all.min.css");
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600");
 
 /*
 	Telephasic by HTML5 UP
@@ -88,8 +87,7 @@ input, select, textarea {
 
 	body {
 		background: #f5f7fa;
-		font-family: 'Source Sans Pro', sans-serif;
-		font-weight: 300;
+        font-family: 'NanumSquareRound';
 		color: #52575c;
 		line-height: 1.75em;
 		font-size: 14pt;
@@ -107,7 +105,7 @@ input, select, textarea {
 		}
 
 	input, textarea, select {
-		font-family: 'Source Sans Pro', sans-serif;
+		font-family: 'NanumSquareRound';
 		font-weight: 300;
 		color: #52575c;
 		line-height: 1.75em;
@@ -3080,17 +3078,21 @@ input, select, textarea {
 
 .content-wrapper table {
 	table-layout: fixed;
-	border: 1px solid #919191;
-	padding: 20px;
 }
 
 .content-wrapper th {
-	background-color: #dedede;
-	border: 1px solid #919191;
+	border-right: 1px solid #40534c;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-weight: 500;
+	font-size: 23px;
 }
 
 .content-wrapper td {
-	border: 1px solid #919191;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-weight: 400;
+	font-size: 20px;
 }
 
 .denied {
@@ -3101,8 +3103,42 @@ input, select, textarea {
 	font-size: 30px;
 }
 
+#donation-title {
+    margin-top:50px;
+    font-family: 'NanumSquareRoundExtraBold';
+    font-size:80px;
+}
+
+#current-percent {
+    margin-top: 50px;
+    font-size:50px;
+    font-weight: 900;
+}
+
+.amount {
+    font-size: 40px;
+    font-weight: 700;
+    display: inline;
+}
+
 #progress {
     width: 95%;
     color: #40534c;
     height: 50px;
+    margin-top:30px;
+    margin-bottom:30px;
 }
+
+#product-list {
+	table-layout: fixed;
+}
+
+#product-list th {
+    border-bottom: 1px solid #40534c;
+    border-right: none;
+}
+
+#product-list td {
+    border-bottom: 1px solid #c2c7cc;
+}
+

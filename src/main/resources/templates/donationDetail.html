@@ -10,6 +10,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/css/main.css" />
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -21,55 +22,71 @@
         <!-- 사용자 테이블 추가되면 admin인지 확인
         <th:block th:if="${donation.isConfirmed()}">-->
         <th:block>
+            <br>
         <hr>
-        <table>
-            <tbody>
-            <tr>
-                <th>기부 번호</th>
-                <td th:text="${donation.getId()}">1</td>
-                <th>시작 날짜</th>
-                <td th:text="${donation.getStartDate()}">2024-10-05</td>
-                <th>시작 날짜</th>
-                <td th:text="${donation.getEndDate()}">2024-10-05</td>
-            </tr>
-            <tr>
-                <th>기업 이름</th>
-                <td colspan="5" th:text="${donation.getEnterName()}">hey</td>
-            </tr>
-            <tr>
-                <th>제목</th>
-                <td colspan="5" th:text="${donation.getTitle()}">기부 제목</td>
-            </tr>
-            <tr>
-                <th>목표 금액</th>
-                <td colspan="2" th:text="${donation.getGoal()}">0</td>
-                <th>현재 금액</th>
-                <td colspan="2" th:text="${donation.getCurrentAmount()}">0</td>
-            </tr>
-                <td colspan="6"><progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress></td>
-            </tr>
-            <tr>
-                <th colspan="6">기부 품목 목록</th>
-            </tr>
-            <tr th:each="p : ${productList}">
-                <td colspan="6" th:text="${p.getProductName()}">품목 이름</td>
-            </tr>
-            <tr>
-                <th>참여자 수</th>
-                <td colspan="5" th:text="${donation.getParticipant()}">0</td>
-            </tr>
-            <tr>
-                <th colspan="6">설명</th>
-            </tr>
-            <tr th:each="i : ${images}">
-                <td colspan="6"><img th:src="|/images/${i.getId()}|"/></td>
-            </tr>
-            <tr>
-                <td colspan="6" th:text="${donation.getDescription()}">내용 여기에 이미지도 들어가겠지</td>
-            </tr>
-            <!-- 추가 행은 여기서부터 작성 -->
-            </tbody>
-        </table>
+            <br>
+            <p id="donation-title" th:text="${donation.getTitle()}"></p>
+            <hr>
+            <table>
+                <tbody>
+                <tr>
+                    <th>시작 날짜</th>
+                    <td th:text="${donation.getStartDate()}"></td>
+                </tr>
+                <tr>
+                    <th>종료 날짜</th>
+                    <td th:text="${donation.getEndDate()}"></td>
+                </tr>
+                <tr>
+                    <th>기업 이름</th>
+                    <td th:text="${donation.getEnterName()}"></td>
+                </tr>
+                <tr>
+                    <th>목표 금액</th>
+                    <td class="money" th:text="${donation.getGoal()}"></td>
+                </tr>
+                <tr>
+                    <th>현재 금액</th>
+                    <td class="money" th:text="${donation.getCurrentAmount()}"></td>
+                </tr>
+                <tr>
+                    <th class="last">참여자 수</th>
+                    <td class="last" th:text="${donation.getParticipant()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+            <table id="product-list">
+                <tbody>
+                <tr>
+                    <th>기부 품목 목록</th>
+                </tr>
+                <tr th:each="p : ${productList}">
+                    <td th:text="${p.getProductName()}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p id="current-percent">현재 모금 진행률</p>
+            <p class="amount money" th:text="${donation.getCurrentAmount()}"></p>
+            <p class="amount"> / </p>
+            <p class="amount money" th:text="${donation.getGoal()}"></p>
+            <p class="amount"> 원</p>
+            <progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress>
+            <hr>
+            <table>
+                <tbody>
+                <tr th:each="i : ${images}">
+                    <th hidden="hidden">이미지</th>
+                    <td><img th:src="|/images/${i.getId()}|"/></td>
+                </tr>
+                <tr>
+                    <th hidden="hidden">설명</th>
+                    <td th:text="${donation.getDescription()}"></td>
+                </tr>
+                <!-- 추가 행은 여기서부터 작성 -->
+                </tbody>
+            </table>
         </th:block>
     </div>
     <!-- 사용자 테이블 추가 후 admin인지 확인되면
@@ -92,5 +109,18 @@
     <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/util.js}"></script>
     <script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script>
+    window.onload = function() {
+        var money = document.getElementsByClassName('money');
+
+        for (var i = 0; i < money.length; i++) {
+            var m = money.item(i);
+            var text = m.innerText;
+            var localeString = Number(text).toLocaleString('ko-kr');
+            console.log(localeString);
+            m.innerText = localeString;
+        }
+    }
+</script>
 </body>
 </html>
