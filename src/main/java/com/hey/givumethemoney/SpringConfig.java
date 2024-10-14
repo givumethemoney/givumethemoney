@@ -18,7 +18,6 @@ public class SpringConfig {
 
     @Bean
     public PaymentsApplicationService paymentsApplicationService() {
-        //return new MemberService(memberRepository());
         return new PaymentsApplicationService(paymentsRepository);
     }
 }
