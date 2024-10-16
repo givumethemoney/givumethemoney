@@ -24,8 +24,11 @@
         <th:block>
             <br>
         <hr>
-            <br>
             <p id="donation-title" th:text="${donation.getTitle()}"></p>
+            <div id="enter-name-container">
+                <p>With </p>
+                <p id="enter-name" th:text="${donation.getEnterName()}"></p>
+            </div>
             <hr>
             <table id="detail">
                 <tbody>
@@ -38,16 +41,12 @@
                     <td th:text="${donation.getEndDate()}"></td>
                 </tr>
                 <tr>
-                    <th>기업 이름</th>
-                    <td th:text="${donation.getEnterName()}"></td>
-                </tr>
-                <tr>
                     <th>목표 금액</th>
-                    <td class="money" th:text="${donation.getGoal()}"></td>
+                    <td class="money" th:text="|${donation.getGoal()}|"></td>
                 </tr>
                 <tr>
                     <th>현재 금액</th>
-                    <td class="money" th:text="${donation.getCurrentAmount()}"></td>
+                    <td class="money" th:text="|${donation.getCurrentAmount()}|"></td>
                 </tr>
                 <tr>
                     <th class="last">참여자 수</th>
@@ -64,9 +63,9 @@
             </div>
             <p id="current-percent" hidden="hidden">현재 모금 진행률</p>
             <div class="align-right">
-                <p class="amount money current" th:text="${donation.getCurrentAmount()}"></p>
+                <p class="amount money2 current" th:text="${donation.getCurrentAmount()}"></p>
                 <p class="amount"> / </p>
-                <p class="amount money" th:text="${donation.getGoal()}"></p>
+                <p class="amount money2" th:text="${donation.getGoal()}"></p>
                 <p class="amount"> 원</p>
             </div>
             <progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress>
@@ -120,14 +119,22 @@
 <script>
     window.onload = function() {
         var money = document.getElementsByClassName('money');
+        var money2 = document.getElementsByClassName('money2');
 
         for (var i = 0; i < money.length; i++) {
-            var m = money.item(i);
-            var text = m.innerText;
-            var localeString = Number(text).toLocaleString('ko-kr');
-            console.log(localeString);
-            m.innerText = localeString;
+            money.item(i).innerText = toLoc(money.item(i)) + ' 원';
         }
+
+        for (var i = 0; i < money2.length; i++) {
+            money2.item(i).innerText = toLoc(money2.item(i));
+        }
+    }
+
+    function toLoc(money) {
+        var text = money.innerText;
+        var localeString = Number(text).toLocaleString('ko-kr');
+
+        return localeString;
     }
 </script>
 </body>
