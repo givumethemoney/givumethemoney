@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Controller
 public class DonationController {
@@ -58,6 +59,14 @@ public class DonationController {
 
         List<Product> productList = productService.getProductsByDonationId(donationId);
         model.addAttribute("productList", productList);
+
+        // 현재 기부 물품 개수
+        if (!productList.isEmpty()) {
+            Random random = new Random();
+            int randInt = random.nextInt(productList.size());
+
+            model.addAttribute("random", random.nextInt(productList.size()));
+        }
 
         return "donationDetail";
     }

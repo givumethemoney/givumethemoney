@@ -27,7 +27,7 @@
             <br>
             <p id="donation-title" th:text="${donation.getTitle()}"></p>
             <hr>
-            <table>
+            <table id="detail">
                 <tbody>
                 <tr>
                     <th>시작 날짜</th>
@@ -56,22 +56,19 @@
                 </tbody>
             </table>
             <hr>
-            <table id="product-list">
-                <tbody>
-                <tr>
-                    <th>기부 품목 목록</th>
-                </tr>
-                <tr th:each="p : ${productList}">
-                    <td th:text="${p.getProductName()}"></td>
-                </tr>
-                </tbody>
-            </table>
-
-            <p id="current-percent">현재 모금 진행률</p>
-            <p class="amount money" th:text="${donation.getCurrentAmount()}"></p>
-            <p class="amount"> / </p>
-            <p class="amount money" th:text="${donation.getGoal()}"></p>
-            <p class="amount"> 원</p>
+            <div id="product-count">
+                <p id="product-name" th:text="${productList[random].getProductName()}">품목 이름</p>
+                <p>을(를) </p>
+                <p id="count" th:text="${donation.getCurrentAmount() / productList[random].getProductPrice()}">인원수</p>
+                <p> 명에게 선물할 수 있습니다.</p>
+            </div>
+            <p id="current-percent" hidden="hidden">현재 모금 진행률</p>
+            <div class="align-right">
+                <p class="amount money current" th:text="${donation.getCurrentAmount()}"></p>
+                <p class="amount"> / </p>
+                <p class="amount money" th:text="${donation.getGoal()}"></p>
+                <p class="amount"> 원</p>
+            </div>
             <progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress>
             <hr>
             <table>
@@ -87,6 +84,17 @@
                 <!-- 추가 행은 여기서부터 작성 -->
                 </tbody>
             </table>
+            <hr>
+            <table id="product-list">
+                <tbody>
+                <tr>
+                    <th>기부 품목 목록</th>
+                </tr>
+                <tr th:each="p : ${productList}">
+                    <td th:text="${p.getProductName()}"></td>
+                </tr>
+                </tbody>
+            </table>
         </th:block>
     </div>
     <!-- 사용자 테이블 추가 후 admin인지 확인되면
@@ -96,7 +104,7 @@
     </th:block>
     -->
     <th:block th:if="${!donation.isConfirmed()}">
-        <a class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">신청</a>
+        <a class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">수락</a>
     </th:block>
 
     <header th:replace="layouts/footer::footer"></header>
