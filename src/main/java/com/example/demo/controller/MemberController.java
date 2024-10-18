@@ -24,6 +24,13 @@ public class MemberController {
         System.out.println("MemberController.join");
         System.out.println("memberDTO = " + memberDTO);
         memberService.join(memberDTO);
+        //회원가입 완료 팝업
         return "index";
     }
 }
+//    @GetMapping("/login")
+//    public String loginForm() {
+//        return "login";
+//    }
+
+// 로그인 처리
