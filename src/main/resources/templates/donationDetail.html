@@ -70,6 +70,26 @@
             </div>
             <progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress>
             <hr>
+            <div class="ranking">
+                <ul>
+                    <li class="wreath">
+                        <img src="/image/wreath_1_BG.png"/>
+                        <p class="rank-number">2nd</p>
+                        <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                    <li class="wreath">
+                        <img src="/image/wreath_1_BG.png"/>
+                        <p class="rank-number">1st</p>
+                        <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                    <li class="wreath">
+                        <img src="/image/wreath_1_BG.png"/>
+                        <p class="rank-number">3rd</p>
+                        <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                </ul>
+            </div>
+            <hr>
             <table>
                 <tbody>
                 <tr th:each="i : ${images}">
