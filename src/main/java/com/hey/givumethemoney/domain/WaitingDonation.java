@@ -3,6 +3,7 @@ package com.hey.givumethemoney.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -12,14 +13,21 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @SuperBuilder
 @Getter
+@Setter
 public class WaitingDonation extends DonationBase {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     protected Long id;
 
+    @Column(name = "is_rejected")
+    protected boolean isRejected = false;
+
+    @Column(name="rejection_reason")
+    protected String rejectionReason;
+
     //@Builder
-    public WaitingDonation(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, boolean isConfirmed, String userId) {
+    public WaitingDonation(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, String userId) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -28,7 +36,6 @@ public class WaitingDonation extends DonationBase {
         this.description = description;
         this.participant = participant;
         this.enterName = enterName;
-        this.isConfirmed = isConfirmed;
         this.userId = userId;
     }
 }

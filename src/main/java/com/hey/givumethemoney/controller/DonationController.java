@@ -76,9 +76,24 @@ public class DonationController {
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
 
         if (donation.isPresent()) {
+            donation.get().setRejected(false);
+            donation.get().setRejectionReason("");
             Donation confirmed = new Donation((WaitingDonation)donation.get());
             donationService.saveDonation(confirmed);
             donationService.deleteWaitingDonationById(id);
+        }
+
+        return "redirect:/detail/{id}";
+    }
+
+    @PostMapping("/application/reject/{id}")
+    public String reject(@PathVariable Long id, @RequestParam(value = "rejectionReason") String rejectionReason, Model model) {
+        Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
+
+        if (donation.isPresent()) {
+            donation.get().setRejected(true);
+            donation.get().setRejectionReason(rejectionReason);
+            donationService.saveWaitingDonation(donation.get());
         }
 
         return "redirect:/detail/{id}";
@@ -91,7 +106,7 @@ public class DonationController {
 
     @PostMapping("/application/submit")
     public String submitApplication(@RequestParam(value = "images", required = false) List<MultipartFile> files, @RequestParam(value = "productName") List<String> productName, @RequestParam(value = "productPrice") List<Long> productPrice, DonationForm form) throws IOException {
-        WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), false, "test");
+        WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), "test");
         donationService.saveWaitingDonation(waitingDonation);
 
         for (MultipartFile file : files) {
