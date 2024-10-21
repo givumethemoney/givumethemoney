@@ -48,7 +48,7 @@ public class WidgetController {
 
         // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
         // 비밀번호가 없다는 것을 알리기 위해 시크릿 키 뒤에 콜론을 추가합니다.
-        String widgetSecretKey = "test_sk_GjLJoQ1aVZYD7JvBlAbP3w6KYe2R";
+        String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
@@ -70,6 +70,8 @@ public class WidgetController {
         InputStream responseStream = isSuccess ? connection.getInputStream() : connection.getErrorStream();
 
         // 결제 성공 및 실패 비즈니스 로직을 구현하세요.
+        // 데이터 저장:
+        // paymentKey, orderId는 서버에 필수로 저장하세요. 결제 조회, 결제 취소에 사용되는 값입니다. 나머지 값들은 필요에 따라 저장하세요.
         Reader reader = new InputStreamReader(responseStream, StandardCharsets.UTF_8);
         JSONObject jsonObject = (JSONObject) parser.parse(reader);
         responseStream.close();
