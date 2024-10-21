@@ -1,14 +1,13 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Login</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<form action="/login" method="post">-->
-<!--    이메일: <input type="text" name="memberEmail"> <br>-->
-<!--    비밀번호: <input type="password" name="memberPassword"> <br>-->
-<!--    <input type="submit" value="로그인">-->
-<!--</form>-->
-<!--</body>-->
-<!--</html>-->
+<div xmlns:th="http://www.thymeleaf.org">
+    <form action="/login" method="post">
+        <!-- 로그인-->
+        이메일: <input type="email" name="email" placeholder="이메일을 입력하세요."> <br>
+        비밀번호: <input type="password" name="password" placeholder="비밀번호를 입력하세요."> <br>
+        <input type="submit" value="로그인">
+
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${error}" class="errorMessage">
+            <p th:text="${error}"></p>
+        </div>
+    </form>
+</div>

@@ -10,10 +10,19 @@
             <h1 id="logo">
                 <a th:href="@{/}">GIVU ME THE MONEY</a>
             </h1>
-            <!-- Join -->
-            <a th:href="@{/join}">join</a>
-            <!-- Login -->
-            <a th:href="@{/login}">login</a>
+            <!--로그인이 되어있는 경우-->
+            <div th:if="${session.loggedInUser != null}">
+            <form action="#" th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+            </div>
+            <!-- 로그인이 되어있지 않은 경우 -->
+            <div th:if="${session.loggedInUser == null}">
+                <!-- Login -->
+                <a th:href="@{/login}">로그인</a>
+                <!-- Join -->
+                <a th:href="@{/join}">회원가입</a>
+            </div>
         </div>
     </div>
 </div>
