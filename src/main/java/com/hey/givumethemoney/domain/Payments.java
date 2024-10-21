@@ -62,13 +62,16 @@ public class Payments {
     @Column(name = "user_id")
     private String userId;
 
+    @Column(name = "paymentKey")
+    private String paymentKey;
+
     // @Column(name = "payment_status", nullable = false)
     // private String paymentStatus = "pending";  // 결제 상태 (예: pending, success, fail)
 
 
     @Builder
     public Payments(String orderId, String currency, int amount, String orderName, String customerEmail,
-                    String customerName, String customerMobilePhone, String successUrl, String failUrl) {
+                    String customerName, String customerMobilePhone, String successUrl, String failUrl, String paymentKey) {
         this.orderId = orderId;
         this.currency = currency;
         this.amount = amount;
@@ -78,6 +81,7 @@ public class Payments {
         this.customerMobilePhone = customerMobilePhone;
         this.successUrl = successUrl;
         this.failUrl = failUrl;
+        this.paymentKey = paymentKey;
         // this.paymentStatus = paymentStatus;
     }
 }

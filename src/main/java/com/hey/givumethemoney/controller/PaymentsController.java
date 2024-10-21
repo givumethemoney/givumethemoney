@@ -21,4 +21,12 @@ public class PaymentsController {
         return "payments";
     }
 
+    // @GetMapping("/success")
+    // public Success success (@PathVariable String paymentKey, int amount, String orderId) {
+    //    this.orderId = orderId;
+    //     payments.paymentKey = paymentKey;
+    //     this.amount = amount;
+    //     return "success/{:}";
+    // }
+
 }
