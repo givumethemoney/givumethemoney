@@ -99,9 +99,23 @@ public class DonationController {
         return "redirect:/detail/{id}";
     }
 
-    @GetMapping("/application")
-    public String application() {
-        return "donationForm";
+    @GetMapping("/application/agree")
+    public String agree() {
+        return "agree";
+    }
+
+    @GetMapping("/application/write")
+    public String application(@RequestParam(value="chk-all", required = false) boolean checkAll, Model model) {
+        if (checkAll) {
+            return "donationForm";
+        }
+        else {
+            // 동의 없이 접근하면 오류 띄우기
+            model.addAttribute("msg", "약관 동의가 필요합니다.");
+            model.addAttribute("url", "/application/agree");
+
+            return "alert";
+        }
     }
 
     @PostMapping("/application/submit")
