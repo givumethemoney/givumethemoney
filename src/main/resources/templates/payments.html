@@ -62,7 +62,7 @@
         // ------ 주문의 결제 금액 설정 ------
         await widgets.setAmount({
           currency: "KRW",
-          value: 50000,
+          value: 6500,
         });
 
         await Promise.all([
@@ -78,8 +78,8 @@
         // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
         button.addEventListener("click", async function () {
           await widgets.requestPayment({
-            orderId: "UwWzfop68Q-vW68WqF23b",
-            orderName: "토스 티셔츠 외 2건",
+            orderId: "123456-F",
+            orderName: "마롱 밤 라떼",
             successUrl: window.location.origin + "/success",
             failUrl: window.location.origin + "/fail.html",
             customerEmail: "customer123@gmail.com",
