@@ -8,14 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Transactional
-public class PaymentsApplicationService {
+public class PaymentsService {
 
     private final JPAPaymentsRepository paymentsRepository;
 
-    public PaymentsApplicationService(JPAPaymentsRepository paymentsRepository) {
+    public PaymentsService(JPAPaymentsRepository paymentsRepository) {
         this.paymentsRepository = paymentsRepository;
     }
 
+    // 결제 정보 저장
     public Payments savePayments(Payments payments) {
         return paymentsRepository.save(payments);
     }
@@ -24,7 +25,7 @@ public class PaymentsApplicationService {
         return paymentsRepository.findAll();
     }
 
-    public Optional<Payments> getPaymentsById(Long id)
+    public Optional<Payments> getPaymentById(Long id)
     {
         return paymentsRepository.findById(id);
     }

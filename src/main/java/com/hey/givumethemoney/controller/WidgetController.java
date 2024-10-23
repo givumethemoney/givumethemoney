@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.hey.givumethemoney.domain.Payments;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,6 +26,13 @@ import java.util.Base64;
 public class WidgetController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final PaymentsController paymentsController;
+
+    // 생성자에서 서비스 주입
+    public WidgetController(PaymentsController paymentsController) {
+        this.paymentsController = paymentsController;
+    }
+
 
     @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
@@ -41,6 +50,21 @@ public class WidgetController {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         };
+
+        // [시작]추가된 부분
+        // 결제 정보 저장
+        // Payments 객체 생성
+        Payments payment = new Payments();
+        payment.setPaymentKey(paymentKey);
+        payment.setOrderId(orderId);
+        // String을 int로 변환
+        int amountInt = Integer.parseInt(amount); // String을 int로 변환
+        payment.setAmount(amountInt);
+
+        // 결제 정보 DB에 저장
+        paymentsController.createPayment(payment);
+        // [끝]추가된 부분
+
         JSONObject obj = new JSONObject();
         obj.put("orderId", orderId);
         obj.put("amount", amount);

@@ -78,7 +78,7 @@
         // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
         button.addEventListener("click", async function () {
           await widgets.requestPayment({
-            orderId: "123456-F",
+            orderId: "marronLatte123",
             orderName: "마롱 밤 라떼",
             successUrl: window.location.origin + "/success",
             failUrl: window.location.origin + "/fail.html",

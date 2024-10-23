@@ -26,7 +26,7 @@ public class Success {
     private String orderId;
 
     @Builder
-    public Successs(String orderId, int amount, String paymentKey) {
+    public Success(String orderId, int amount, String paymentKey) {
         this.orderId = orderId;
         this.amount = amount;
         this.paymentKey = paymentKey;
