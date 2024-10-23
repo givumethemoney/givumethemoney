@@ -19,7 +19,13 @@
     <div th:replace="layouts/header::header"></div>
 
     <div class="content-wrapper">
-        <a href="#" class="button">목록</a>
+        <th:block th:if="${donation.isConfirmed()}">
+            <a href="/applicationList/end" class="button">목록</a>
+        </th:block>
+        <!-- 사용자 타입 확인 가능하게 리스트 합치면 링크 수정 -->
+        <th:block th:if="!${donation.isConfirmed()}">
+            <a href="/admin/applicationList" class="button">목록</a>
+        </th:block>
         <!-- 사용자 테이블 추가되면 admin인지 확인
         <th:block th:if="${donation.isConfirmed()}">-->
         <th:block>
@@ -136,7 +142,11 @@
         <p th:text="${donation.getRejectionReason()}"></p>
     </th:block>
 
+    <th:block th:if="${isEnded}">
+        <td><a class="button" th:name="donationId" th:onclick="popup([[${donation.getId()}]]);">영수증 첨부</a></td>
+    </th:block>
 
+    <!-- 일반 사용자도 가능 -->
     <th:block th:if="${isEnded}">
         <a class="button" th:href="@{/receiptList/{id}(id = ${donation.getId()})}">기부 영수증 확인</a>
     </th:block>
@@ -171,6 +181,13 @@
         var localeString = Number(text).toLocaleString('ko-kr');
 
         return localeString;
+    }
+
+    function popup(id) {
+        var url = "/receiptPopup?id=" + id.toString();
+        var name = "Givu me the money";
+        var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+        window.open(url, name, option);
     }
 </script>
 </body>
