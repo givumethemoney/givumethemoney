@@ -161,6 +161,11 @@ public class DonationController {
         return "redirect:/admin/applicationList/1";
     }
 
+    @GetMapping("/admin/applicationList")
+    public String redirectList() {
+        return "redirect:/admin/applicationList/1";
+    }
+
     // user 테이블 생성되면 userType 받아서 applicationList 두 개 합치기
     @GetMapping("/admin/applicationList/{page}")
     public String confirmApplicationList(@PathVariable int page, Model model) {
@@ -200,6 +205,11 @@ public class DonationController {
 
         model.addAttribute("isEnded", false);
         return "applicationList";
+    }
+
+    @GetMapping("/applicationList/end")
+    public String redirectEndList() {
+        return "redirect:/applicationList/end/1";
     }
 
     // 마감된 기부 보기
