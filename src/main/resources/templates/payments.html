@@ -5,7 +5,6 @@
   <head>
     <title>Givu Me The Money</title>
     <meta charset="utf-8" />
-    <script src="https://js.tosspayments.com/v2/standard"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/payments.css">
@@ -15,81 +14,52 @@
 
     <div id="page-wrapper">
       <header th:replace="layouts/header::header"></header>
-
       <div class="container">
         <h1>GIVU ME THE MONEY</h1>
         <hr>
         <h2>기부 금액</h2>
-        <div class="donation-amounts">
-            <button class="amount">500원</button>
-            <button class="amount">1,000원</button>
-            <button class="amount">3,000원</button>
-            <button class="amount">5,000원</button>
-            <button class="amount">10,000원</button>
-            <button class="amount">15,000원</button>
-            <button class="amount">30,000원</button>
-            <button class="amount">50,000원</button>
-        </div>
-        <div class="custom-amount">
-            <input type="text" placeholder="직접 입력" aria-label="Custom Amount">
-        </div>
-    
-        <!-- 결제 UI -->
-        <div id="payment-method"></div>
-        <!-- 이용약관 UI -->
-        <div id="agreement"></div>
-        <!-- 결제하기 버튼 -->
-        <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+        <form action="/widget.html" method="post" id="payment-form">
+          <div class="donation-amounts">
+              <button type="button" class="amount" value="500">500원</button>
+              <button type="button" class="amount" value="1000">1,000원</button>
+              <button type="button" class="amount" value="3000">3,000원</button>
+              <button type="button" class="amount" value="5000">5,000원</button>
+              <button type="button" class="amount" value="10000">10,000원</button>
+              <button type="button" class="amount" value="15000">15,000원</button>
+              <button type="button" class="amount" value="30000">30,000원</button>
+              <button type="button" class="amount" value="50000">50,000원</button>
+          </div>
+          <div class="custom-amount">
+              <input type="text" name="customAmount" placeholder="직접 입력" aria-label="Custom Amount">
+          </div>
+
+          <!-- 결제하기 버튼을 submit으로 변경 -->
+          <button type="submit" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+        </form>
       </div>
     </div>
     
-    <script>
-      main();
-
-      async function main() {
-        const button = document.getElementById("payment-button");
-        // ------  결제위젯 초기화 ------
-        const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
-        const tossPayments = TossPayments(clientKey);
-        // 회원 결제
-        const customerKey = "rvu9KeS25NEP7gWvx6d9N";
-        const widgets = tossPayments.widgets({
-          customerKey,
-        });
-        // 비회원 결제
-        // const widgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
-
-        // ------ 주문의 결제 금액 설정 ------
-        await widgets.setAmount({
-          currency: "KRW",
-          value: 6500,
-        });
-
-        await Promise.all([
-          // ------  결제 UI 렌더링 ------
-          widgets.renderPaymentMethods({
-            selector: "#payment-method",
-            variantKey: "DEFAULT",
-          }),
-          // ------  이용약관 UI 렌더링 ------
-          widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
-        ]);
-
-        // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
-        button.addEventListener("click", async function () {
-          await widgets.requestPayment({
-            orderId: "marronLatte123",
-            orderName: "마롱 밤 라떼",
-            successUrl: window.location.origin + "/success",
-            failUrl: window.location.origin + "/fail.html",
-            customerEmail: "customer123@gmail.com",
-            customerName: "김토스",
-            customerMobilePhone: "01012341234",
-          });
-        });
-      }
-    </script>
     <header th:replace="layouts/footer::footer"></header>
+
+    <script>
+      // 금액 버튼을 선택하여 클릭 이벤트를 등록
+      const amountButtons = document.querySelectorAll(".amount"); // 모든 금액 버튼 선택
+        let selectedAmount = 0; // 선택된 금액 저장 변수
+
+        amountButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                selectedAmount = button.value; // 선택된 금액 저장
+                console.log("선택된 금액: ", selectedAmount); // 선택된 금액 출력
+
+                // hidden input 추가
+                let hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'amount'; // 서버에 전달할 파라미터 이름
+                hiddenInput.value = selectedAmount; // 선택된 금액 값
+                document.getElementById("payment-form").appendChild(hiddenInput);
+            });
+        });
+    </script>
   </body>
 
 </html>

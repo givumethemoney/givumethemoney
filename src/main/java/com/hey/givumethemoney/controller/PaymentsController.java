@@ -31,6 +31,7 @@ public class PaymentsController {
     @GetMapping("/payments")
     public String payments () {
         return "payments";
+        // return "widget";
     }
 
     // 결제 정보 저장
