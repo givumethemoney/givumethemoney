@@ -1,12 +1,11 @@
 package com.hey.givumethemoney.controller;
 
-import com.hey.givumethemoney.domain.Donation;
-import com.hey.givumethemoney.domain.Image;
-import com.hey.givumethemoney.domain.Product;
-import com.hey.givumethemoney.domain.WaitingDonation;
+import com.hey.givumethemoney.domain.*;
 import com.hey.givumethemoney.service.DonationService;
 import com.hey.givumethemoney.service.ImageService;
 import com.hey.givumethemoney.service.ProductService;
+import com.hey.givumethemoney.service.ReceiptService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +28,14 @@ public class DonationController {
     DonationService donationService;
     ImageService imageService;
     ProductService productService;
+    ReceiptService receiptService;
 
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService, ProductService productService) {
+    public DonationController(ImageService imageService, DonationService donationService, ProductService productService, ReceiptService receiptService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
+        this.receiptService = receiptService;
     }
 
     @GetMapping("/detail/{id}")
@@ -49,11 +51,21 @@ public class DonationController {
             model.addAttribute("donation", donation.get());
             images = imageService.findImagesByDonationId(donation.get().getId());
             donationId = donation.get().getId();
+
+            if (donation.get().getEndDate().isBefore(LocalDate.now())) {
+                model.addAttribute("isEnded", true);
+            }
+            else {
+                model.addAttribute("isEnded", false);
+            }
         }
         else if (notConfirmed.isPresent()) {
             model.addAttribute("donation", notConfirmed.get());
             images = imageService.findImagesByDonationId(notConfirmed.get().getId());
             donationId = notConfirmed.get().getId();
+
+            model.addAttribute("isEnded", false);
+
         }
         model.addAttribute("images", images);
 
@@ -67,6 +79,7 @@ public class DonationController {
 
             model.addAttribute("random", random.nextInt(productList.size()));
         }
+
 
         return "donationDetail";
     }
@@ -145,7 +158,7 @@ public class DonationController {
             }
         }
 
-        return "redirect:/application";
+        return "redirect:/admin/applicationList/1";
     }
 
     // user 테이블 생성되면 userType 받아서 applicationList 두 개 합치기
@@ -161,7 +174,8 @@ public class DonationController {
             waitingDonationsByPage.add(waitingDonations.get(i));
         }
 
-        model.addAttribute("donationsToConfirm", waitingDonationsByPage);
+        model.addAttribute("isEnded", false);
+        model.addAttribute("donations", waitingDonationsByPage);
 
         return "applicationList";
     }
@@ -182,18 +196,89 @@ public class DonationController {
             waitingDonationsByPage.add(waitingDonations.get(i));
         }
 
-        model.addAttribute("donationsToConfirm", waitingDonationsByPage);
-        
+        model.addAttribute("donations", waitingDonationsByPage);
+
+        model.addAttribute("isEnded", false);
         return "applicationList";
     }
 
-    @GetMapping("images/{id}")
+    // 마감된 기부 보기
+    @GetMapping("/applicationList/end/{page}")
+    public String showEndedApplicationList(@PathVariable int page, Model model) {
+        // 기업 사용자인지 확인
+        // 일반 유저면 로그인 or 오류 페이지 띄우기
+
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = "Test";
+
+        //List<Donation> donations = donationService.getDonationsByUserId(currentUserId);
+        // 테스트용
+        List<Donation> donations = donationService.getDonations();
+
+        // 보여질 리스트
+        List<Donation> donationsByPage = new ArrayList<>();
+        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+            if (i >= donations.size()) {
+                break;
+            }
+            if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
+                donationsByPage.add(donations.get(i));
+            }
+        }
+        model.addAttribute("isEnded", true);
+        model.addAttribute("donations", donationsByPage);
+
+        return "applicationList";
+    }
+
+    @GetMapping("/receiptPopup")
+    public String receipt(@RequestParam(value = "id", required = false) Long donationId, Model model) throws IOException {
+        model.addAttribute("donationId", donationId);
+        return "getReceipt";
+    }
+
+    @PostMapping("/receipt/submit")
+    public String submitReceipt(@RequestParam(value = "receipt", required = false) List<MultipartFile> files, @RequestParam(value = "donationId", required = false) Long donationId) throws IOException {
+        for (MultipartFile file : files) {
+            if (receiptService.saveReceipts(file, donationId) == null) {
+                // 이미지 확장자 외 파일 오류
+                System.out.println("다른 확장자");
+
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    @GetMapping("receiptList/{donationId}")
+    public String receiptList(@PathVariable Long donationId, Model model) throws IOException {
+        List<Receipt> receipts = receiptService.findReceiptsByDonationId(donationId);
+
+        model.addAttribute("receipts", receipts);
+
+        return "donationReceipt";
+    }
+
+    @GetMapping("/images/{id}")
     @ResponseBody
     public UrlResource showImage(@PathVariable Long id, Model model) throws IOException {
         Optional<Image> image = imageService.findImageById(id);
         if (image.isPresent()) {
             return new UrlResource("file:" + image.get().getSavedPath());
 
+        }
+        else {
+            return null;
+        }
+    }
+
+    @GetMapping("/receipts/{id}")
+    @ResponseBody
+    public UrlResource showReceipt(@PathVariable Long id, Model model) throws IOException {
+        Optional<Receipt> receipt = receiptService.findReceiptById(id);
+        if (receipt.isPresent()) {
+            return new UrlResource("file:" + receipt.get().getSavedPath());
         }
         else {
             return null;

@@ -57,6 +57,19 @@ public class DonationService {
         return result;
     }
 
+    public List<Donation> getDonationsByUserId(String userId) {
+        List<Donation> donations = getDonations();
+        List<Donation> result = new ArrayList<>();
+
+        for (Donation d : donations) {
+            if (d.getUserId().equals(userId)) {
+                result.add(d);
+            }
+        }
+
+        return result;
+    }
+
     public void deleteWaitingDonationById(Long id) {
         waitingDonationRepository.deleteById(id);
     }
