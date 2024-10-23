@@ -10,15 +10,4 @@ import java.util.Optional;
 
 @Repository
 public interface DonationRepository extends JpaRepository<Donation, Long> {
-    @Override
-    <S extends Donation> S save(S entity);
-
-    @Override
-    Optional<Donation> findById(Long aLong);
-
-    @Override
-    void deleteById(Long aLong);
-
-    @Override
-    List<Donation> findAll(Sort sort);
 }

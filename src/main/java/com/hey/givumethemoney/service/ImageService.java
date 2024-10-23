@@ -17,7 +17,7 @@ import java.util.UUID;
 @Transactional
 public class ImageService {
 
-    @Value("${file.dir}")
+    @Value("${image.dir}")
     private String fileDir;
 
     private final ImageRepository imageRepository;
