@@ -71,4 +71,9 @@ public class ImageService {
 
         return result;
     }
+
+    public void deleteImagesById(Long id) {
+        List<Image> images = findImagesByDonationId(id);
+        imageRepository.deleteAll(images);
+    }
 }

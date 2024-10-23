@@ -19,40 +19,75 @@
     <div class="content-wrapper">
         <a href="#" class="button">목록</a>
         <hr>
-        <form action="/application/submit" method="POST" enctype="multipart/form-data">
-            <label class="title">제목: </label><br>
-            <input type="text" id="title" name="title" required><br><br>
+        <th:block th:if="${isEdit}">
+            <form th:action="@{/application/edit(id = ${donation.getId()})}" method="POST" enctype="multipart/form-data">
+                <label class="title">제목: </label><br>
+                <input type="text" id="title" name="title" th:value="${donation.getTitle()}" required><br><br>
 
-            <label class="startDate">시작 날짜: </label><br>
-            <input type="date" id="startDate" name="startDate" required><br><br>
+                <label class="startDate">시작 날짜: </label><br>
+                <input type="date" id="startDate" name="startDate" th:value="${donation.getStartDate()}" required><br><br>
 
-            <label class="endDate">마감 날짜: </label><br>
-            <input type="date" id="endDate" name="endDate" required><br><br>
+                <label class="endDate">마감 날짜: </label><br>
+                <input type="date" id="endDate" name="endDate" th:value="${donation.getEndDate()}" required><br><br>
 
-            <label class="goal">목표 금액: </label><br>
-            <input type="text" id="goal" name="goal" required><br><br>
+                <label class="goal">목표 금액: </label><br>
+                <input type="text" id="goal" name="goal" th:value="${donation.getGoal()}" required><br><br>
 
-            <label class="enterName">기업: </label><br>
-            <input type="text" id="enterName" name="enterName" required><br><br>
+                <label class="enterName">기업: </label><br>
+                <input type="text" id="enterName" name="enterName" th:value="${donation.getEnterName()}" required><br><br>
 
-            <label class="product" id="productList">물건 리스트: </label><br>
-            <div id="product">
+                <label class="product" id="productList">물건 리스트: </label><br>
+                <div id="product">
+                    <input type="text" id="productName" name="productName" required>
+                    <input type="text" id="productPrice" name="productPrice" required>
+                </div>
+                <a class="button" onclick="addProduct()">추가</a>
 
-                <input type="text" id="productName" name="productName" required>
-                <input type="text" id="productPrice" name="productPrice" required>
-            </div>
-            <a class="button" onclick="addProduct()">추가</a>
+                <br><br>
 
-            <br><br>
+                <label class="descript">설명: </label><br>
+                <textarea id="descript" name="descript" rows="10" cols="50" th:value="${donation.getDescription()}" required></textarea><br><br>
 
-            <label class="descript">설명: </label><br>
-            <textarea id="descript" name="descript" rows="10" cols="50" required></textarea><br><br>
+                <label class="image">파일 첨부:</label><br>
+                <input type="file" id="image" name="images" multiple="multiple"><br><br>
+                <input type="submit" value="신청">
+            </form>
+        </th:block>
+        <th:block th:unless="${isEdit}">
+            <form action="/application/submit" method="POST" enctype="multipart/form-data">
+                <label class="title">제목: </label><br>
+                <input type="text" id="title" name="title" value="" required><br><br>
 
-            <label class="image">파일 첨부:</label><br>
-            <input type="file" id="image" name="images" multiple="multiple"><br><br>
+                <label class="startDate">시작 날짜: </label><br>
+                <input type="date" id="startDate" name="startDate" required><br><br>
 
-            <input type="submit" value="신청">
-        </form>
+                <label class="endDate">마감 날짜: </label><br>
+                <input type="date" id="endDate" name="endDate" required><br><br>
+
+                <label class="goal">목표 금액: </label><br>
+                <input type="text" id="goal" name="goal" required><br><br>
+
+                <label class="enterName">기업: </label><br>
+                <input type="text" id="enterName" name="enterName" required><br><br>
+
+                <label class="product" id="productList">물건 리스트: </label><br>
+                <div id="product">
+                    <input type="text" id="productName" name="productName" required>
+                    <input type="text" id="productPrice" name="productPrice" required>
+                </div>
+                <a class="button" onclick="addProduct()">추가</a>
+
+                <br><br>
+
+                <label class="descript">설명: </label><br>
+                <textarea id="descript" name="descript" rows="10" cols="50" required></textarea><br><br>
+
+                <label class="image">파일 첨부:</label><br>
+                <input type="file" id="image" name="images" multiple="multiple"><br><br>
+                <input type="submit" value="신청">
+            </form>
+        </th:block>
+
     </div>
 </div>
 
@@ -71,6 +106,7 @@
         const productElement = document.getElementById('product');
 
         const clone = productElement.cloneNode(true);
+        // 입력값 없애고 추가
         productElement.after(clone);
     }
 </script>

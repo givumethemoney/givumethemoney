@@ -138,8 +138,11 @@
     </th:block>
 
     <!-- 기업 사용자일 때 -->
-    <th:block th:if="${!donation.isConfirmed() and donation.isRejected()}">
-        <p th:text="${donation.getRejectionReason()}"></p>
+    <th:block th:if="${!donation.isConfirmed()}">
+        <th:block th:if="${donation.isRejected()}">
+            <p th:text="${donation.getRejectionReason()}"></p>
+        </th:block>
+        <a class="button" th:href="@{/application/edit(id = ${donation.getId()})}">수정</a>
     </th:block>
 
     <th:block th:if="${isEnded}">

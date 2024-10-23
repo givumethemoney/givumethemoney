@@ -120,6 +120,7 @@ public class DonationController {
     @GetMapping("/application/write")
     public String application(@RequestParam(value="chk-all", required = false) boolean checkAll, Model model) {
         if (checkAll) {
+            model.addAttribute("isEdit", false);
             return "donationForm";
         }
         else {
@@ -131,8 +132,30 @@ public class DonationController {
         }
     }
 
+    @GetMapping("/application/edit")
+    public String editingApplication(@RequestParam(value="id") Long id, Model model) {
+        Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
+
+        if (donation.isPresent()) {
+            model.addAttribute("donation", donation.get());
+            model.addAttribute("isEdit", true);
+
+            return "donationForm";
+        }
+        else {
+            model.addAttribute("msg", "일치하는 기부 신청서가 없습니다.");
+            model.addAttribute("url", "/admin/applicationList");
+
+            return "alert";
+        }
+    }
+
     @PostMapping("/application/submit")
-    public String submitApplication(@RequestParam(value = "images", required = false) List<MultipartFile> files, @RequestParam(value = "productName") List<String> productName, @RequestParam(value = "productPrice") List<Long> productPrice, DonationForm form) throws IOException {
+    public String submitApplication(
+            @RequestParam(value = "images", required = false) List<MultipartFile> files,
+            @RequestParam(value = "productName") List<String> productName,
+            @RequestParam(value = "productPrice") List<Long> productPrice,
+            DonationForm form) throws IOException {
         WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), "test");
         donationService.saveWaitingDonation(waitingDonation);
 
@@ -158,7 +181,55 @@ public class DonationController {
             }
         }
 
-        return "redirect:/admin/applicationList/1";
+        return "redirect:/detail/" + waitingDonation.getId().toString();
+    }
+
+    @PostMapping("/application/edit")
+    public String editApplication(
+            @RequestParam(value = "id") Long id,
+            @RequestParam(value = "images", required = false) List<MultipartFile> files,
+            @RequestParam(value = "productName") List<String> productName,
+            @RequestParam(value = "productPrice") List<Long> productPrice,
+            DonationForm form) throws IOException {
+        // 전체 다 지우는 게 아니라 부분 수정 가능하도록 바꿔봅시당
+        imageService.deleteImagesById(id);
+        productService.deleteProductsByDonationId(id);
+
+        Optional<WaitingDonation> waitingDonation = donationService.getWaitingDonationById(id);
+
+        if (waitingDonation.isPresent()) {
+            waitingDonation.get().setTitle(form.getTitle());
+            waitingDonation.get().setStartDate(form.getStartDate());
+            waitingDonation.get().setEndDate(form.getEndDate());
+            waitingDonation.get().setGoal(form.getGoal());
+            waitingDonation.get().setEnterName(form.getEnterName());
+            waitingDonation.get().setDescription(form.getDescript());
+            donationService.saveWaitingDonation(waitingDonation.get());
+        }
+
+        for (MultipartFile file : files) {
+            if (imageService.saveImages(file, id) == null) {
+                // 이미지 확장자 외 파일 오류
+                System.out.println("다른 확장자");
+            }
+        }
+
+        List<Product> productList = new ArrayList<>();
+        if (!productName.isEmpty() && !productPrice.isEmpty()) {
+            if (productName.size() != productPrice.size()) {
+                // 오류 메시지
+            }
+            else {
+                for (int i = 0; i < productName.size(); i++) {
+                    Product p = new Product(productName.get(i), productPrice.get(i), id);
+                    productList.add(p);
+                }
+
+                productService.saveProducts(productList);
+            }
+        }
+        
+        return "redirect:/detail/" + id.toString();
     }
 
     @GetMapping("/admin/applicationList")

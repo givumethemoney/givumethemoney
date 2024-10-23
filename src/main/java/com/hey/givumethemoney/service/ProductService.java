@@ -34,4 +34,9 @@ public class ProductService {
 
         return result;
     }
+
+    public void deleteProductsByDonationId(Long id) {
+        List<Product> productList = getProductsByDonationId(id);
+        productRepository.deleteAll(productList);
+    }
 }
