@@ -140,6 +140,11 @@ public class DonationController {
             model.addAttribute("donation", donation.get());
             model.addAttribute("isEdit", true);
 
+            List<Image> images = imageService.findImagesByDonationId(id);
+            model.addAttribute("images", images);
+            List<Product> productList = productService.getProductsByDonationId(id);
+            model.addAttribute("productList", productList);
+
             return "donationForm";
         }
         else {
@@ -191,7 +196,7 @@ public class DonationController {
             @RequestParam(value = "productName") List<String> productName,
             @RequestParam(value = "productPrice") List<Long> productPrice,
             DonationForm form) throws IOException {
-        // 전체 다 지우는 게 아니라 부분 수정 가능하도록 바꿔봅시당
+        // 전부 지운 후 새로 들어온 리스트로 저장
         imageService.deleteImagesById(id);
         productService.deleteProductsByDonationId(id);
 
