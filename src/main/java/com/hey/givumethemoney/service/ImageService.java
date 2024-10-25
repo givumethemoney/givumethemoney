@@ -2,6 +2,7 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.repository.ImageRepository;
+import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -41,15 +42,18 @@ public class ImageService {
 
         String savedName = uuid + "." + extension;
         String savedPath = fileDir + savedName;
+        String thumbPath = fileDir + "thumb_" + savedName;
 
         Image image = Image.builder()
                 .originName(originName)
                 .savedName(savedName)
                 .savedPath(savedPath)
+                .thumbPath(thumbPath)
                 .donationId(donationId)
                 .build();
 
         imageFiles.transferTo(new File(savedPath));
+        Thumbnailator.createThumbnail(new File(savedPath), new File(thumbPath), 200, 200);
 
         Image savedImage = imageRepository.save(image);
 
@@ -72,8 +76,12 @@ public class ImageService {
         return result;
     }
 
-    public void deleteImagesById(Long id) {
-        List<Image> images = findImagesByDonationId(id);
+    public void deleteImageById(Long id) {
+        imageRepository.deleteById(id);
+    }
+
+    public void deleteImagesByDonationId(Long donationId) {
+        List<Image> images = findImagesByDonationId(donationId);
         imageRepository.deleteAll(images);
     }
 }

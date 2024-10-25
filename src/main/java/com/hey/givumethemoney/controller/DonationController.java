@@ -15,10 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 public class DonationController {
@@ -195,10 +192,17 @@ public class DonationController {
             @RequestParam(value = "images", required = false) List<MultipartFile> files,
             @RequestParam(value = "productName") List<String> productName,
             @RequestParam(value = "productPrice") List<Long> productPrice,
+            @RequestParam(value = "deleteImages") String deleteImageList,
             DonationForm form) throws IOException {
         // 전부 지운 후 새로 들어온 리스트로 저장
-        imageService.deleteImagesById(id);
         productService.deleteProductsByDonationId(id);
+
+        StringTokenizer st = new StringTokenizer(deleteImageList);
+        while (st.hasMoreTokens()) {
+            Long imageId = Long.parseLong(st.nextToken().trim());
+            imageService.deleteImageById(imageId);
+            // 실제 저장된 이미지도 지워야 함
+        }
 
         Optional<WaitingDonation> waitingDonation = donationService.getWaitingDonationById(id);
 
@@ -365,6 +369,18 @@ public class DonationController {
         Optional<Receipt> receipt = receiptService.findReceiptById(id);
         if (receipt.isPresent()) {
             return new UrlResource("file:" + receipt.get().getSavedPath());
+        }
+        else {
+            return null;
+        }
+    }
+
+    @GetMapping("/thumbs/{id}")
+    @ResponseBody
+    public UrlResource showThumb(@PathVariable Long id, Model model) throws IOException {
+        Optional<Image> image = imageService.findImageById(id);
+        if (image.isPresent()) {
+            return new UrlResource("file:" + image.get().getThumbPath());
         }
         else {
             return null;
