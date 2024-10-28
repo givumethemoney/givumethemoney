@@ -35,6 +35,11 @@ public class PaymentsController {
         return "payments";
     }
 
+    @GetMapping("/signup")
+    public String signup () {
+        return "signup";
+    }
+
     @GetMapping("/setAmount")
     public String widget(
         @RequestParam(name = "amount", required = false) Integer amount,
