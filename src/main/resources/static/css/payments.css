@@ -104,7 +104,11 @@ h2 {
 }
 
 .amount:hover {
-    background-color: #D0E4B1;
+    background-color: #4B8A3A;
+}
+
+.clicked {
+    background-color: #508D4E;
 }
 
 .custom-amount {
@@ -273,3 +277,9 @@ h2 {
     .color-grey {
     color: #b0b8c1;
     }
+
+    .payment-info {
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+    

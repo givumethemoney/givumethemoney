@@ -95,4 +95,9 @@ public class Payments {
         // this.failUrl = failUrl;
         // this.paymentStatus = paymentStatus;
     }
+
+    
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 }

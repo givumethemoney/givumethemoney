@@ -8,6 +8,7 @@
     <script src="https://js.tosspayments.com/v2/standard"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/payments.css" />
   </head>
 
   <body class="homepage is-preload">
@@ -16,6 +17,11 @@
       <header th:replace="layouts/header::header"></header>
       <div class="container">
     
+        <div class="payment-info">
+            <h1>결제 정보</h1>
+        </div>
+        <p id="payment-amount">결제 금액: [[${payment.amount}]] 원</p>
+
         <!-- 결제 UI -->
         <div id="payment-method"></div>
         <!-- 이용약관 UI -->
@@ -27,11 +33,18 @@
     
     <header th:replace="layouts/footer::footer"></header>
     <script>
-        main();
+        document.addEventListener("DOMContentLoaded", () => {
+            main();
+        });
+
   
         async function main() {
           const button = document.getElementById("payment-button");
-          const coupon = document.getElementById("coupon-box");
+        //   const coupon = document.getElementById("coupon-box");
+        const amountText = document.getElementById("payment-amount").innerText; // p 태그의 내용을 가져옴
+        const amount = parseInt(amountText.replace(/[^0-9]/g, '')); // "결제 금액: " 부분 제거 후 숫자만 추출
+        console.log("결제 금액: ", amount);
+
           // ------  결제위젯 초기화 ------
           const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
           const tossPayments = TossPayments(clientKey);
@@ -46,7 +59,7 @@
           // ------ 주문의 결제 금액 설정 ------
           await widgets.setAmount({
             currency: "KRW",
-            value: 50000,
+            value: amount
           });
   
           await Promise.all([
@@ -59,30 +72,14 @@
             widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
           ]);
   
-          // ------  주문서의 결제 금액이 변경되었을 경우 결제 금액 업데이트 ------
-          coupon.addEventListener("change", async function () {
-            if (coupon.checked) {
-              await widgets.setAmount({
-                currency: "KRW",
-                value: 50000 - 5000,
-              });
-  
-              return;
-            }
-  
-            await widgets.setAmount({
-              currency: "KRW",
-              value: 50000,
-            });
-          });
-  
           // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
           button.addEventListener("click", async function () {
+            console.log("결제하기 버튼 클릭됨");
             await widgets.requestPayment({
-              orderId: "UwWzfop68Q-vW68WqF23b",
+              orderId: "hello37",
               orderName: "토스 티셔츠 외 2건",
-              successUrl: window.location.origin + "/success.html",
-              failUrl: window.location.origin + "/fail.html",
+              successUrl: window.location.origin + "/success",
+              failUrl: window.location.origin + "/fail",
               customerEmail: "customer123@gmail.com",
               customerName: "김토스",
               customerMobilePhone: "01012341234",
