@@ -1,7 +1,7 @@
 package com.hey.givumethemoney;
 
-import com.hey.givumethemoney.repository.JPAPaymentsRepository;
-import com.hey.givumethemoney.service.PaymentsService;
+import com.hey.givumethemoney.repository.*;
+import com.hey.givumethemoney.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,14 +10,21 @@ import org.springframework.context.annotation.Configuration;
 public class SpringConfig {
 
     private final JPAPaymentsRepository paymentsRepository;
+    private final JPAInquiryRepository inquiryRepository;
 
     @Autowired
-    public SpringConfig(JPAPaymentsRepository paymentsRepository) {
+    public SpringConfig(JPAPaymentsRepository paymentsRepository, JPAInquiryRepository inquiryRepository) {
         this.paymentsRepository = paymentsRepository;
+        this.inquiryRepository = inquiryRepository;
     }
 
     @Bean
-    public PaymentsService paymentsApplicationService() {
+    public PaymentsService paymentsService() {
         return new PaymentsService(paymentsRepository);
+    }
+
+    @Bean
+    public InquiryService inquiryRService() {
+        return new InquiryService(inquiryRepository);
     }
 }

@@ -83,7 +83,6 @@ h2 {
     margin-bottom: 20px;
     margin-left: 10%;
     margin-right: 10%;
-    /* background-color: gray; */
     justify-items: center; /* 각 버튼을 중앙 정렬 */
     /* width: 40%; */
 }
@@ -116,7 +115,7 @@ h2 {
 }
 
 .custom-amount input {
-    width: 200px;
+    width: 80%;
     padding: 10px;
     margin-bottom: 30px;
     border: 1px solid #ccc;
