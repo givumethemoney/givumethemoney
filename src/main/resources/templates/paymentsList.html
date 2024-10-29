@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+  <head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/paymentsList.css" />
+  </head>
+
+  <body class="homepage is-preload">
+    <header th:replace="layouts/header::header"></header>
+    <div id="page-wrapper">
+      
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="header-title pb-3 mt-0">결제 내역</h2>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                        <tr class="align-self-center">
+                                            <th>기부</th>
+                                            <th>주최 기업</th>
+                                            <th>결제 수단</th>
+                                            <th>결제 날짜</th>
+                                            <th>금액</th>
+                                            <th>Transaction</th>
+                                        </tr>
+                                    </thead>
+                                    <!-- <tbody>
+                                        <tr>
+                                            <td>Product Devlopment</td>
+                                            <td><img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="thumb-sm rounded-circle mr-2"> Kevin Heal</td>
+                                            <td>Paypal</td>
+                                            <td>5/8/2018</td>
+                                            <td>$15,000</td>
+                                            <td><span class="badge badge-boxed badge-soft-warning">panding</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>New Office Building</td>
+                                            <td><img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" class="thumb-sm rounded-circle mr-2"> Frank M. Lyons</td>
+                                            <td>Paypal</td>
+                                            <td>15/7/2018</td>
+                                            <td>$35,000</td>
+                                            <td><span class="badge badge-boxed badge-soft-primary">Success</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Market Research</td>
+                                            <td><img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" class="thumb-sm rounded-circle mr-2"> Angelo Butler</td>
+                                            <td>Pioneer</td>
+                                            <td>30/9/2018</td>
+                                            <td>$45,000</td>
+                                            <td><span class="badge badge-boxed badge-soft-warning">Panding</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Website &amp; Blog</td>
+                                            <td><img src="https://bootdey.com/img/Content/avatar/avatar4.png" alt="" class="thumb-sm rounded-circle mr-2"> Phillip Morse</td>
+                                            <td>Paypal</td>
+                                            <td>2/6/2018</td>
+                                            <td>$70,000</td>
+                                            <td><span class="badge badge-boxed badge-soft-warning">Success</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Product Devlopment</td>
+                                            <td><img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="" class="thumb-sm rounded-circle mr-2"> Kevin Heal</td>
+                                            <td>Paypal</td>
+                                            <td>5/8/2018</td>
+                                            <td>$15,000</td>
+                                            <td><span class="badge badge-boxed badge-soft-primary">panding</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>New Office Building</td>
+                                            <td><img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" class="thumb-sm rounded-circle mr-2"> Frank M. Lyons</td>
+                                            <td>Paypal</td>
+                                            <td>15/7/2018</td>
+                                            <td>$35,000</td>
+                                            <td><span class="badge badge-boxed badge-soft-primary">Success</span></td>
+                                        </tr>
+                                    </tbody> -->
+                                    
+                                    <tbody>
+                                        <tr th:each="payment, iterStat : ${payments}">
+                                            <td th:text="${donationList[iterStat.index].title}">기부 제목</td>
+                                            <td>
+                                                <img th:src="${donationList[iterStat.index].company.logo}" alt="" class="thumb-sm rounded-circle mr-2">
+                                                <span th:text="${donationList[iterStat.index].company.name}">주최 기업</span>
+                                            </td>
+                                            <td th:text="${payment.method}">결제 수단</td>
+                                            <td th:text="${#dates.format(payment.requestedAt, 'yyyy-MM-dd')}">결제 날짜</td>
+                                            <td th:text="${payment.amount}">금액</td>
+                                            <td>
+                                                <span th:class="${payment.status == 'SUCCESS' ? 'badge badge-boxed badge-soft-primary' : 'badge badge-boxed badge-soft-warning'}" 
+                                                      th:text="${payment.status}">Transaction 상태</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!--end table-responsive-->
+                            <div class="pt-3 border-top text-right"><a href="#" class="text-primary">View all <i class="mdi mdi-arrow-right"></i></a></div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <header th:replace="layouts/footer::footer"></header>
+        
+    </body>
+  </html>

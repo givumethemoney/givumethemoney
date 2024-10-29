@@ -1,6 +1,5 @@
 package com.hey.givumethemoney.domain;
 
-import groovyjarjarpicocli.CommandLine.Help.Ansi.Text;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

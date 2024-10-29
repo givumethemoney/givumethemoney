@@ -2,6 +2,8 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Inquiry;
 import com.hey.givumethemoney.repository.JPAInquiryRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Optional;
 public class InquiryService {
     private final JPAInquiryRepository inquiryRepository;
 
+    @Autowired
     public InquiryService(JPAInquiryRepository inquiryRepository) {
         this.inquiryRepository = inquiryRepository;
     }

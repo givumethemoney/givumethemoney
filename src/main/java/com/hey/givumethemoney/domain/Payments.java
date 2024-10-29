@@ -55,12 +55,6 @@ public class Payments {
     @Column(name = "customer_mobile_phone")
     private String customerMobilePhone;
 
-    // @Column(name = "success_url")
-    // private String successUrl;
-
-    // @Column(name = "fail_url")
-    // private String failUrl;
-
     // 결제가 일어난 날짜와 시간 정보입니다. 
     // yyyy-MM-dd'T'HH:mm:ss±hh:mm ISO 8601 형식입니다.
     // (e.g. 2022-01-01T00:00:00+09:00)
@@ -68,7 +62,7 @@ public class Payments {
     private String requestedAt;
 
     @Column(name = "donation_id")
-    private int donationId;
+    private Long donationId;
 
     @Column(name = "user_id")
     private String userId;
@@ -80,8 +74,7 @@ public class Payments {
 
     @Builder
     public Payments(String orderId, String currency, int amount, String orderName, String customerEmail,
-                    String customerName, String customerMobilePhone, 
-                    // String successUrl, String failUrl, 
+                    String customerName, String customerMobilePhone, Long donationId,
                     String paymentKey) {
         this.orderId = orderId;
         this.currency = currency;
@@ -91,8 +84,7 @@ public class Payments {
         this.customerEmail = customerEmail;
         this.customerName = customerName;
         this.customerMobilePhone = customerMobilePhone;
-        // this.successUrl = successUrl;
-        // this.failUrl = failUrl;
+        this.donationId = donationId;
         // this.paymentStatus = paymentStatus;
     }
 

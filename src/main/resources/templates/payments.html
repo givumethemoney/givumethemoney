@@ -7,13 +7,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/payments.css">
+    <link rel="stylesheet" href="/css/payments.css" />
+
   </head>
 
   <body class="homepage is-preload">
 
     <div id="page-wrapper">
-      <header th:replace="layouts/header::header"></header>
+      <header th:replace="~{layouts/header :: header}"></header>
       <div class="container">
         <!-- <h1>GIVU ME THE MONEY</h1> -->
         <hr>
@@ -61,7 +62,8 @@
       </div>
     </div>
     
-    <header th:replace="layouts/footer::footer"></header>
+    <footer th:replace="~{layouts/footer :: footer}"></footer>
+
 
     <script>
       var currentAmount;

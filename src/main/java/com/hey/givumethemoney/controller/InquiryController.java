@@ -28,8 +28,7 @@ public class InquiryController {
     }
 
     // 문의 저장
-    @PostMapping
-    @RequestMapping("/sendMessage")
+    @PostMapping("/sendMessage")
     public String saveInquiry(
         @RequestParam(name = "name", required = false) String name,
         @RequestParam(name = "email", required = false) String email,
