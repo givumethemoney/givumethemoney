@@ -25,14 +25,12 @@ public class DonationController {
     DonationService donationService;
     ImageService imageService;
     ProductService productService;
-    ReceiptService receiptService;
 
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService, ProductService productService, ReceiptService receiptService) {
+    public DonationController(ImageService imageService, DonationService donationService, ProductService productService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
-        this.receiptService = receiptService;
     }
 
     @GetMapping("/detail/{id}")
@@ -186,7 +184,7 @@ public class DonationController {
         return "redirect:/detail/" + waitingDonation.getId().toString();
     }
 
-    @PostMapping("/application/edit")
+    @PostMapping("/application/submitEdit")
     public String editApplication(
             @RequestParam(value = "id") Long id,
             @RequestParam(value = "images", required = false) List<MultipartFile> files,
@@ -213,6 +211,8 @@ public class DonationController {
             waitingDonation.get().setGoal(form.getGoal());
             waitingDonation.get().setEnterName(form.getEnterName());
             waitingDonation.get().setDescription(form.getDescript());
+            waitingDonation.get().setRejected(false);
+            waitingDonation.get().setRejectionReason("");
             donationService.saveWaitingDonation(waitingDonation.get());
         }
 
@@ -321,69 +321,19 @@ public class DonationController {
         return "applicationList";
     }
 
-    @GetMapping("/receiptPopup")
-    public String receipt(@RequestParam(value = "id", required = false) Long donationId, Model model) throws IOException {
-        model.addAttribute("donationId", donationId);
-        return "getReceipt";
-    }
 
-    @PostMapping("/receipt/submit")
-    public String submitReceipt(@RequestParam(value = "receipt", required = false) List<MultipartFile> files, @RequestParam(value = "donationId", required = false) Long donationId) throws IOException {
-        for (MultipartFile file : files) {
-            if (receiptService.saveReceipts(file, donationId) == null) {
-                // 이미지 확장자 외 파일 오류
-                System.out.println("다른 확장자");
+    @GetMapping("/donation/complete")
+    public String donationComplete(
+            @RequestParam(value="id") Long id,
+            @RequestParam(value="value") int value) throws IOException {
+        Optional<Donation> donation = donationService.getDonationById(id);
 
-                return null;
-            }
+        if (donation.isPresent()) {
+            donation.get().setCurrentAmount(donation.get().getCurrentAmount() + value);
+            donation.get().setParticipant(donation.get().getParticipant() + 1);
         }
 
-        return null;
-    }
-
-    @GetMapping("receiptList/{donationId}")
-    public String receiptList(@PathVariable Long donationId, Model model) throws IOException {
-        List<Receipt> receipts = receiptService.findReceiptsByDonationId(donationId);
-
-        model.addAttribute("receipts", receipts);
-
-        return "donationReceipt";
-    }
-
-    @GetMapping("/images/{id}")
-    @ResponseBody
-    public UrlResource showImage(@PathVariable Long id, Model model) throws IOException {
-        Optional<Image> image = imageService.findImageById(id);
-        if (image.isPresent()) {
-            return new UrlResource("file:" + image.get().getSavedPath());
-
-        }
-        else {
-            return null;
-        }
-    }
-
-    @GetMapping("/receipts/{id}")
-    @ResponseBody
-    public UrlResource showReceipt(@PathVariable Long id, Model model) throws IOException {
-        Optional<Receipt> receipt = receiptService.findReceiptById(id);
-        if (receipt.isPresent()) {
-            return new UrlResource("file:" + receipt.get().getSavedPath());
-        }
-        else {
-            return null;
-        }
-    }
-
-    @GetMapping("/thumbs/{id}")
-    @ResponseBody
-    public UrlResource showThumb(@PathVariable Long id, Model model) throws IOException {
-        Optional<Image> image = imageService.findImageById(id);
-        if (image.isPresent()) {
-            return new UrlResource("file:" + image.get().getThumbPath());
-        }
-        else {
-            return null;
-        }
+        // 기부 완료 페이지로 넘어감
+        return "redirect:/complete";
     }
 }
