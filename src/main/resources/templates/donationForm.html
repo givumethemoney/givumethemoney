@@ -21,7 +21,7 @@
         <a href="#" class="button">목록</a>
         <hr>
         <th:block th:if="${isEdit}">
-            <form th:action="@{/application/edit(id = ${donation.getId()})}" method="POST" enctype="multipart/form-data">
+            <form th:action="@{/application/submitEdit(id = ${donation.getId()})}" method="POST" enctype="multipart/form-data">
                 <label class="title">제목: </label><br>
                 <input type="text" class="title" name="title" th:value="${donation.getTitle()}" required><br><br>
 
@@ -65,7 +65,7 @@
                     <img th:src="|/thumbs/${i.getId()}|" alt="Image">
                     <a class="button delete-button" th:onclick="addDeleteImages(this, [[${i.getId()}]])">X</a>
                 </div>
-                <input type="submit" value="신청">
+                <input type="submit" value="수정">
             </form>
         </th:block>
         <th:block th:unless="${isEdit}">
