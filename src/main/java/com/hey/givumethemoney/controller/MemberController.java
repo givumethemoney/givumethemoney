@@ -63,15 +63,8 @@ public class MemberController {
 
         // 사용자 존재 여부와 비밀번호 확인
         if (memberDomain != null && passwordEncoder.matches(password, memberDomain.getPassword())) {
-            sessreion.setAttribute("loggedInUser", memberDomain);
-
-            //사용자 역할에 따라 redirect
-            Role role = memberDomain.getRole();
-                if ("ADMIN".equals(role)) {
-                    return "redirect:/admin";
-                } else if ("COMPANY".equals(role)) {
-                    return "redirect:/company";
-                } else return "redirect:/";
+            session.setAttribute("loggedInUser", memberDomain);
+            return "redirect:/";
             }
 
         // 로그인 실패 시, 에러 메시지를 표시하거나 로그인 페이지로 리다이렉트
