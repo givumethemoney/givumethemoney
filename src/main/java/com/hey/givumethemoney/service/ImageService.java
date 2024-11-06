@@ -52,6 +52,16 @@ public class ImageService {
                 .donationId(donationId)
                 .build();
 
+        File folder = new File(fileDir);
+        if (!folder.exists()) {
+            try {
+                folder.mkdir();
+            }
+            catch (Exception e) {
+                e.getStackTrace();
+            }
+        }
+
         imageFiles.transferTo(new File(savedPath));
         Thumbnailator.createThumbnail(new File(savedPath), new File(thumbPath), 200, 200);
 

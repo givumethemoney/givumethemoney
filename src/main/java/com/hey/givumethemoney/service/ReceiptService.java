@@ -49,6 +49,16 @@ public class ReceiptService {
                 .donationId(donationId)
                 .build();
 
+        File folder = new File(fileDir);
+        if (!folder.exists()) {
+            try {
+                folder.mkdir();
+            }
+            catch (Exception e) {
+                e.getStackTrace();
+            }
+        }
+
         receiptFiles.transferTo(new File(savedPath));
 
         Receipt savedReceipt = receiptRepository.save(receipt);
