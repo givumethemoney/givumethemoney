@@ -75,7 +75,7 @@
         <p id="amount"></p>
 
         <!-- 기부 상세 보기 버튼 -->
-        <a href="/detail/${donationId}" class="button">기부 상세 보기</a>
+        <a th:href="@{/detail/{id}(id = ${donationId})}" class="button">기부 상세 보기</a>
       </div>
     </div>
     <header th:replace="layouts/footer::footer"></header>

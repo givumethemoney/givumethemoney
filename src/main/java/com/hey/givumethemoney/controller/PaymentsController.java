@@ -102,6 +102,11 @@ public class PaymentsController {
         // System.out.println("\n\n최종 금액: " + finalAmount);
         // System.out.println("\n\n\nwidget.html로 넘어갑니다...\n\n\n");
 
+        Optional<Donation> donation = donationService.getDonationById(dontaionId);
+        if (donation.isPresent()) {
+            model.addAttribute("donation", donation.get());
+        }
+
         return "widget";
     }
 
@@ -132,14 +137,15 @@ public class PaymentsController {
         @RequestParam(name = "amount") int amount, 
         @RequestParam(name = "orderId") String orderId, 
         @RequestParam(name = "paymentType", required = false) String paymentType, // paymentType은 OPTIONAL하게 처리
-        @RequestParam(name = "donationId") Long dontaionId
+        @RequestParam(name = "donationId") Long dontaionId,
+        Model model
     ) {
         if (paymentType == null) {
             paymentType = "NORMAL";
         }
         // 여기서 금액이 더해지게 하기
         addAmount(dontaionId, amount);
-
+        model.addAttribute("donationId", dontaionId);
 
         return "success";
     }

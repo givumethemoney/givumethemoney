@@ -30,7 +30,7 @@
         <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
       </div>
     </div>
-    
+
     <header th:replace="layouts/footer::footer"></header>
     <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", () => {
@@ -76,9 +76,9 @@
           button.addEventListener("click", async function () {
             console.log("결제하기 버튼 클릭됨");
             await widgets.requestPayment({
-              orderId: "milktea11",
-              orderName: "토스 티셔츠 외 2건",
-              successUrl: window.location.origin + "/success?donationId=" + [[${payment.donationId}]],
+              orderId: [[${payment.orderId}]],
+              orderName: [[${donation.getTitle()}]],
+              successUrl: window.location.origin + "/success?donationId=" + [[${donation.getId()}]],
               failUrl: window.location.origin + "/fail",
               customerEmail: "customer123@gmail.com",
               customerName: "김토스",

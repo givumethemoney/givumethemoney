@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "payments")
 @Getter
@@ -25,7 +27,7 @@ public class Payments {
     private Long id;
 
     @Column(name = "order_id", nullable = false)
-    private String orderId;
+    private String orderId = UUID.randomUUID().toString();;
 
     //결제할 때 사용한 통화
     @Column(name = "currency")
