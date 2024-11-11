@@ -25,16 +25,21 @@ import java.util.Optional;
 public class PaymentsController {
     
     PaymentsService paymentsService;
-    // DonationService donationService;
+    DonationService donationService;
 
     // 생성자 주입
     @Autowired
-    public PaymentsController(PaymentsService paymentsService) {
+    public PaymentsController(PaymentsService paymentsService, DonationService donationService) {
         this.paymentsService = paymentsService;
+        this.donationService = donationService;
     }
 
     @GetMapping("/payments")
-    public String payments () {
+    public String payments (
+        @RequestParam(name = "donationId") Long dontaionId,
+        Model model
+    ) {
+        model.addAttribute("donationId", dontaionId);
         return "payments";
     }
 
@@ -77,10 +82,11 @@ public class PaymentsController {
         return "paymentsList";
     }
 
-    @GetMapping("/setAmount")
+    @GetMapping("/pay")
     public String widget(
         @RequestParam(name = "amount", required = false) Integer amount,
         @RequestParam(name = "customAmount", required = false) Integer customAmount,
+        @RequestParam(name = "donationId") Long dontaionId,
         Model model
     ) {
         System.out.println("amount: " + amount);
@@ -90,6 +96,7 @@ public class PaymentsController {
 
         Payments payment = new Payments();
         payment.setAmount(finalAmount);
+        payment.setDonationId(dontaionId);
         model.addAttribute("payment", payment);
         
         // System.out.println("\n\n최종 금액: " + finalAmount);
@@ -101,9 +108,19 @@ public class PaymentsController {
     // 결제 정보 저장
     @PostMapping
     public Payments createPayment(@RequestBody Payments payment) {
+
         return paymentsService.savePayments(payment);
     }
 
+    // 결제 금액 더하기
+    private void addAmount(Long donationId, int amount) {
+        Optional<Donation> donation = donationService.getDonationById(donationId);
+
+        if (donation.isPresent()) {
+            donation.get().setCurrentAmount(donation.get().getCurrentAmount() + amount);
+            donation.get().setParticipant(donation.get().getParticipant() + 1);
+        }
+    }
 
     @GetMapping("/success")
     // paymentType=NORMAL
@@ -114,11 +131,15 @@ public class PaymentsController {
         @RequestParam(name = "paymentKey") String paymentKey, 
         @RequestParam(name = "amount") int amount, 
         @RequestParam(name = "orderId") String orderId, 
-        @RequestParam(name = "paymentType", required = false) String paymentType // paymentType은 OPTIONAL하게 처리
+        @RequestParam(name = "paymentType", required = false) String paymentType, // paymentType은 OPTIONAL하게 처리
+        @RequestParam(name = "donationId") Long dontaionId
     ) {
         if (paymentType == null) {
             paymentType = "NORMAL";
         }
+        // 여기서 금액이 더해지게 하기
+        addAmount(dontaionId, amount);
+
 
         return "success";
     }
