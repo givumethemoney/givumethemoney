@@ -22,7 +22,7 @@
         <div class="payment-info">
           <h1>기부 금액</h1>
         </div>
-        <form th:action="@{/pay(donationId = ${donationId})}" method="get" id="payment-form">
+        <form action="/pay" method="get" id="payment-form">
           <div class="donation-amounts">
               <button type="button" class="amount" value="500" 
               th:onclick="setAmount(this.value)">500원</button>
@@ -54,6 +54,7 @@
 
           <!-- 실제 전송될 금액을 저장하는 숨겨진 input -->
           <input type="hidden" name="amount" id="selectedAmount" value="">
+          <input type="hidden" name="donationId" id="donationId" th:value="${donationId}">
 
 
           <!-- 결제하기 버튼을 submit으로 변경 -->
