@@ -42,16 +42,6 @@ public class MemberController {
         return "login";
     }
 
-    @GetMapping("/admin")
-    public String adminPage() {
-        return "admin";
-    }
-
-    @GetMapping("/company")
-    public String companyPage() {
-        return "company";
-    }
-
     @PostMapping("/login")
     public String login(@RequestParam("email") String email,
                         @RequestParam("password") String password,

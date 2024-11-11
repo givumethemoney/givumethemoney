@@ -1,13 +1,59 @@
-<div xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<header>
+    <!-- Logo -->
+    <h1 id="logo">
+        <a th:href="@{/}">GIVU ME THE MONEY</a>
+    </h1>
+</header>
+<body>
+<div xmlns:th="http://www.thymeleaf.org" class="container">
+    <input type="checkbox" id="check">
+    <div class="login form">
+        <header>Login</header>
     <form action="/login" method="post">
         <!-- 로그인-->
-        이메일: <input type="email" name="email" placeholder="이메일을 입력하세요."> <br>
-        비밀번호: <input type="password" name="password" placeholder="비밀번호를 입력하세요."> <br>
-        <input type="submit" value="로그인">
-
+        e-mail : <input type="email" name="email" placeholder="이메일을 입력하세요."> <br>
+        password : <input type="password" name="password" placeholder="비밀번호를 입력하세요."> <br>
+        <a href="#">비밀번호를 잊으셨나요?</a>
+        <input type="submit" class="button" value="로그인">
+    </form>
+        <div class="join">
+        <span class="join"> 회원이 아니라면?
+            <!-- Join -->
+         <label for="check">Join Us!
+             <a th:href="@{/join}"></a>
+         </label>
+        </span>
+        </div>
+    </div>
+    </form>
         <!-- 오류 메시지 표시 -->
         <div th:if="${error}" class="errorMessage">
             <p th:text="${error}"></p>
         </div>
-    </form>
+    <div class="registration form">
+        <header>Join</header>
+        <form action="/join" method="post">
+            이메일: <input type="email" name="email"> <br>
+            비밀번호: <input type="password" name="password"> <br>
+            이름: <input type="text" name="userName"> <br>
+            기업이름: <input type="text" name="companyName"><br>
+            <input type="submit" class="button" value="회원가입">
+        </form>
+        <div class="join">
+        <span class="join">Already have an account?
+         <label for="check">Login</label>
+        </span>
+        </div>
+    </div>
 </div>
+</body>
+
