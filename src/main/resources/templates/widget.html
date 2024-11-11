@@ -32,7 +32,7 @@
     </div>
     
     <header th:replace="layouts/footer::footer"></header>
-    <script>
+    <script th:inline="javascript">
         document.addEventListener("DOMContentLoaded", () => {
             main();
         });
@@ -51,7 +51,7 @@
           // 회원 결제
           const customerKey = "rvu9KeS25NEP7gWvx6d9N";
           const widgets = tossPayments.widgets({
-            customerKey,
+            customerKey
           });
           // 비회원 결제
           // const widgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
@@ -78,7 +78,7 @@
             await widgets.requestPayment({
               orderId: "milktea11",
               orderName: "토스 티셔츠 외 2건",
-              successUrl: window.location.origin + "/success",
+              successUrl: window.location.origin + "/success?donationId=" + [[${payment.donationId}]],
               failUrl: window.location.origin + "/fail",
               customerEmail: "customer123@gmail.com",
               customerName: "김토스",

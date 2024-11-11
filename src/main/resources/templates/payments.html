@@ -22,7 +22,7 @@
         <div class="payment-info">
           <h1>기부 금액</h1>
         </div>
-        <form action="/setAmount" method="get" id="payment-form">
+        <form th:action="@{/pay(donationId = ${donationId})}" method="get" id="payment-form">
           <div class="donation-amounts">
               <button type="button" class="amount" value="500" 
               th:onclick="setAmount(this.value)">500원</button>
