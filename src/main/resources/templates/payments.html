@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+  <head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/payments.css" />
+
+  </head>
+
+  <body class="homepage is-preload">
+
+    <div id="page-wrapper">
+      <header th:replace="~{layouts/header :: header}"></header>
+      <div class="container">
+        <!-- <h1>GIVU ME THE MONEY</h1> -->
+        <hr>
+        <!-- <h2>기부 금액</h2> -->
+        <div class="payment-info">
+          <h1>기부 금액</h1>
+        </div>
+        <form action="/setAmount" method="get" id="payment-form">
+          <div class="donation-amounts">
+              <button type="button" class="amount" value="500" 
+              th:onclick="setAmount(this.value)">500원</button>
+
+              <button type="button" class="amount" value="1000"
+              th:onclick="setAmount(this.value)">1,000원</button>
+
+              <button type="button" class="amount" value="3000"
+              th:onclick="setAmount(this.value)">3,000원</button>
+
+              <button type="button" class="amount" value="5000" 
+              th:onclick="setAmount(this.value)">5,000원</button>
+
+              <button type="button" class="amount" value="10000"
+              th:onclick="setAmount(this.value)">10,000원</button>
+              
+              <button type="button" class="amount" value="15000"
+              th:onclick="setAmount(this.value)">15,000원</button>
+
+              <button type="button" class="amount" value="30000"
+              th:onclick="setAmount(this.value)">30,000원</button>
+
+              <button type="button" class="amount" value="50000"
+              th:onclick="setAmount(this.value)">50,000원</button>
+          </div>
+          <div class="custom-amount">
+              <input type="text" name="customAmount" placeholder="직접 입력" aria-label="Custom Amount">
+          </div>
+
+          <!-- 실제 전송될 금액을 저장하는 숨겨진 input -->
+          <input type="hidden" name="amount" id="selectedAmount" value="">
+
+
+          <!-- 결제하기 버튼을 submit으로 변경 -->
+          <button type="submit" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+        </form>
+      </div>
+    </div>
+    
+    <footer th:replace="~{layouts/footer :: footer}"></footer>
+
+
+    <script>
+      var currentAmount;
+      var amount = document.querySelectorAll('.amount');
+
+      function clickHandler(){
+          if (currentAmount){
+              currentAmount.classList.remove('clicked');  
+          }   
+          this.classList.add('clicked');
+          currentAmount = this;
+      }
+
+
+      for (var i = 0; i < amount.length; i++) {
+          amount[i].addEventListener('click', clickHandler);        
+      }
+
+
+      async function setAmount(amount) {
+        console.log("선택된 금액:", amount);
+        // 숨겨진 input에 선택된 금액을 할당
+        document.getElementById("selectedAmount").value = amount;
+        // 숨겨진 input의 값 콘솔 출력
+        console.log("숨겨진 input의 값:", document.getElementById("selectedAmount").value);
+      }
+    </script>
+  </body>
+
+</html>

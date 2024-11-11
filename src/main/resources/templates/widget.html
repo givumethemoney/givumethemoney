@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+  <head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/payments.css" />
+  </head>
+
+  <body class="homepage is-preload">
+
+    <div id="page-wrapper">
+      <header th:replace="layouts/header::header"></header>
+      <div class="container">
+    
+        <div class="payment-info">
+            <h1>결제 정보</h1>
+        </div>
+        <p id="payment-amount">결제 금액: [[${payment.amount}]] 원</p>
+
+        <!-- 결제 UI -->
+        <div id="payment-method"></div>
+        <!-- 이용약관 UI -->
+        <div id="agreement"></div>
+        <!-- 결제하기 버튼 -->
+        <button class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+      </div>
+    </div>
+    
+    <header th:replace="layouts/footer::footer"></header>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            main();
+        });
+
+  
+        async function main() {
+          const button = document.getElementById("payment-button");
+        //   const coupon = document.getElementById("coupon-box");
+        const amountText = document.getElementById("payment-amount").innerText; // p 태그의 내용을 가져옴
+        const amount = parseInt(amountText.replace(/[^0-9]/g, '')); // "결제 금액: " 부분 제거 후 숫자만 추출
+        console.log("결제 금액: ", amount);
+
+          // ------  결제위젯 초기화 ------
+          const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+          const tossPayments = TossPayments(clientKey);
+          // 회원 결제
+          const customerKey = "rvu9KeS25NEP7gWvx6d9N";
+          const widgets = tossPayments.widgets({
+            customerKey,
+          });
+          // 비회원 결제
+          // const widgets = tossPayments.widgets({ customerKey: TossPayments.ANONYMOUS });
+  
+          // ------ 주문의 결제 금액 설정 ------
+          await widgets.setAmount({
+            currency: "KRW",
+            value: amount
+          });
+  
+          await Promise.all([
+            // ------  결제 UI 렌더링 ------
+            widgets.renderPaymentMethods({
+              selector: "#payment-method",
+              variantKey: "DEFAULT",
+            }),
+            // ------  이용약관 UI 렌더링 ------
+            widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
+          ]);
+  
+          // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
+          button.addEventListener("click", async function () {
+            console.log("결제하기 버튼 클릭됨");
+            await widgets.requestPayment({
+              orderId: "milktea11",
+              orderName: "토스 티셔츠 외 2건",
+              successUrl: window.location.origin + "/success",
+              failUrl: window.location.origin + "/fail",
+              customerEmail: "customer123@gmail.com",
+              customerName: "김토스",
+              customerMobilePhone: "01012341234",
+            });
+          });
+        }
+      </script>
+    </body>
+  </html>
+  
