@@ -52,7 +52,7 @@ public class NaverOCRService {
             if (imageUrls.contains(null)) {
                 return "One or more images not found.";
             }
-            
+
             // Create HttpClient instance
             HttpClient httpClient = HttpClient.newHttpClient();
 
@@ -73,7 +73,7 @@ public class NaverOCRService {
                             "  \"requestId\": \"string\",\n" +
                             "  \"timestamp\": %d,\n" +
                             "  \"resultType\": \"string\"\n" +
-                            "}", imageUrl, timestamp);
+                            "}", imageUrls.get(0), timestamp);
 
             // Create HttpRequest
             HttpRequest postRequest = HttpRequest.newBuilder()

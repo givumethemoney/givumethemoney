@@ -1,19 +1,18 @@
 package com.hey.givumethemoney.Config;
 
-import com.hey.givumethemoney.repository.*;
-import com.hey.givumethemoney.service.*;
-
-import groovyjarjarantlr4.v4.parse.ANTLRParser.finallyClause_return;
-import jakarta.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.beans.factory.annotation.Value;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class S3Config {
+
     @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
@@ -24,13 +23,13 @@ public class S3Config {
     private String region;
 
     @Bean
-    public AmazonS3Service amazonS3Client() {
-        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+    public AmazonS3Client amazonS3Client() {
+        BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 
-        return AmazonS3ClientBuilder
+        return (AmazonS3Client) AmazonS3ClientBuilder
                 .standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .withRegion(region)
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
     }
 }
