@@ -44,6 +44,12 @@ public class ReceiptController {
         return "redirect:/receipt/closePopup?donationId=" + donationId;
     }
 
+    @GetMapping("/receipt/closePopup")
+    public String closePopup(@RequestParam Long donationId, Model model) {
+        model.addAttribute("donationId", donationId);
+        return "closePopup";  // JavaScript를 포함한 HTML 페이지로 리턴
+    }
+
     @GetMapping("receiptList/{donationId}")
     public String receiptList(@PathVariable Long donationId, Model model) throws IOException {
         List<Receipt> receipts = receiptService.findReceiptsByDonationId(donationId);
@@ -51,12 +57,6 @@ public class ReceiptController {
         model.addAttribute("receipts", receipts);
 
         return "donationReceipt";
-    }
-
-    @GetMapping("/receipt/closePopup")
-    public String closePopup(@RequestParam Long donationId, Model model) {
-        model.addAttribute("donationId", donationId);
-        return "closePopup";  // JavaScript를 포함한 HTML 페이지로 리턴
     }
 
 
