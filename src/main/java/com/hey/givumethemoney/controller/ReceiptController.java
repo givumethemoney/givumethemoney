@@ -41,7 +41,7 @@ public class ReceiptController {
             }
         }
 
-        return null;
+        return "redirect:/receipt/closePopup?donationId=" + donationId;
     }
 
     @GetMapping("receiptList/{donationId}")
@@ -51,6 +51,12 @@ public class ReceiptController {
         model.addAttribute("receipts", receipts);
 
         return "donationReceipt";
+    }
+
+    @GetMapping("/receipt/closePopup")
+    public String closePopup(@RequestParam Long donationId, Model model) {
+        model.addAttribute("donationId", donationId);
+        return "closePopup";  // JavaScript를 포함한 HTML 페이지로 리턴
     }
 
 

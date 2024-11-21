@@ -17,7 +17,7 @@
 <div id="page-wrapper">
 
     <!-- 새로운 방식 -->
-    <header th:replace="layouts/header::header"></header>
+    <div th:replace="~{layouts/header::header}"></div>
 
 
     <div class="content-wrapper">
@@ -39,86 +39,6 @@
                 <p id="enter-name" th:text="${donation.getEnterName()}"></p>
             </div>
             <hr>
-            <table id="detail">
-                <tbody>
-                <tr>
-                    <th>시작 날짜</th>
-                    <td th:text="${donation.getStartDate()}"></td>
-                </tr>
-                <tr>
-                    <th>종료 날짜</th>
-                    <td th:text="${donation.getEndDate()}"></td>
-                </tr>
-                <tr>
-                    <th>목표 금액</th>
-                    <td class="money" th:text="|${donation.getGoal()}|"></td>
-                </tr>
-                <tr>
-                    <th>현재 금액</th>
-                    <td class="money" th:text="|${donation.getCurrentAmount()}|"></td>
-                </tr>
-                <tr>
-                    <th class="last">참여자 수</th>
-                    <td class="last" th:text="${donation.getParticipant()}"></td>
-                </tr>
-                </tbody>
-            </table>
-            <hr>
-            
-            
-            <p id="current-percent" hidden="hidden">현재 모금 진행률</p>
-            <div class="align-right">
-                <p class="amount money2 current" th:text="${donation.getCurrentAmount()}"></p>
-                <p class="amount"> / </p>
-                <p class="amount money2" th:text="${donation.getGoal()}"></p>
-                <p class="amount"> 원</p>
-            </div>
-            <progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress>
-            <hr>
-            <div class="ranking">
-                <ul>
-                    <li class="wreath">
-                        <img src="/image/wreath_1_BG.png"/>
-                        <p class="rank-number">2nd</p>
-                        <p class="rank-name" th:text="|test|"></p>
-                    </li>
-                    <li class="wreath">
-                        <img src="/image/wreath_1_BG.png"/>
-                        <p class="rank-number">1st</p>
-                        <p class="rank-name" th:text="|test|"></p>
-                    </li>
-                    <li class="wreath">
-                        <img src="/image/wreath_1_BG.png"/>
-                        <p class="rank-number">3rd</p>
-                        <p class="rank-name" th:text="|test|"></p>
-                    </li>
-                </ul>
-            </div>
-            <hr>
-            <table>
-                <tbody>
-                <!-- <tr th:each="i : ${images}">
-                    <th hidden="hidden">이미지</th>
-                    <td><img th:src="|/images/${i.getId()}|"/></td>
-                </tr> -->
-                <tr>
-                    <th hidden="hidden">설명</th>
-                    <td th:text="${donation.getDescription()}"></td>
-                </tr>
-                <!-- 추가 행은 여기서부터 작성 -->
-                </tbody>
-            </table>
-            <hr>
-            <table id="product-list">
-                <tbody>
-                <tr>
-                    <th>기부 품목 목록</th>
-                </tr>
-                <!-- <tr th:each="p : ${productList}">
-                    <td th:text="${p.getProductName()}"></td>
-                </tr> -->
-                </tbody>
-            </table>
         </th:block>
     </div>
     <!-- 기부 결제 버튼 -->

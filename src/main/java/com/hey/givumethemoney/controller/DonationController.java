@@ -39,12 +39,12 @@ public class DonationController {
         Optional<Donation> donation = donationService.getDonationById(id);
         Optional<WaitingDonation> notConfirmed = donationService.getWaitingDonationById(id);
 
-        List<Image> images = List.of();
+        // List<Image> images = List.of();
         Long donationId = 0L;
 
         if (donation.isPresent() && notConfirmed.isEmpty()) {
             model.addAttribute("donation", donation.get());
-            images = imageService.findImagesByDonationId(donation.get().getId());
+            // images = imageService.findImagesByDonationId(donation.get().getId());
             donationId = donation.get().getId();
 
             if (donation.get().getEndDate().isBefore(LocalDate.now())) {
@@ -56,27 +56,16 @@ public class DonationController {
         }
         else if (notConfirmed.isPresent()) {
             model.addAttribute("donation", notConfirmed.get());
-            images = imageService.findImagesByDonationId(notConfirmed.get().getId());
+            // images = imageService.findImagesByDonationId(notConfirmed.get().getId());
             donationId = notConfirmed.get().getId();
 
             model.addAttribute("isEnded", false);
 
         }
-        model.addAttribute("images", images);
-
-        List<Product> productList = productService.getProductsByDonationId(donationId);
-        model.addAttribute("productList", productList);
-
-        // 현재 기부 물품 개수
-        if (!productList.isEmpty()) {
-            Random random = new Random();
-            int randInt = random.nextInt(productList.size());
-
-            model.addAttribute("random", random.nextInt(productList.size()));
-        }
+        
 
 
-        return "donationDetail";
+        return "donationDetail2";
     }
 
     @GetMapping("/application/confirm/{id}")
