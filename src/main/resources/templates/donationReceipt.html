@@ -20,7 +20,7 @@
 
   <div class="content-wrapper">
     <ul th:each="r : ${receipts}">
-      <li><img th:src="|/receipts/${r.getId()}|" /></li>
+      <li><img th:src="@{${r.getImageUrl()}}" /></li>
     </ul>
 
     <a class="button" th:href="@{/detail/{id}(id = ${receipts.get(0).getDonationId()})}">돌아가기</a>

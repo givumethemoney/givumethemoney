@@ -3,8 +3,6 @@ package com.hey.givumethemoney.Config;
 import com.hey.givumethemoney.repository.*;
 import com.hey.givumethemoney.service.*;
 
-import groovyjarjarantlr4.v4.parse.ANTLRParser.finallyClause_return;
-import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +19,7 @@ public class GMTMConfig {
     private final JPAPaymentsRepository paymentsRepository;
     private final JPAInquiryRepository inquiryRepository;
     private final NaverOCRRepository naverOCRRepository;
+    private final S3UploadService s3UploadService;
 
     @Bean
     public DonationService donationService() {
@@ -39,7 +38,7 @@ public class GMTMConfig {
 
     @Bean
     public ReceiptService receiptService() {
-        return new ReceiptService(receiptRepository);
+        return new ReceiptService(receiptRepository, s3UploadService);
     }
 
     @Bean
@@ -64,7 +63,8 @@ public class GMTMConfig {
                           ReceiptRepository receiptRepository,
                           JPAPaymentsRepository paymentsRepository,
                           JPAInquiryRepository inquiryRepository,
-                          NaverOCRRepository naverOCRRepository
+                          NaverOCRRepository naverOCRRepository,
+                          S3UploadService s3UploadService
                           )
     {
         this.donationRepository = donationRepository;
@@ -75,5 +75,6 @@ public class GMTMConfig {
         this.paymentsRepository = paymentsRepository;
         this.inquiryRepository = inquiryRepository;
         this.naverOCRRepository = naverOCRRepository;
+        this.s3UploadService = s3UploadService;
     }
 }

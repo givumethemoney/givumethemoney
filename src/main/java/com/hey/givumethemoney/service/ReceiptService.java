@@ -2,6 +2,7 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Receipt;
 import com.hey.givumethemoney.repository.ReceiptRepository;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -21,9 +22,11 @@ public class ReceiptService {
     private String fileDir;
 
     private final ReceiptRepository receiptRepository;
+    private final S3UploadService s3UploadService;
 
-    public ReceiptService(ReceiptRepository receiptRepository) {
+    public ReceiptService(ReceiptRepository receiptRepository, S3UploadService s3UploadService) {
         this.receiptRepository = receiptRepository;
+        this.s3UploadService = s3UploadService;
     }
 
     public Long saveReceipts(MultipartFile receiptFiles, Long donationId) throws IOException {
@@ -40,13 +43,13 @@ public class ReceiptService {
         }
 
         String savedName = uuid + "." + extension;
-        String savedPath = fileDir + savedName;
+        String imageUrl = s3UploadService.saveFile(receiptFiles);
 
         Receipt receipt = Receipt.builder()
                 .originName(originName)
                 .savedName(savedName)
-                .savedPath(savedPath)
                 .donationId(donationId)
+                .imageUrl(imageUrl)
                 .build();
 
         File folder = new File(fileDir);
@@ -58,9 +61,6 @@ public class ReceiptService {
                 e.getStackTrace();
             }
         }
-
-        receiptFiles.transferTo(new File(savedPath));
-
         Receipt savedReceipt = receiptRepository.save(receipt);
 
         return savedReceipt.getId();

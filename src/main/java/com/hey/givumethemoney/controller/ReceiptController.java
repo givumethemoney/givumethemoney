@@ -1,7 +1,6 @@
 package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.Receipt;
-import com.hey.givumethemoney.service.ImageService;
 import com.hey.givumethemoney.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
@@ -65,7 +64,8 @@ public class ReceiptController {
     public UrlResource showReceipt(@PathVariable Long id, Model model) throws IOException {
         Optional<Receipt> receipt = receiptService.findReceiptById(id);
         if (receipt.isPresent()) {
-            return new UrlResource("file:" + receipt.get().getSavedPath());
+            String imageUrl = receipt.get().getImageUrl(); // S3에서 저장된 URL
+            return new UrlResource(imageUrl);
         }
         else {
             return null;

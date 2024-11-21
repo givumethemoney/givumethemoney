@@ -22,18 +22,19 @@ public class Receipt {
     @Column(name = "saved_name", nullable = false)
     private String savedName;
 
-    @Column(name = "saved_path", nullable = false)
-    private String savedPath;
-
     @Column(name = "donation_id", nullable = false)
     private Long donationId;
 
+    @Column(name = "imgae_url", nullable = false)
+    private String imageUrl;
+
+
     @Builder
-    public Receipt(Long id, String originName, String savedName, String savedPath, Long donationId) {
+    public Receipt(Long id, String originName, String savedName, Long donationId, String imageUrl) {
         this.id = id;
         this.originName = originName;
         this.savedName = savedName;
-        this.savedPath = savedPath;
         this.donationId = donationId;
+        this.imageUrl = imageUrl;
     }
 }
