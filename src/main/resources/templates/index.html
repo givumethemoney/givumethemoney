@@ -5,7 +5,7 @@
     <title>GIVU ME THE MONEY</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" href="css/main.css"/>
+        <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -20,13 +20,14 @@
         <div class="slider">
             <div class="slides">
                 <a href="https://link1.com" class="slide">
-                    <img src="./images/pic01.jpg" alt="Image 1">
+                    <img th:src="@{/images/pic01.jpg}" alt="Image 1">
+
                 </a>
                 <a href="https://link2.com" class="slide">
-                    <img src="./images/pic02.jpg" alt="Image 2">
+                    <img th:src="@{/images/pic02.jpg}" alt="Image 2">
                 </a>
                 <a href="https://link3.com" class="slide">
-                    <img src="./images/pic03.jpg" alt="Image 3">
+                    <img th:src="@{/images/pic03.jpg}" alt="Image 3">
                 </a>
             </div>
         </div>
@@ -44,13 +45,12 @@
 </div>
 
 <!-- Scripts -->
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery.dropotron.min.js"></script>
-<script src="js/browser.min.js"></script>
-<script src="js/breakpoints.min.js"></script>
-<script src="js/util.js"></script>
-<script src="js/main.js"></script>
-
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
 </body>
 
 </html>

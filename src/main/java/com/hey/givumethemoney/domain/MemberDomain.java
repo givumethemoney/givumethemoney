@@ -3,16 +3,14 @@ package com.hey.givumethemoney.domain;
 import com.hey.givumethemoney.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
-@Table(name = "users") //database에 해당 이름의 테이블 생성
+@Table(name = "company")
 public class MemberDomain {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "email", unique = true, nullable = false)
@@ -29,17 +27,20 @@ public class MemberDomain {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Role role;
+    private Role role = Role.COMPANY;
 
-    public static MemberDomain toMemberDomain(MemberDTO memberDTO){
-        MemberDomain memberDomain = new MemberDomain();
-        memberDomain.setId(memberDTO.getId());
-        memberDomain.setEmail(memberDTO.getEmail());
-        memberDomain.setPassword(memberDTO.getPassword());
-        memberDomain.setUserName(memberDTO.getUserName());
-        memberDomain.setCompanyName(memberDTO.getCompanyName());
-        memberDomain.setRole(memberDTO.getRole());
+    public void setEncodedPassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 
-        return memberDomain;
+    // MemberDTO -> MemberDomain 변환 메서드
+    public static MemberDomain toMemberDomain(MemberDTO dto) {
+        MemberDomain domain = new MemberDomain();
+        domain.email = dto.getEmail();
+        domain.password = dto.getPassword();
+        domain.userName = dto.getUserName();
+        domain.companyName = dto.getCompanyName();
+        domain.role = dto.getRole() != null ? dto.getRole() : Role.COMPANY;
+        return domain;
     }
 }
