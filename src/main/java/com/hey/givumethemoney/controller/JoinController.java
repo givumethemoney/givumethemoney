@@ -1,6 +1,7 @@
 package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.dto.MemberDTO;
+import com.hey.givumethemoney.jwt.JWTUtil;
 import com.hey.givumethemoney.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -23,20 +24,27 @@ public class JoinController {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
 
-    // 회원가입 폼
+    // 회원가입 화면 반환
     @GetMapping("/join")
-    public String joinForm(Model model, HttpServletRequest request) {
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-        model.addAttribute("csrfToken", csrfToken.getToken());
+    public String joinForm() {
         return "join";
     }
+
+    // 회원가입 폼
+//    @PostMapping("/join")
+//    public String joinForm(Model model, HttpServletRequest request) {
+//        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
+//        model.addAttribute("csrfToken", csrfToken.getToken());
+//        return "join";
+//    }
 
     // 회원가입 처리
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute MemberDTO memberDTO, BindingResult bindingResult) {
         //유효성 검사에서 오류가 발생한 경우
-        if(bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             //회원가입 페이지로 리턴
             return "join";
         }

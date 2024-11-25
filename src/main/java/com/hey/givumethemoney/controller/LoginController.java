@@ -14,38 +14,54 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
-@RequestMapping("/auth")
 public class LoginController {
 
     private final MemberService memberService;
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
 
-    // 로그인 폼
+    // 로그인 화면 반환
     @GetMapping("/login")
+    public String loginForm() {
+        return "login";
+    }
+
+    // 로그인 폼 처리
+    @PostMapping("/login")
+    @ResponseBody
     public ResponseEntity<?> login(@RequestParam("email") String email,
                                    @RequestParam("password") String password) {
-        // 사용자 조회
-        var memberDomain = memberService.findByEmail(email);
 
-        // 비밀번호 검증
-        if (!passwordEncoder.matches(password, memberDomain.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        try {
+            // 사용자 조회
+            var memberDomain = memberService.findByEmail(email);
+
+            // 비밀번호 검증
+            if (!passwordEncoder.matches(password, memberDomain.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            }
+
+            // JWT 생성
+            String token = jwtUtil.createJwt(email, memberDomain.getRole().toString(), 60 * 60 * 10L);
+
+            // JWT 반환
+            return ResponseEntity.ok()
+                    .header("Authorization", "Bearer " + token)
+                    .body("Login successful");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed: " + e.getMessage());
         }
-
-        // JWT 생성
-        String token = jwtUtil.createJwt(email, memberDomain.getRole().toString(), 60 * 60 * 10L);
-
-        // JWT 반환
-        return ResponseEntity.ok().header("Authorization", "Bearer " + token).body("Login successful");
     }
 
     // 로그아웃 처리
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
+    public ResponseEntity<Void> logout(HttpSession session) {
         session.invalidate(); // 세션 무효화
-        return "redirect:/"; // 로그아웃 후 메인 페이지로 리다이렉트
+        return ResponseEntity.status(HttpStatus.FOUND) // HTTP 302 리다이렉트
+                .header("Location", "/") // 메인 페이지로 리다이렉트
+                .build();
     }
 }
+
