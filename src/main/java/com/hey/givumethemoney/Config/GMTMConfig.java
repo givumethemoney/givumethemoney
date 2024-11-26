@@ -19,7 +19,7 @@ public class GMTMConfig {
     private final JPAPaymentsRepository paymentsRepository;
     private final JPAInquiryRepository inquiryRepository;
     private final NaverOCRRepository naverOCRRepository;
-    private final S3UploadService s3UploadService;
+    private final S3Repository s3Repository;
 
     @Bean
     public DonationService donationService() {
@@ -37,8 +37,13 @@ public class GMTMConfig {
     }
 
     @Bean
+    public S3Service s3Service() {
+        return new S3Service(s3Repository);
+    }
+
+    @Bean
     public ReceiptService receiptService() {
-        return new ReceiptService(receiptRepository, s3UploadService);
+        return new ReceiptService(receiptRepository, s3Repository);
     }
 
     @Bean
@@ -53,10 +58,10 @@ public class GMTMConfig {
 
     @Bean
     public NaverOCRService naverOCRService() {
-        return new NaverOCRService(naverOCRRepository, imageRepository);
+        return new NaverOCRService(naverOCRRepository, receiptRepository);
     }
 
-    @Autowired GMTMConfig(DonationRepository donationRepository,
+   GMTMConfig(DonationRepository donationRepository,
                           WaitingDonationRepository waitingDonationRepository,
                           ImageRepository imageRepository,
                           ProductRepository productRepository,
@@ -64,7 +69,7 @@ public class GMTMConfig {
                           JPAPaymentsRepository paymentsRepository,
                           JPAInquiryRepository inquiryRepository,
                           NaverOCRRepository naverOCRRepository,
-                          S3UploadService s3UploadService
+                          S3Repository s3Repository
                           )
     {
         this.donationRepository = donationRepository;
@@ -75,6 +80,6 @@ public class GMTMConfig {
         this.paymentsRepository = paymentsRepository;
         this.inquiryRepository = inquiryRepository;
         this.naverOCRRepository = naverOCRRepository;
-        this.s3UploadService = s3UploadService;
+        this.s3Repository= s3Repository;
     }
 }
