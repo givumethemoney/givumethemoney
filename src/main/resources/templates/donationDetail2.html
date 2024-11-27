@@ -99,8 +99,8 @@
             </div>
             <progress class="progress" id="progress" th:value="${donation.getCurrentAmount() ?: 0}" min="0" th:max="${donation.getGoal() ?: 1}"></progress>
             <hr>
-            <div class="ranking">
-                <ul>
+            <div class="ranking" th:if="${top3Nicknames != null && !#lists.isEmpty(top3Nicknames)}">
+                <!-- <ul>
                     <li class="wreath">
                         <img src="/image/wreath_1_BG.png"/>
                         <p class="rank-number">2nd</p>
@@ -115,6 +115,15 @@
                         <img src="/image/wreath_1_BG.png"/>
                         <p class="rank-number">3rd</p>
                         <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                </ul> -->
+                <ul>
+                    <li class="wreath" th:each="entry, iterStat : ${top3Nicknames}">
+                        <img src="/image/wreath_1_BG.png" th:if="${iterStat.index == 0}"/>
+                        <img src="/image/wreath_1_BG.png" th:if="${iterStat.index == 1}"/>
+                        <img src="/image/wreath_1_BG.png" th:if="${iterStat.index == 2}"/>
+                        <p class="rank-number" th:text="${iterStat.index == 0 ? '1st' : iterStat.index == 1 ? '2nd' : '3rd'}"></p>
+                        <p class="rank-name" th:text="${entry != null ? entry.key : '없음'}"></p>
                     </li>
                 </ul>
             </div>
@@ -145,6 +154,29 @@
             </table>
         </th:block>
     </div>
+    <h1>상위 30개 닉네임</h1>
+    <div th:if="${topNicknames == null && #lists.isEmpty(topNicknames)}">
+        <p>현재 닉네임이 없습니다.</p>
+    </div>
+    <div th:if="${topNicknames != null && !#lists.isEmpty(topNicknames)}">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>닉네임</th>
+                    <th>기부 금액</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry, iterStat : ${topNicknames}">
+                    <td th:text="${iterStat.index + 1}">1</td> <!-- 순위 -->
+                    <td th:text="${entry.key}">닉네임</td> <!-- 닉네임 -->
+                    <td th:text="${entry.value}">금액</td> <!-- 금액 -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <!-- 기부 결제 버튼 -->
     <a class="button" th:href="@{/payments(donationId = ${donation.getId()})}">기부하기</a>
 

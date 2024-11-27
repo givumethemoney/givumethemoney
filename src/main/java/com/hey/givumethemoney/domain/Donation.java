@@ -1,5 +1,8 @@
 package com.hey.givumethemoney.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +18,9 @@ public class Donation extends DonationBase {
     @Id
     @Column(name = "id", nullable = false)
     protected Long id;
+
+    @OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
+    private List<NicknameDonation> nicknameDonations = new ArrayList<>();
 
     //@Builder
     public Donation(WaitingDonation waitingDonation) {
