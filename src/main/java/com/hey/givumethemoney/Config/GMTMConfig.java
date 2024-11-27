@@ -28,7 +28,7 @@ public class GMTMConfig {
 
     @Bean
     public ImageService imageService() {
-        return new ImageService(imageRepository);
+        return new ImageService(imageRepository, s3Repository);
     }
 
     @Bean

@@ -31,6 +31,7 @@ public class ReceiptService {
         this.s3Repository = s3Repository;
     }
 
+    @SuppressWarnings("null")
     public Long saveReceipts(MultipartFile receiptFiles, Long donationId) throws IOException {
         if (receiptFiles.isEmpty()) {
             return null;
@@ -54,15 +55,6 @@ public class ReceiptService {
                 .imageUrl(imageUrl)
                 .build();
 
-        // File folder = new File(fileDir);
-        // if (!folder.exists()) {
-        //     try {
-        //         folder.mkdir();
-        //     }
-        //     catch (Exception e) {
-        //         e.getStackTrace();
-        //     }
-        // }
         Receipt savedReceipt = receiptRepository.save(receipt);
 
         return savedReceipt.getId();

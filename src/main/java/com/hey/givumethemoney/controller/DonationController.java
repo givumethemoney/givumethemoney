@@ -6,6 +6,8 @@ import com.hey.givumethemoney.service.ImageService;
 import com.hey.givumethemoney.service.ProductService;
 import com.hey.givumethemoney.service.ReceiptService;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Controller
 public class DonationController {
 
@@ -25,6 +30,9 @@ public class DonationController {
     DonationService donationService;
     ImageService imageService;
     ProductService productService;
+    // 컨트롤러 클래스 내에 로거 추가
+    private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
+
 
     @Autowired
     public DonationController(ImageService imageService, DonationService donationService, ProductService productService) {
@@ -39,13 +47,13 @@ public class DonationController {
         Optional<Donation> donation = donationService.getDonationById(id);
         Optional<WaitingDonation> notConfirmed = donationService.getWaitingDonationById(id);
 
-        // List<Image> images = List.of();
+        List<Image> images = List.of();
         Long donationId = 0L;
 
         if (donation.isPresent() && notConfirmed.isEmpty()) {
             model.addAttribute("donation", donation.get());
-            // images = imageService.findImagesByDonationId(donation.get().getId());
-            donationId = donation.get().getId();
+            images = imageService.findImagesByDonationId(id);
+            donationId =donation.get().getId();
 
             if (donation.get().getEndDate().isBefore(LocalDate.now())) {
                 model.addAttribute("isEnded", true);
@@ -56,14 +64,29 @@ public class DonationController {
         }
         else if (notConfirmed.isPresent()) {
             model.addAttribute("donation", notConfirmed.get());
-            // images = imageService.findImagesByDonationId(notConfirmed.get().getId());
+            images = imageService.findImagesByDonationId(notConfirmed.get().getId());
             donationId = notConfirmed.get().getId();
 
             model.addAttribute("isEnded", false);
 
         }
-        
+        model.addAttribute("images", images);
 
+        List<Product> productList = productService.getProductsByDonationId(donationId);
+        model.addAttribute("productList", productList);
+
+        // 현재 기부 물품 개수
+        if (!productList.isEmpty()) {
+            Random random = new Random();
+            int randInt = random.nextInt(productList.size());
+
+            model.addAttribute("random", randInt);
+        } else {
+            model.addAttribute("random", -1); // -1은 유효하지 않은 인덱스를 의미
+        }
+
+        // 모델에 들어있는 데이터 확인
+        logger.info("Model contains: {}", model.asMap());
 
         return "donationDetail2";
     }

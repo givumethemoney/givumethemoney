@@ -26,3 +26,9 @@ public class DonationForm {
         this.descript = descript;
     }
 }
+
+// **
+// *
+// 이 파일은 지워도 되는건가......?????????
+// **
+// **

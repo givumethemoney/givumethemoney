@@ -2,6 +2,7 @@ package com.hey.givumethemoney.repository;
 
 import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.domain.Payments;
+import com.hey.givumethemoney.domain.Receipt;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,9 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Override
     Optional<Image> findById(Long id);  // 이미지 ID로 조회하는 메서드
 
+    @Override
+    <S extends Image> S save(S entity);
+    
     @Query("SELECT p FROM Image p WHERE p.donationId = :donationId")
     List<Image> findImagesByDonationId(@Param("donationId") Long donationId);
 }
