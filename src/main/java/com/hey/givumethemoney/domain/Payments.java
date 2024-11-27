@@ -73,11 +73,14 @@ public class Payments {
     @Column(name = "use_escrow")
     private boolean useEscrow;
 
+    @Column(name = "nick_name", nullable = true)
+    private String nickName;
+
 
     @Builder
     public Payments(String orderId, String currency, int amount, String orderName, String customerEmail,
                     String customerName, String customerMobilePhone, Long donationId,
-                    String paymentKey) {
+                    String paymentKey, String nickName) {
         this.orderId = orderId;
         this.currency = currency;
         this.amount = amount;
@@ -87,6 +90,7 @@ public class Payments {
         this.customerName = customerName;
         this.customerMobilePhone = customerMobilePhone;
         this.donationId = donationId;
+        this.nickName = nickName;
         // this.paymentStatus = paymentStatus;
     }
 

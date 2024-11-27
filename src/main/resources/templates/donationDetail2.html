@@ -17,7 +17,7 @@
 <div id="page-wrapper">
 
     <!-- 새로운 방식 -->
-    <header th:replace="layouts/header::header"></header>
+    <div th:replace="~{layouts/header::header}"></div>
 
 
     <div class="content-wrapper">
@@ -64,16 +64,40 @@
                 </tbody>
             </table>
             <hr>
+            <!-- 여기가 오류 
+             - productList random 접근.... 
+             그리고 이미지가 일단.. -->
+            <div id="product-count">
+                <!-- random 값이 유효할 때만 처리 -->
+                <p id="product-name">
+                    <!-- random 값이 유효할 경우 productName 출력, 아니면 기본 메시지 출력 -->
+                    <span th:if="${random != -1 and productList[random] != null}" th:text="${productList[random].productName}"></span>
+                    <span th:if="${random == -1 or productList[random] == null}">기부 품목 정보가 없습니다.</span>
+                </p>
+                <p>을(를) </p>
+                <p id="count">
+                    <!-- random 값이 유효할 경우, price에 대한 계산을 하여 인원수를 출력 -->
+                    <span th:if="${random != -1 and productList[random] != null}" th:text="${donation.getCurrentAmount() / productList[random].getProductPrice()}"></span>
+                    <span th:if="${random == -1 or productList[random] == null}">0</span>
+                </p>
+                <p> 명에게 선물할 수 있습니다.</p>
+            </div>
             
+            
+            
+            <div id="product-count" th:if="${productList == null or productList.isEmpty()}">
+                <p>현재 기부 물품이 없습니다.</p>
+            </div>
             
             <p id="current-percent" hidden="hidden">현재 모금 진행률</p>
+
             <div class="align-right">
-                <p class="amount money2 current" th:text="${donation.getCurrentAmount()}"></p>
+                <p class="amount money2 current" th:text="${donation.getCurrentAmount() ?: '진행 중인 금액이 없습니다.'}"></p>
                 <p class="amount"> / </p>
-                <p class="amount money2" th:text="${donation.getGoal()}"></p>
+                <p class="amount money2" th:text="${donation.getGoal() ?: '목표 금액이 없습니다.'}"></p>
                 <p class="amount"> 원</p>
             </div>
-            <progress class="progress" id="progress" th:value="${donation.getCurrentAmount()}" min="0" th:max="${donation.getGoal()}"></progress>
+            <progress class="progress" id="progress" th:value="${donation.getCurrentAmount() ?: 0}" min="0" th:max="${donation.getGoal() ?: 1}"></progress>
             <hr>
             <div class="ranking">
                 <ul>
@@ -97,26 +121,26 @@
             <hr>
             <table>
                 <tbody>
-                <!-- <tr th:each="i : ${images}">
-                    <th hidden="hidden">이미지</th>
-                    <td><img th:src="|/images/${i.getId()}|"/></td>
-                </tr> -->
-                <tr>
-                    <th hidden="hidden">설명</th>
-                    <td th:text="${donation.getDescription()}"></td>
-                </tr>
-                <!-- 추가 행은 여기서부터 작성 -->
+                    <tr th:each="i : ${images}">
+                        <th hidden="hidden">이미지</th>
+                        <td><img th:src="@{${i.getImgUrl() ?: '/images/default-image.png'}}"/></td>
+                    </tr>
+                    <tr>
+                        <th hidden="hidden">설명</th>
+                        <td th:text="${donation.getDescription() ?: '설명이 없습니다.'}"></td>
+                    </tr>
+                    <!-- 추가 행은 여기서부터 작성 -->
                 </tbody>
             </table>
             <hr>
             <table id="product-list">
                 <tbody>
-                <tr>
-                    <th>기부 품목 목록</th>
-                </tr>
-                <!-- <tr th:each="p : ${productList}">
-                    <td th:text="${p.getProductName()}"></td>
-                </tr> -->
+                    <tr>
+                        <th>기부 품목 목록</th>
+                    </tr>
+                    <tr th:each="p : ${productList}">
+                        <td th:text="${p.getProductName() ?: '품목명이 없습니다.'}"></td>
+                    </tr>
                 </tbody>
             </table>
         </th:block>

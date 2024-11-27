@@ -1,6 +1,7 @@
 package com.hey.givumethemoney.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class WaitingDonation extends DonationBase {
     protected Long id;
 
     @Column(name = "is_rejected")
+    @Builder.Default 
     protected boolean isRejected = false;
 
     @Column(name="rejection_reason")

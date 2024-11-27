@@ -52,6 +52,11 @@
               <input type="text" name="customAmount" placeholder="직접 입력" aria-label="Custom Amount">
           </div>
 
+          <!-- 닉네임 입력받기 -->
+          <div class="custom-amount">
+            <input type="text" name="nickName" placeholder="(선택)기부 닉네임" aria-label="Nick Name">
+          </div>
+
           <!-- 실제 전송될 금액을 저장하는 숨겨진 input -->
           <input type="hidden" name="amount" id="selectedAmount" value="">
           <input type="hidden" name="donationId" id="donationId" th:value="${donationId}">

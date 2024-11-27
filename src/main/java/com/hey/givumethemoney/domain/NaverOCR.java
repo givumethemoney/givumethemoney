@@ -1,20 +1,22 @@
 package com.hey.givumethemoney.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "image")
-public class Image implements Serializable {
-
+@Table(name = "ocrResult")
+public class NaverOCR {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,27 +27,18 @@ public class Image implements Serializable {
     @Column(name = "saved_name", nullable = false)
     private String savedName;
 
-    @Column(name = "imgUrl", nullable = false)
-    private String imgUrl;
-
-    // @Column(name = "thumb_path", nullable = true)
-    // private String thumbPath;
+    @Column(name = "saved_path", nullable = false)
+    private String savedPath;
 
     @Column(name = "donation_id", nullable = false)
     private Long donationId;
 
     @Builder
-    public Image(Long id, String originName, String savedName, String imgUrl, Long donationId) {
+    public NaverOCR(Long id, String originName, String savedName, String savedPath, Long donationId) {
         this.id = id;
         this.originName = originName;
         this.savedName = savedName;
-        this.imgUrl = imgUrl;
-        // this.thumbPath = thumbPath;
+        this.savedPath = savedPath;
         this.donationId = donationId;
     }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
 }

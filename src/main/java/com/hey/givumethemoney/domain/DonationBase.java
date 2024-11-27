@@ -1,6 +1,7 @@
 package com.hey.givumethemoney.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,6 +41,7 @@ public abstract class DonationBase {
     protected String enterName;
 
     @Column(name = "is_confirmed", nullable = false)
+    @Builder.Default 
     protected boolean isConfirmed = false;
 
     @Column(name = "user_id", nullable = false)

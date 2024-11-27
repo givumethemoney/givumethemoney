@@ -58,6 +58,10 @@
     margin-bottom: 0px;
 }
 
+.receipts {
+    width: 500px;
+}
+
 @media screen and (max-width: 1280px) {
 
     #donation-title {

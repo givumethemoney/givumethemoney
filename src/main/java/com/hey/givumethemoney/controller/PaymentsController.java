@@ -87,16 +87,18 @@ public class PaymentsController {
         @RequestParam(name = "amount", required = false) Integer amount,
         @RequestParam(name = "customAmount", required = false) Integer customAmount,
         @RequestParam(name = "donationId") Long dontaionId,
+        @RequestParam(name = "nickName", required = false) String nickName,
         Model model
     ) {
-        System.out.println("amount: " + amount);
-        System.out.println("coustomAmount: " + customAmount);
+        // System.out.println("amount: " + amount);
+        // System.out.println("coustomAmount: " + customAmount);
         int finalAmount = (customAmount != null) ? customAmount : amount;
-        System.out.println("finalAmount: " + finalAmount);
+        // System.out.println("finalAmount: " + finalAmount);
 
         Payments payment = new Payments();
         payment.setAmount(finalAmount);
         payment.setDonationId(dontaionId);
+        payment.setNickName(nickName);
         model.addAttribute("payment", payment);
         
         // System.out.println("\n\n최종 금액: " + finalAmount);
