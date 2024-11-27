@@ -3,6 +3,7 @@ package com.hey.givumethemoney.controller;
 import com.hey.givumethemoney.domain.*;
 import com.hey.givumethemoney.service.DonationService;
 import com.hey.givumethemoney.service.ImageService;
+import com.hey.givumethemoney.service.PaymentsService;
 import com.hey.givumethemoney.service.ProductService;
 import com.hey.givumethemoney.service.ReceiptService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,15 +31,18 @@ public class DonationController {
     DonationService donationService;
     ImageService imageService;
     ProductService productService;
+    PaymentsService paymentsService;
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
 
 
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService, ProductService productService) {
+    public DonationController(ImageService imageService, DonationService donationService, 
+            ProductService productService, PaymentsService paymentsService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
+        this.paymentsService = paymentsService;
     }
 
     @GetMapping("/detail/{id}")
@@ -84,6 +88,21 @@ public class DonationController {
         } else {
             model.addAttribute("random", -1); // -1은 유효하지 않은 인덱스를 의미
         }
+
+
+        // 기부 닉네임 정보 불러오기
+        // 1. 닉네임을 배열에 저장
+        List<Payments> payments = paymentsService.findByDonationId(id);
+        List<String> nickNames = new ArrayList<>();
+        for (Payments payment: payments) {
+            if (payment.getNickName() != null) {
+                nickNames.add(payment.getNickName());
+            }
+        }
+        // 2. 닉네임 리스트 중 비슷하거나 같은 것끼리 분류!
+        // 이건 다른 컨트롤러 호출하기. 여기서 하면 응집도가 높아질듯
+
+
 
         // 모델에 들어있는 데이터 확인
         logger.info("Model contains: {}", model.asMap());
