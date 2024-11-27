@@ -20,10 +20,11 @@ public class GMTMConfig {
     private final JPAInquiryRepository inquiryRepository;
     private final NaverOCRRepository naverOCRRepository;
     private final S3Repository s3Repository;
+    private final NicknameDonationRepository nicknameDonationRepository;
 
     @Bean
     public DonationService donationService() {
-        return new DonationService(donationRepository, waitingDonationRepository);
+        return new DonationService(donationRepository, waitingDonationRepository, nicknameDonationRepository);
     }
 
     @Bean
@@ -69,7 +70,8 @@ public class GMTMConfig {
                           JPAPaymentsRepository paymentsRepository,
                           JPAInquiryRepository inquiryRepository,
                           NaverOCRRepository naverOCRRepository,
-                          S3Repository s3Repository
+                          S3Repository s3Repository,
+                          NicknameDonationRepository nicknameDonationRepository
                           )
     {
         this.donationRepository = donationRepository;
@@ -81,5 +83,6 @@ public class GMTMConfig {
         this.inquiryRepository = inquiryRepository;
         this.naverOCRRepository = naverOCRRepository;
         this.s3Repository= s3Repository;
+        this.nicknameDonationRepository = nicknameDonationRepository;
     }
 }

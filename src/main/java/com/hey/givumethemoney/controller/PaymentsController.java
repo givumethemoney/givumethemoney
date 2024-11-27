@@ -26,12 +26,14 @@ public class PaymentsController {
     
     PaymentsService paymentsService;
     DonationService donationService;
+    NicknameDonationService nicknameDonationService;
 
     // 생성자 주입
     @Autowired
-    public PaymentsController(PaymentsService paymentsService, DonationService donationService) {
+    public PaymentsController(PaymentsService paymentsService, DonationService donationService, NicknameDonationService nicknameDonationService) {
         this.paymentsService = paymentsService;
         this.donationService = donationService;
+        this.nicknameDonationService = nicknameDonationService;
     }
 
     @GetMapping("/payments")
@@ -86,25 +88,28 @@ public class PaymentsController {
     public String widget(
         @RequestParam(name = "amount", required = false) Integer amount,
         @RequestParam(name = "customAmount", required = false) Integer customAmount,
-        @RequestParam(name = "donationId") Long dontaionId,
+        @RequestParam(name = "donationId") Long donationId,
         @RequestParam(name = "nickName", required = false) String nickName,
         Model model
     ) {
-        // System.out.println("amount: " + amount);
-        // System.out.println("coustomAmount: " + customAmount);
-        int finalAmount = (customAmount != null) ? customAmount : amount;
-        // System.out.println("finalAmount: " + finalAmount);
+        Integer finalAmount = 0;
+        if (customAmount == null) {
+            finalAmount = amount;
+        } else if (amount == null) {
+            finalAmount = customAmount;
+        }
 
         Payments payment = new Payments();
         payment.setAmount(finalAmount);
-        payment.setDonationId(dontaionId);
-        payment.setNickName(nickName);
+        payment.setDonationId(donationId);
         model.addAttribute("payment", payment);
-        
-        // System.out.println("\n\n최종 금액: " + finalAmount);
-        // System.out.println("\n\n\nwidget.html로 넘어갑니다...\n\n\n");
 
-        Optional<Donation> donation = donationService.getDonationById(dontaionId);
+        if (nickName != null) {
+            payment.setNickName(nickName);
+            donationService.addNicknameDonation(donationId, nickName, finalAmount);
+        }
+
+        Optional<Donation> donation = donationService.getDonationById(donationId);
         if (donation.isPresent()) {
             model.addAttribute("donation", donation.get());
         }
@@ -119,36 +124,45 @@ public class PaymentsController {
         return paymentsService.savePayments(payment);
     }
 
-    // 결제 금액 더하기
-    private void addAmount(Long donationId, int amount) {
-        Optional<Donation> donation = donationService.getDonationById(donationId);
-
-        if (donation.isPresent()) {
-            donation.get().setCurrentAmount(donation.get().getCurrentAmount() + amount);
-            donation.get().setParticipant(donation.get().getParticipant() + 1);
+    // 금액, 참여자 수 업데이트
+    public void addToDonation(Long donationId, int amount) {
+        Optional<Donation> donationOptional = donationService.getDonationById(donationId);
+        if (donationOptional.isPresent()) {
+            Donation donation = donationOptional.get();
+            donation.setCurrentAmount(donation.getCurrentAmount() + amount); // current_amount 증가
+            donation.setParticipant(donation.getParticipant() + 1); // participant 증가
+            donationService.saveDonation(donation); // 변경된 금액을 저장
+        } else {
+            throw new RuntimeException("Donation not found with id " + donationId);
         }
     }
 
     @GetMapping("/success")
-    // paymentType=NORMAL
-    // orderId=UwWzfop68Q-vW68WqF23b
-    // paymentKey=tgen_202410211645296hdg0
-    // amount=50000
     public String success (
         @RequestParam(name = "paymentKey") String paymentKey, 
         @RequestParam(name = "amount") int amount, 
         @RequestParam(name = "orderId") String orderId, 
         @RequestParam(name = "paymentType", required = false) String paymentType, // paymentType은 OPTIONAL하게 처리
-        @RequestParam(name = "donationId") Long dontaionId,
+        @RequestParam(name = "donationId") Long donationId,
         Model model
     ) {
         if (paymentType == null) {
             paymentType = "NORMAL";
         }
-        // 여기서 금액이 더해지게 하기
-        addAmount(dontaionId, amount);
-        model.addAttribute("donationId", dontaionId);
+        // amount 값을 로그로 출력해서 제대로 들어오는지 확인
+        System.out.println("Received amount: " + amount);
 
+
+        // 여기서 금액이 더해지게 하기
+        addToDonation(donationId, amount);
+        model.addAttribute("donationId", donationId);
+        // Optional<Donation> donation = donationService.getDonationById(dontaionId);
+        // 닉네임이 실제로 반영되도록(결제 상태를 true로 수정)
+        List<NicknameDonation> nicknameDonations = nicknameDonationService.findByDonationId(donationId);
+        for (NicknameDonation nicknameDonation : nicknameDonations) {
+            nicknameDonation.setStatus(true);
+        }
+        
         return "success";
     }
 
