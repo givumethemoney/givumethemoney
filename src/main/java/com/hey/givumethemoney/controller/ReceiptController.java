@@ -31,7 +31,9 @@ public class ReceiptController {
     }
 
     @PostMapping("/receipt/submit")
-    public String submitReceipt(@RequestParam(value = "receipt", required = false) List<MultipartFile> files, @RequestParam(value = "donationId", required = false) Long donationId) throws IOException {
+    public String submitReceipt(@RequestParam(value = "receipt", required = false) List<MultipartFile> files,
+                                @RequestParam(value = "donationId", required = false) Long donationId,
+                                Model model) throws IOException {
         for (MultipartFile file : files) {
             if (receiptService.saveReceipts(file, donationId) == null) {
                 // 이미지 확장자 외 파일 오류
@@ -40,8 +42,9 @@ public class ReceiptController {
                 return null;
             }
         }
+        model.addAttribute("donationId", donationId);
 
-        return null;
+        return "close";
     }
 
     @GetMapping("receiptList/{donationId}")
