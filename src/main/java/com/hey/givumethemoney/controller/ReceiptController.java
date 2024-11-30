@@ -36,7 +36,9 @@ public class ReceiptController {
     }
 
     @PostMapping("/receipt/submit")
-    public String submitReceipt(@RequestParam(value = "receipt", required = false) List<MultipartFile> files, @RequestParam(value = "donationId", required = false) Long donationId) throws IOException {
+    public String submitReceipt(@RequestParam(value = "receipt", required = false) List<MultipartFile> files,
+                                @RequestParam(value = "donationId", required = false) Long donationId,
+                                Model model) throws IOException {
         for (MultipartFile file : files) {
             if (receiptService.saveReceipts(file, donationId) == null) {
                 // 이미지 확장자 외 파일 오류
@@ -45,14 +47,9 @@ public class ReceiptController {
                 return null;
             }
         }
-
-        return "redirect:/receipt/closePopup?donationId=" + donationId;
-    }
-
-    @GetMapping("/receipt/closePopup")
-    public String closePopup(@RequestParam Long donationId, Model model) {
         model.addAttribute("donationId", donationId);
-        return "closePopup";  // JavaScript를 포함한 HTML 페이지로 리턴
+
+        return "close";
     }
 
     @GetMapping("receiptList/{donationId}")
