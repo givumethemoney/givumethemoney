@@ -46,6 +46,9 @@ public class LoginController {
             // JWT 생성
             String token = jwtUtil.createJwt(email, memberDomain.getRole().toString(), 60 * 60 * 10L);
 
+            // 역할에 따라 리다이렉션 URL 설정
+            String redirectUrl = memberDomain.getRole().toString().equals("ROLE_ADMIN") ? "/admin" : "/company";
+
             // JWT 반환
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + token)
@@ -64,4 +67,3 @@ public class LoginController {
                 .build();
     }
 }
-

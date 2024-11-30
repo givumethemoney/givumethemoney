@@ -32,14 +32,6 @@ public class JoinController {
         return "join";
     }
 
-    // 회원가입 폼
-//    @PostMapping("/join")
-//    public String joinForm(Model model, HttpServletRequest request) {
-//        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-//        model.addAttribute("csrfToken", csrfToken.getToken());
-//        return "join";
-//    }
-
     // 회원가입 처리
     @PostMapping("/join")
     public String join(@Valid @ModelAttribute MemberDTO memberDTO, BindingResult bindingResult) {

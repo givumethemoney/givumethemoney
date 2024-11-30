@@ -47,7 +47,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(email, password, null);
-            System.out.println("Principal during token creation: " + authToken.getPrincipal());
+//            System.out.println("Principal during token creation: " + authToken.getPrincipal());
             return authenticationManager.authenticate(authToken);
         } catch (Exception e) {
             throw new AuthenticationException("Authentication failed: " + e.getMessage()) {};
@@ -59,11 +59,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             HttpServletRequest request, HttpServletResponse response,
             FilterChain chain, Authentication authentication) {
 
-        //email 추출
+        //email, role 추출
         String email = authentication.getName();
-        System.out.println("Principal: " + authentication.getPrincipal());
-
-        //roel 추출
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(auth -> auth.getAuthority())
@@ -71,13 +68,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //JWT 생성
         String token = jwtUtil.createJwt(email, role, 60 * 60 * 10L);
-//        System.out.println("Creating JWT with email: " + email);
 
-        // 응답 데이터 작성
+        // 로그 추가
+        System.out.println("Authentication successful for: " + email + " with role: " + role);
+
+        // 역할에 따라 리다이렉션 설정
         try {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"token\": \"" + token + "\", \"email\": \"" + email + "\", \"role\": \"" + role + "\"}");
+            response.setHeader("Authorization", "Bearer " + token);
+            String redirectUrl = "ROLE_ADMIN".equals(role) ? "/admin" : "/company";
+            System.out.println("Redirecting to: " + redirectUrl);
+            response.sendRedirect(redirectUrl);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/company").hasRole("COMPANY")
+                        .requestMatchers("/company").hasAnyAuthority("COMPANY")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
@@ -63,37 +63,3 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
-
-
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/join", "/login", "/", "/css/**", "/js/**", "/images/**").permitAll()
-//                        .requestMatchers("/admin").hasRole("ADMIN")
-//                        .requestMatchers("/company").hasRole("COMPANY")
-//                        .anyRequest().authenticated()
-//                )
-//                .addFilterBefore(new LoginFilter(authenticationManager(http), jwtUtil, memberRepository, passwordEncoder), UsernamePasswordAuthenticationFilter.class) // 로그인 필터 등록
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // JWT 토큰 검증 필터 등록
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                );
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-//        return http.getSharedObject(AuthenticationConfiguration.class).getAuthenticationManager();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(); // 비밀번호 암호화 방식
-//    }
-//}
-//
