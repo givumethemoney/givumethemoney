@@ -1,14 +1,10 @@
 package com.hey.givumethemoney.service;
 
-import com.hey.givumethemoney.dto.CustomUserDetails;
 import com.hey.givumethemoney.dto.MemberDTO;
 import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

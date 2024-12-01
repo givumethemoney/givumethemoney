@@ -3,9 +3,11 @@ package com.hey.givumethemoney.domain;
 import com.hey.givumethemoney.dto.MemberDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "company")
 public class MemberDomain {
 

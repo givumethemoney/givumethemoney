@@ -7,16 +7,18 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.hey.givumethemoney.domain.Role;
+
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
 public class JWTUtil {
+    // JWT 서명 및 검증에 사용되는 비밀 키
     private final SecretKey secretKey;
 
     public JWTUtil(@Value("${jwt.secret}") String secret) {
-        System.out.println("JWT_SECRET: " + secret); // 로그 출력
         if (secret == null || secret.length() < 32) {
             throw new IllegalArgumentException("JWT secret key must be at least 32 characters long");
         }
@@ -24,18 +26,28 @@ public class JWTUtil {
     }
 
     public String createJwt(String email, String role, Long expiredMs) {
-        if (expiredMs == null) {
-            expiredMs = 1000L * 60 * 60 * 10; // 기본 10시간
+        try {
+            if (expiredMs == null) {
+                expiredMs = 1000L * 60 * 60 * 10; // 기본 10시간
+            }
+            System.out.println("JWT 생성 시작");
+            String jwt = Jwts.builder()
+                    .claim("email", email)
+                    .claim("role", role)
+                    .setIssuedAt(new Date(System.currentTimeMillis())) // 발급 시간
+                    .setExpiration(new Date(System.currentTimeMillis() + expiredMs)) // 만료 시간
+                    .signWith(secretKey)
+                    .compact();
+            System.out.println("JWT 생성 성공: " + jwt);
+            return jwt;
+        } catch (Exception e) {
+            System.out.println("JWT 생성 중 예외 발생: " + e.getMessage());
+            return null;
         }
-        return Jwts.builder()
-                .claim("email", email)
-                .claim("role", role)
-                .setIssuedAt(new Date(System.currentTimeMillis())) // 발급 시간
-                .setExpiration(new Date(System.currentTimeMillis() + expiredMs)) // 만료 시간
-                .signWith(secretKey)
-                .compact();
     }
+    
 
+    // JWT를 검증하여 유효한 경우 Claims를 반환
     public Claims validateJwt(String token) {
         try {
             return Jwts.parserBuilder()
@@ -54,10 +66,12 @@ public class JWTUtil {
         return claims.get("email", String.class);
     }
 
-    public String getRole(String token) {
+    public Role getRole(String token) {
         Claims claims = validateJwt(token);
-        return claims.get("role", String.class); // ROLE_ 없이 반환
+        String roleString = claims.get("role", String.class);
+        return Role.valueOf(roleString); // 문자열을 Enum으로 변환
     }
+    
 
     public boolean isExpired(String token) {
         Claims claims = validateJwt(token);
