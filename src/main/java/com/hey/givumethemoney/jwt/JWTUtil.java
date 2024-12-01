@@ -75,9 +75,9 @@ public class JWTUtil {
 
     public boolean isExpired(String token) {
         Claims claims = validateJwt(token);
-        System.out.println("Claims: " + claims);
-        System.out.println("Expiration time from token: " + claims.getExpiration());
-        System.out.println("Current time: " + new Date());
+//        System.out.println("Claims: " + claims);
+//        System.out.println("Expiration time from token: " + claims.getExpiration());
+//        System.out.println("Current time: " + new Date());
 
         Date expiration = claims.getExpiration();
 

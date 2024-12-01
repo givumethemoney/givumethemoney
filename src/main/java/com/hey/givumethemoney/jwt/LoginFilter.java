@@ -57,7 +57,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(email, password, null);
-            System.out.println("Principal during token creation: " + authToken.getPrincipal());
+//            System.out.println("Principal during token creation: " + authToken.getPrincipal());
             return authenticationManager.authenticate(authToken);
         } catch (Exception e) {
             throw new AuthenticationException("Authentication failed: " + e.getMessage()) {};
@@ -73,9 +73,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //email 추출
         String email = authentication.getName();
-        System.out.println("Principal: " + authentication.getPrincipal());
-
-        //roel 추출
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(auth -> auth.getAuthority())
@@ -86,7 +83,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println("loginFilter [successfulAuthentication]: jwt 토큰 생성을 위해 jwtUtil의 createJwt 호출\n\n");
         String token = jwtUtil.createJwt(email, role, 60 * 60 * 10L);
 
-        // 응답 데이터 작성
+        // 로그 추가
+        System.out.println("Authentication successful for: " + email + " with role: " + role);
+
+        // 역할에 따라 리다이렉션 설정
         try {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

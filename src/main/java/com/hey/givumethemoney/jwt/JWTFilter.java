@@ -38,6 +38,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        System.out.println("JWTFilter is processing request: " + request.getRequestURI());
 
         //request에서 Authorization 헤더를 찾음
         String authorization = request.getHeader("Authorization");
@@ -52,7 +53,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
         //Bearer 부분 제거 후 순수 토큰만 획득
         String token = authorization.split(" ")[1];
-        System.out.println("Token received: " + token);
 
         //토큰 소멸 시간 검증
         try {
@@ -88,16 +88,11 @@ public class JWTFilter extends OncePerRequestFilter {
             
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
+            System.out.println("Authentication set for: " + email + " with role: " + role);
         } catch (ExpiredJwtException e) {
             System.out.println("Token is expired: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token has expired. Please log in again.");
-            return;
-
-        } catch (Exception e) {
-            System.out.println("Error during token validation: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid token.");
+//            response.getWriter().write("Token has expired. Please log in again.");
             return;
         }
         filterChain.doFilter(request, response);
