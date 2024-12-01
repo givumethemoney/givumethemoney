@@ -57,7 +57,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(email, password, null);
-//            System.out.println("Principal during token creation: " + authToken.getPrincipal());
             return authenticationManager.authenticate(authToken);
         } catch (Exception e) {
             throw new AuthenticationException("Authentication failed: " + e.getMessage()) {};

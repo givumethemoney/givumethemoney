@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.hey.givumethemoney.dto.CustomUserDetails;
-import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.repository.MemberRepository;
 
 @Service

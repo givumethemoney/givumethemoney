@@ -2,7 +2,6 @@ package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
