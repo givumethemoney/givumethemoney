@@ -1,11 +1,7 @@
 package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.*;
-import com.hey.givumethemoney.service.DonationService;
-import com.hey.givumethemoney.service.ImageService;
-import com.hey.givumethemoney.service.PaymentsService;
-import com.hey.givumethemoney.service.ProductService;
-import com.hey.givumethemoney.service.ReceiptService;
+import com.hey.givumethemoney.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
@@ -32,18 +28,19 @@ public class DonationController {
     DonationService donationService;
     ImageService imageService;
     ProductService productService;
-    PaymentsService paymentsService;
+    MemberService memberService;
+    CustomUserService customUserService;
+
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
 
-
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService, 
-            ProductService productService, PaymentsService paymentsService) {
+    public DonationController(ImageService imageService, DonationService donationService, ProductService productService, MemberService memberService, CustomUserService customUserService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
-        this.paymentsService = paymentsService;
+        this.memberService = memberService;
+        this.customUserService = customUserService;
     }
 
     @GetMapping("/detail/{id}")
@@ -54,7 +51,11 @@ public class DonationController {
 
         List<Image> images = List.of();
 
-        // 승인된 기부인 경우
+        // 유저 정보 전달
+        String email = customUserService.getEmail();
+        MemberDomain member = memberService.findByEmail(email);
+        model.addAttribute("user", member);
+
         if (donation.isPresent() && notConfirmed.isEmpty()) {
             model.addAttribute("donation", donation.get());
 
@@ -111,6 +112,14 @@ public class DonationController {
 
     @GetMapping("/application/confirm/{id}")
     public String confirm(@PathVariable Long id, Model model) {
+
+        if (getUserType() != Role.ADMIN) {
+            model.addAttribute("msg", "관리자가 아닙니다.");
+            model.addAttribute("url", "/");
+
+            return "alert";
+        }
+
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
 
         if (donation.isPresent()) {
@@ -126,6 +135,14 @@ public class DonationController {
 
     @PostMapping("/application/reject/{id}")
     public String reject(@PathVariable Long id, @RequestParam(value = "rejectionReason") String rejectionReason, Model model) {
+        
+        if (getUserType() != Role.ADMIN) {
+            model.addAttribute("msg", "관리자가 아닙니다.");
+            model.addAttribute("url", "/");
+
+            return "alert";
+        }
+
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
 
         if (donation.isPresent()) {
@@ -138,12 +155,28 @@ public class DonationController {
     }
 
     @GetMapping("/application/agree")
-    public String agree() {
+    public String agree(Model model) {
+
+        if (getUserType() != Role.ADMIN && getUserType() != Role.COMPANY) {
+            model.addAttribute("msg", "로그인이 필요합니다.");
+            model.addAttribute("url", "/login");
+
+            return "alert";
+        }
+
         return "agree";
     }
 
     @GetMapping("/application/write")
     public String application(@RequestParam(value="chk-all", required = false) boolean checkAll, Model model) {
+
+        if (getUserType() != Role.ADMIN && getUserType() != Role.COMPANY) {
+            model.addAttribute("msg", "로그인이 필요합니다.");
+            model.addAttribute("url", "/login");
+
+            return "alert";
+        }
+
         if (checkAll) {
             model.addAttribute("isEdit", false);
             return "donationForm";
@@ -159,7 +192,16 @@ public class DonationController {
 
     @GetMapping("/application/edit")
     public String editingApplication(@RequestParam(value="id") Long id, Model model) {
+
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
+
+        // 유저id 일치한지 확인하는 것으로 수정
+        if (customUserService.getEmail() != donation.get().getUserId()) {
+            model.addAttribute("msg", "해당 기업이 아닙니다.");
+            model.addAttribute("url", "/");
+
+            return "alert";
+        }
 
         if (donation.isPresent()) {
             model.addAttribute("donation", donation.get());
@@ -186,6 +228,7 @@ public class DonationController {
             @RequestParam(value = "productName") List<String> productName,
             @RequestParam(value = "productPrice") List<Long> productPrice,
             DonationForm form) throws IOException {
+        // 유저 id 수정
         WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), "test");
         donationService.saveWaitingDonation(waitingDonation);
 
@@ -276,45 +319,96 @@ public class DonationController {
         return "redirect:/admin/applicationList/1";
     }
 
-    // user 테이블 생성되면 userType 받아서 applicationList 두 개 합치기
-    @GetMapping("/admin/applicationList/{page}")
-    public String confirmApplicationList(@PathVariable int page, Model model) {
-        List<WaitingDonation> waitingDonations = donationService.getWaitingDonations();
+//    // user 테이블 생성되면 userType 받아서 applicationList 두 개 합치기
+//    @GetMapping("/admin/applicationList/{page}")
+//    public String confirmApplicationList(@PathVariable int page, Model model) {
+//        List<WaitingDonation> waitingDonations = donationService.getWaitingDonations();
+//
+//        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
+//        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+//            if (i >= waitingDonations.size()) {
+//                break;
+//            }
+//            waitingDonationsByPage.add(waitingDonations.get(i));
+//        }
+//
+//        model.addAttribute("isEnded", false);
+//        model.addAttribute("donations", waitingDonationsByPage);
+//
+//        return "applicationList";
+//    }
+//
+//    @GetMapping("/enterprise/applicationList/{page}")
+//    public String showApplicationList(@PathVariable int page, Model model) {
+//        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+//        String currentUserId = "Test";
+//
+//        List<WaitingDonation> waitingDonations = donationService.getWaitingDonationsByUserId(currentUserId);
+//
+//        // 보여질 리스트
+//        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
+//        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+//            if (i >= waitingDonations.size()) {
+//                break;
+//            }
+//            waitingDonationsByPage.add(waitingDonations.get(i));
+//        }
+//
+//        model.addAttribute("donations", waitingDonationsByPage);
+//
+//        model.addAttribute("isEnded", false);
+//        return "applicationList";
+//    }
 
-        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
-            if (i >= waitingDonations.size()) {
-                break;
-            }
-            waitingDonationsByPage.add(waitingDonations.get(i));
-        }
-
-        model.addAttribute("isEnded", false);
-        model.addAttribute("donations", waitingDonationsByPage);
-
-        return "applicationList";
-    }
-
-    @GetMapping("/enterprise/applicationList/{page}")
+    @GetMapping("/applicationList/{page}")
     public String showApplicationList(@PathVariable int page, Model model) {
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = "Test";
+        // 홈에서 기부자에게 보여질 목록과 다른 목록임
 
-        List<WaitingDonation> waitingDonations = donationService.getWaitingDonationsByUserId(currentUserId);
-        
-        // 보여질 리스트
-        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
-            if (i >= waitingDonations.size()) {
-                break;
+        Role userType = getUserType();
+
+        if (userType == Role.ADMIN) {
+            List<WaitingDonation> waitingDonations = donationService.getWaitingDonations();
+
+            List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
+            for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+                if (i >= waitingDonations.size()) {
+                    break;
+                }
+                waitingDonationsByPage.add(waitingDonations.get(i));
             }
-            waitingDonationsByPage.add(waitingDonations.get(i));
+
+            model.addAttribute("isEnded", false);
+            model.addAttribute("donations", waitingDonationsByPage);
+
+            return "applicationList";
         }
+        else if (userType == Role.COMPANY) {
+            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+            String currentUserId = "Test";
 
-        model.addAttribute("donations", waitingDonationsByPage);
+            // 해당 기업이 작성한 목록으로 받아오기
+            List<WaitingDonation> waitingDonations = donationService.getWaitingDonationsByUserId(currentUserId);
 
-        model.addAttribute("isEnded", false);
-        return "applicationList";
+            // 보여질 리스트
+            List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
+            for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+                if (i >= waitingDonations.size()) {
+                    break;
+                }
+                waitingDonationsByPage.add(waitingDonations.get(i));
+            }
+
+            model.addAttribute("donations", waitingDonationsByPage);
+
+            model.addAttribute("isEnded", false);
+            return "applicationList";
+        }
+        else {
+            model.addAttribute("msg", "로그인이 필요합니다.");
+            model.addAttribute("url", "/login");
+
+            return "alert";
+        }
     }
 
     @GetMapping("/applicationList/end")
@@ -325,45 +419,49 @@ public class DonationController {
     // 마감된 기부 보기
     @GetMapping("/applicationList/end/{page}")
     public String showEndedApplicationList(@PathVariable int page, Model model) {
-        // 기업 사용자인지 확인
-        // 일반 유저면 로그인 or 오류 페이지 띄우기
 
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = "Test";
-
-        //List<Donation> donations = donationService.getDonationsByUserId(currentUserId);
-        // 테스트용
-        List<Donation> donations = donationService.getDonations();
+        List<Donation> donations;
 
         // 보여질 리스트
         List<Donation> donationsByPage = new ArrayList<>();
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
-            if (i >= donations.size()) {
-                break;
-            }
-            if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
-                donationsByPage.add(donations.get(i));
+
+        if (getUserType() == Role.COMPANY) {
+            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+            String currentUserId = "Test";
+
+            donations = donationService.getDonationsByUserId(currentUserId);
+
+            for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+                if (i >= donations.size()) {
+                    break;
+                }
+                if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
+                    donationsByPage.add(donations.get(i));
+                }
             }
         }
+        else {
+            // 전체 마감 목록
+            donations = donationService.getDonations();
+
+            for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+                if (i >= donations.size()) {
+                    break;
+                }
+                if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
+                    donationsByPage.add(donations.get(i));
+                }
+            }
+        }
+
         model.addAttribute("isEnded", true);
         model.addAttribute("donations", donationsByPage);
 
         return "applicationList";
+
     }
 
-
-    @GetMapping("/donation/complete")
-    public String donationComplete(
-            @RequestParam(value="id") Long id,
-            @RequestParam(value="value") int value) throws IOException {
-        Optional<Donation> donation = donationService.getDonationById(id);
-
-        if (donation.isPresent()) {
-            donation.get().setCurrentAmount(donation.get().getCurrentAmount() + value);
-            donation.get().setParticipant(donation.get().getParticipant() + 1);
-        }
-
-        // 기부 완료 페이지로 넘어감
-        return "redirect:/complete";
+    protected Role getUserType() {
+        return customUserService.getRole();
     }
 }
