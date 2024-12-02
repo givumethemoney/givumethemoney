@@ -106,7 +106,7 @@ public class DonationController {
         // 모델에 들어있는 데이터 확인
         // logger.info("Model contains: {}", model.asMap());
 
-        return "donationDetail2";
+        return "donationDetail";
     }
 
     @GetMapping("/application/confirm/{id}")

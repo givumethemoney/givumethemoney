@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "company")
+@Table(name = "member")
 public class MemberDomain {
 
     @Id

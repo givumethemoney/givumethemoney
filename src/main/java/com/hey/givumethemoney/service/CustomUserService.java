@@ -37,12 +37,8 @@ public class CustomUserService implements UserDetailsService {
     }
 
     public Role getRole() throws UsernameNotFoundException {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String userEmail = userDetails.getUsername();
-
-        MemberDomain member = memberService.findByEmail(userEmail);
-
-        return member.getRole();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ((CustomUserDetails)principal).getRole();
     }
 
     public String getEmail() throws UsernameNotFoundException {
