@@ -53,7 +53,7 @@ public class DonationController {
         // 유저 정보 전달
         String email = customUserService.getEmail();
         if (email.equals("anonymous")) {
-            model.addAttribute("user", "null");
+            model.addAttribute("user", null);
         }
         else {
             MemberDomain member = memberService.findByEmail(email);
@@ -61,6 +61,12 @@ public class DonationController {
         }
 
         if (donation.isPresent() && notConfirmed.isEmpty()) {
+            if (!email.equals(donation.get().getUserId()) && donation.get().getStartDate().isAfter(LocalDate.now())) {
+                model.addAttribute("msg", "준비 중인 기부입니다.");
+                model.addAttribute("url", "/");
+
+                return "alert";
+            }
             model.addAttribute("donation", donation.get());
 
             if (donation.get().getEndDate().isBefore(LocalDate.now())) {
@@ -86,6 +92,14 @@ public class DonationController {
         }
         // 아직 승인되지 않은 기부인 경우
         else if (notConfirmed.isPresent() && donation.isEmpty()) {
+            // 다른 사용자가 작성한 건 볼 수 없음
+            if (getUserType() == Role.ADMIN) {}
+            else if (!email.equals(notConfirmed.get().getUserId())) {
+                model.addAttribute("msg", "준비 중인 기부입니다.");
+                model.addAttribute("url", "/");
+
+                return "alert";
+            }
             model.addAttribute("donation", notConfirmed.get());
 
             model.addAttribute("isEnded", false);
@@ -200,7 +214,7 @@ public class DonationController {
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
 
         // 유저id 일치한지 확인하는 것으로 수정
-        if (customUserService.getEmail() != donation.get().getUserId()) {
+        if (!customUserService.getEmail().equals(donation.get().getUserId())) {
             model.addAttribute("msg", "해당 기업이 아닙니다.");
             model.addAttribute("url", "/");
 
@@ -233,7 +247,7 @@ public class DonationController {
             @RequestParam(value = "productPrice") List<Long> productPrice,
             DonationForm form) throws IOException {
         // 유저 id 수정
-        WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), "test");
+        WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), customUserService.getEmail());
         donationService.saveWaitingDonation(waitingDonation);
 
         for (MultipartFile file : files) {

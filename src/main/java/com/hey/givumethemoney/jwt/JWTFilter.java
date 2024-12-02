@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -48,7 +49,10 @@ public class JWTFilter extends OncePerRequestFilter {
                 request.getRequestURI().startsWith("/images") ||
                 request.getRequestURI().startsWith("/image") ||
                 request.getRequestURI().startsWith("/favicon.ico") ||
-                request.getRequestURI().startsWith("/detail/")) {
+                request.getRequestURI().startsWith("/payments") ||
+                request.getRequestURI().startsWith("/receipts") ||
+                request.getRequestURI().startsWith("/receiptList") ||
+                request.getRequestURI().startsWith("/detail")) {
                 System.out.println(request.getRequestURI());
                 filterChain.doFilter(request, response); // JWT 필터를 건너뛰고 다음 필터로 이동
                 return;

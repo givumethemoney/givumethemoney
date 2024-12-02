@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -44,9 +45,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 특정 URL은 인증 없이 접근 가능(permitAll())
                         .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/**", "/member", "/detail/*").permitAll()
+                        .requestMatchers("/payments", "/receipts/**", "/receiptList/*").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/company").hasRole("COMPANY")
+                        //.requestMatchers("/detail/**").anonymous()
                         // 그 외 모든 요청은 인증이 필요
                         .anyRequest().authenticated()
                 )
@@ -54,9 +55,9 @@ public class SecurityConfig {
                 // LoginFilter는 일반적으로 POST 요청만 처리하는 필터임
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 // JWTFilter: 요청에 포함된 JWT 토큰을 검증하고, 인증된 사용자 정보를 설정
-                .addFilterBefore(jwtFilter, LoginFilter.class)
-                // SessionCreationPolicy.STATELESS: 세션을 생성하거나 유지하지 않음
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        // SessionCreationPolicy.STATELESS: 세션을 생성하거나 유지하지 않음
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 )
                 // /login 페이지를 커스텀 로그인 페이지로 사용
                 // 이 페이지는 누구나 접근 가능

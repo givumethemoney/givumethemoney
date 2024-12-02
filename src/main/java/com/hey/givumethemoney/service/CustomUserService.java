@@ -2,6 +2,8 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Role;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,14 +40,21 @@ public class CustomUserService implements UserDetailsService {
 
     public Role getRole() throws UsernameNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ((CustomUserDetails)principal).getRole();
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails)principal).getRole();
+        }
+        else {
+            return Role.ANONYMOUS;
+        }
     }
 
     public String getEmail() throws UsernameNotFoundException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         if (principal instanceof CustomUserDetails) {
             return ((CustomUserDetails)principal).getEmail();
-        } else {
+        }
+        else {
             return "anonymous";
         }
     }
