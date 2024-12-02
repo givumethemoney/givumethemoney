@@ -71,7 +71,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println("로그인 필터의 successfulAuthentication 실행!!!\n\n\n");
 
         //email 추출
-        String email = authentication.getName();
+        String email = request.getParameter("email");
         String role = authentication.getAuthorities().stream()
                 .findFirst()
                 .map(auth -> auth.getAuthority())
