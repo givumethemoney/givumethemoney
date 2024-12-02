@@ -72,27 +72,29 @@ public class JWTFilter extends OncePerRequestFilter {
 
             String email = jwtUtil.getEmail(token);
             com.hey.givumethemoney.domain.Role role = jwtUtil.getRole(token);
+    
+            // 사용자 도메인 생성 및 설정
             MemberDomain member = new MemberDomain();
             member.setEmail(email);// String -> Enum 변환
             member.setRole(role);
+
+            // CustomUserDetails 생성
             CustomUserDetails customerUserDetails = new CustomUserDetails(member);
 
-
+            // 권한 생성 및 SecurityContext 설정
             String authority = "ROLE_" + role.name();
-            System.out.println("authority: " + authority);
-
-            // 인증 토큰 생성 후 SecurityContext에 설정
             Authentication authToken = new UsernamePasswordAuthenticationToken(
                 customerUserDetails,
+                null,
                 Collections.singletonList(new SimpleGrantedAuthority(authority)));
             
             SecurityContextHolder.getContext().setAuthentication(authToken);
-
             System.out.println("Authentication set for: " + email + " with role: " + role);
+
         } catch (ExpiredJwtException e) {
             System.out.println("Token is expired: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            response.getWriter().write("Token has expired. Please log in again.");
+            response.getWriter().write("Token has expired. Please log in again.");
             return;
         }
         filterChain.doFilter(request, response);

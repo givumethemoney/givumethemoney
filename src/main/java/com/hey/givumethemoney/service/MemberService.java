@@ -10,6 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @Primary //기본 UserDetailService로 사용
+// MemberService: 비즈니스 로직(회원가입, 사용자 조회 등)을 처리
+// 인증이 아닌, 애플리케이션 로직에서 사용자 정보를 다룰 때 사용
+// Spring Security와 관계없이 자유롭게 사용할 수 있음
 public class MemberService{
 
     private final MemberRepository memberRepository;

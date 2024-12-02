@@ -62,29 +62,21 @@ public class JWTUtil {
     }
 
     public String getEmail(String token) {
-        Claims claims = validateJwt(token);
-        return claims.get("email", String.class);
+        return validateJwt(token).getSubject();
     }
 
     public Role getRole(String token) {
-        Claims claims = validateJwt(token);
-        String roleString = claims.get("role", String.class);
-        return Role.valueOf(roleString); // 문자열을 Enum으로 변환
+        String role = (String) validateJwt(token).get("role");
+        return Role.valueOf(role); // 문자열을 Enum으로 변환
     }
     
 
     public boolean isExpired(String token) {
         Claims claims = validateJwt(token);
-//        System.out.println("Claims: " + claims);
-//        System.out.println("Expiration time from token: " + claims.getExpiration());
-//        System.out.println("Current time: " + new Date());
-
-        Date expiration = claims.getExpiration();
-
-        if (expiration == null) {
+        if (claims.getExpiration() == null) {
             System.out.println("Expiration date is null. Token is considered expired.");
             return true; // 만료로 간주
         }
-        return expiration.before(new Date());
+        return claims.getExpiration().before(new Date());
     }
 }
