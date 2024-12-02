@@ -40,11 +40,16 @@ public class JWTFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
             // 로그인, 회원가입 등의 URL은 JWT 필터를 실행하지 않도록 설정
-            if (request.getRequestURI().startsWith("/login") || 
+            if (request.getRequestURI().equals("/") ||
+                request.getRequestURI().startsWith("/login") ||
                 request.getRequestURI().startsWith("/join") ||
                 request.getRequestURI().startsWith("/css") ||
                 request.getRequestURI().startsWith("/js") ||
-                request.getRequestURI().startsWith("/images")) {
+                request.getRequestURI().startsWith("/images") ||
+                request.getRequestURI().startsWith("/image") ||
+                request.getRequestURI().startsWith("/favicon.ico") ||
+                request.getRequestURI().startsWith("/detail/")) {
+                System.out.println(request.getRequestURI());
                 filterChain.doFilter(request, response); // JWT 필터를 건너뛰고 다음 필터로 이동
                 return;
             }

@@ -52,8 +52,13 @@ public class DonationController {
 
         // 유저 정보 전달
         String email = customUserService.getEmail();
-        MemberDomain member = memberService.findByEmail(email);
-        model.addAttribute("user", member);
+        if (email.equals("anonymous")) {
+            model.addAttribute("user", "null");
+        }
+        else {
+            MemberDomain member = memberService.findByEmail(email);
+            model.addAttribute("user", member);
+        }
 
         if (donation.isPresent() && notConfirmed.isEmpty()) {
             model.addAttribute("donation", donation.get());

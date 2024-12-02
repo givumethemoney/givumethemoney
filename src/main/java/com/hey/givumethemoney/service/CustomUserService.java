@@ -42,7 +42,11 @@ public class CustomUserService implements UserDetailsService {
     }
 
     public String getEmail() throws UsernameNotFoundException {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUsername();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails)principal).getEmail();
+        } else {
+            return "anonymous";
+        }
     }
 }
