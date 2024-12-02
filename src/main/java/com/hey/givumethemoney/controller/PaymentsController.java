@@ -175,7 +175,6 @@ public class PaymentsController {
     }
 
     // 모든 결제 정보 조회
-    @GetMapping
     public List<Payments> getPayments() {
         return paymentsService.getPayments();
     }

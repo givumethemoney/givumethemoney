@@ -5,7 +5,10 @@ import com.hey.givumethemoney.repository.ImageRepository;
 import com.hey.givumethemoney.repository.S3Repository;
 
 import net.coobird.thumbnailator.Thumbnailator;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,14 +21,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Transactional
+@Service
 public class ImageService {
 
-    @Value("${image.dir}")
+    // @Value("${image.dir}")
     private String fileDir;
 
     private final ImageRepository imageRepository;
     private final S3Repository s3Repository;
 
+    @Autowired
     public ImageService(ImageRepository imageRepository,  S3Repository s3Repository) {
         this.imageRepository = imageRepository;
         this.s3Repository = s3Repository;

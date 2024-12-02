@@ -1,4 +1,4 @@
-package com.hey.givumethemoney.config;
+package com.hey.givumethemoney.Config;
 
 import com.hey.givumethemoney.jwt.JWTFilter;
 import com.hey.givumethemoney.jwt.JWTUtil;
