@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,6 +21,7 @@ public class Donation extends DonationBase {
     protected Long id;
 
     @OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<NicknameDonation> nicknameDonations = new ArrayList<>();
 
     //@Builder

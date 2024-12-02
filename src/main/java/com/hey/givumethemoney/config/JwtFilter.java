@@ -1,4 +1,4 @@
-package com.hey.givumethemoney.config;
+package com.hey.givumethemoney.Config;
 
 public class JwtFilter {
 

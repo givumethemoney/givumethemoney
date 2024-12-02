@@ -6,12 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@SuperBuilder
 public class NicknameDonation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class NicknameDonation {
     @Column(name = "payment_status")
     private boolean status = false; // 결제 상태
 
-    // getter/setter
+    @Builder
     public NicknameDonation(Donation donation, String nickname, int amount, boolean status) {
         this.donation = donation;
         this.nickname = nickname;

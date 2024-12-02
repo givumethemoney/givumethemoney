@@ -1,4 +1,4 @@
-package com.hey.givumethemoney.config;
+package com.hey.givumethemoney.Config;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
