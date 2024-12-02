@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GIVU ME THE MONEY</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+    <!-- <script src="auth.js"></script> -->
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <!--  header-->
+    <div th:replace="~{header :: header}"></div>
+
+    <!--navigation bar-->
+    <div th:replace="~{navBar :: navBar}"></div>
+
+    <!-- Slider -->
+    <div id="body-wrapper">
+        <div class="slider">
+            <div class="slides">
+                <a href="https://link1.com" class="slide">
+                    <img th:src="@{/images/pic01.jpg}" alt="Image 1">
+
+                </a>
+                <a href="https://link2.com" class="slide">
+                    <img th:src="@{/images/pic02.jpg}" alt="Image 2">
+                </a>
+                <a href="https://link3.com" class="slide">
+                    <img th:src="@{/images/pic03.jpg}" alt="Image 3">
+                </a>
+            </div>
+        </div>
+        <div class="givuing">
+            <h1 id="givuing-title"><a>진행중인 GIVU ❯</a></h1>
+        </div>
+        <div class="ending">
+            <h1 id="ending-title"><a>마감된 GIVU ❯</a></h1>
+
+        </div>
+    </div>
+    <!--    footer-->
+<!--    <div th:replace="footer :: footer"></div>-->
+
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/home.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+</body>
+
+</html>
