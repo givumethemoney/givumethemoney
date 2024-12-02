@@ -1,7 +1,8 @@
 package com.hey.givumethemoney.controller;
 
+import com.hey.givumethemoney.domain.OCRResult;
 import com.hey.givumethemoney.domain.Receipt;
-import com.hey.givumethemoney.service.ImageService;
+import com.hey.givumethemoney.service.NaverOCRService;
 import com.hey.givumethemoney.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +21,12 @@ import java.util.Optional;
 public class ReceiptController {
 
     ReceiptService receiptService;
+    NaverOCRService naverOCRService;
 
     @Autowired
-    public ReceiptController(ReceiptService receiptService) {
+    public ReceiptController(ReceiptService receiptService, NaverOCRService naverOCRService) {
         this.receiptService = receiptService;
+        this.naverOCRService = naverOCRService;
     }
 
     @GetMapping("/receiptPopup")
@@ -49,9 +54,17 @@ public class ReceiptController {
 
     @GetMapping("receiptList/{donationId}")
     public String receiptList(@PathVariable Long donationId, Model model) throws IOException {
-        List<Receipt> receipts = receiptService.findReceiptsByDonationId(donationId);
-
+        List<Receipt> receipts = receiptService.findByDonationId(donationId);
+        List<OCRResult> ocrResults = new ArrayList<>();
+        
+        // OCR 서비스에서 각 영수증에 대한 OCR 결과를 가져오기
+        for (Receipt r : receipts) {
+            List<OCRResult> result = naverOCRService.sendImageToOCR(Collections.singletonList(r));
+            ocrResults.addAll(result);
+        }
+        
         model.addAttribute("receipts", receipts);
+        model.addAttribute("ocrResults", ocrResults); // ocrResults 객체 배열 전달
 
         return "donationReceipt";
     }
@@ -62,7 +75,8 @@ public class ReceiptController {
     public UrlResource showReceipt(@PathVariable Long id, Model model) throws IOException {
         Optional<Receipt> receipt = receiptService.findReceiptById(id);
         if (receipt.isPresent()) {
-            return new UrlResource("file:" + receipt.get().getSavedPath());
+            String imageUrl = receipt.get().getImageUrl(); // S3에서 저장된 URL
+            return new UrlResource(imageUrl);
         }
         else {
             return null;

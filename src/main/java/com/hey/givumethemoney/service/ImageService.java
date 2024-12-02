@@ -2,6 +2,8 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.repository.ImageRepository;
+import com.hey.givumethemoney.repository.S3Repository;
+
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +24,14 @@ public class ImageService {
     private String fileDir;
 
     private final ImageRepository imageRepository;
+    private final S3Repository s3Repository;
 
-    public ImageService(ImageRepository imageRepository) {
+    public ImageService(ImageRepository imageRepository,  S3Repository s3Repository) {
         this.imageRepository = imageRepository;
+        this.s3Repository = s3Repository;
     }
 
+    @SuppressWarnings("null")
     public Long saveImages(MultipartFile imageFiles, Long donationId) throws IOException {
         if (imageFiles.isEmpty()) {
             return null;
@@ -37,33 +42,23 @@ public class ImageService {
 
         String extension = StringUtils.getFilenameExtension(imageFiles.getOriginalFilename());
         if (!(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("gif"))) {
-            return null;
+            throw new IllegalArgumentException("지원되지 않는 파일 형식입니다.");
         }
 
         String savedName = uuid + "." + extension;
-        String savedPath = fileDir + savedName;
-        String thumbPath = fileDir + "thumb_" + savedName;
+        String imgUrl = s3Repository.uploadFile(imageFiles);
+        // thumbPath가 뭐지?
+        // String thumbPath = fileDir + "thumb_" + savedName;
 
         Image image = Image.builder()
                 .originName(originName)
                 .savedName(savedName)
-                .savedPath(savedPath)
-                .thumbPath(thumbPath)
+                .imgUrl(imgUrl)
+                // .thumbPath(thumbPath)
                 .donationId(donationId)
                 .build();
 
-        File folder = new File(fileDir);
-        if (!folder.exists()) {
-            try {
-                folder.mkdir();
-            }
-            catch (Exception e) {
-                e.getStackTrace();
-            }
-        }
-
-        imageFiles.transferTo(new File(savedPath));
-        Thumbnailator.createThumbnail(new File(savedPath), new File(thumbPath), 200, 200);
+        // Thumbnailator.createThumbnail(new File(imageUrl), new File(thumbPath), 200, 200);
 
         Image savedImage = imageRepository.save(image);
 

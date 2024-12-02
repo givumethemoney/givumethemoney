@@ -1,4 +1,6 @@
 @import url("fontawesome-all.min.css");
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600");
+
 
 /*
 	Telephasic by HTML5 UP
@@ -66,7 +68,7 @@ input::-moz-focus-inner {
 
 input, select, textarea {
 	-moz-appearance: none;
-	/*-webkit-appearance: none; */
+	-webkit-appearance: none;
 	-ms-appearance: none;
 	appearance: none;
 }
@@ -87,7 +89,8 @@ input, select, textarea {
 
 	body {
 		background: #f5f7fa;
-        font-family: 'NanumSquareRound';
+		font-weight: 300;
+    font-family: 'NanumSquareRound';
 		color: #52575c;
 		line-height: 1.75em;
 		font-size: 14pt;
@@ -234,6 +237,8 @@ input, select, textarea {
 		margin: 0 auto;
 		max-width: 100%;
 		width: 1200px;
+		text-align: center;
+		align-items: center;
 	}
 
 		@media screen and (max-width: 1280px) {
@@ -3068,9 +3073,27 @@ input, select, textarea {
 
 	}
 
+
+/* 상세 페이지 */
+
 .content-wrapper {
 	padding: 100px;
 	text-align: center;
+}
+
+.content-wrapper table {
+	border: 1px solid #919191;
+}
+
+.content-wrapper th {
+	background-color: #dedede;
+	border: 1px solid #919191;
+}
+
+.content-wrapper td {
+	border: 1px solid #919191;
+	padding-left: 20px;
+	padding-right: 20px;
 }
 
 @media screen and (max-width: 1280px) {
@@ -3112,4 +3135,3 @@ input, select, textarea {
 		padding: 10px;
 		width: 100%;
 	}
-}

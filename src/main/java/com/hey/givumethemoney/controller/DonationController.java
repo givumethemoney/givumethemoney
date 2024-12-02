@@ -3,9 +3,12 @@ package com.hey.givumethemoney.controller;
 import com.hey.givumethemoney.domain.*;
 import com.hey.givumethemoney.service.DonationService;
 import com.hey.givumethemoney.service.ImageService;
+import com.hey.givumethemoney.service.PaymentsService;
 import com.hey.givumethemoney.service.ProductService;
 import com.hey.givumethemoney.service.ReceiptService;
 import jakarta.servlet.http.HttpServletResponse;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller
 public class DonationController {
@@ -25,12 +32,18 @@ public class DonationController {
     DonationService donationService;
     ImageService imageService;
     ProductService productService;
+    PaymentsService paymentsService;
+    // 컨트롤러 클래스 내에 로거 추가
+    private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
+
 
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService, ProductService productService) {
+    public DonationController(ImageService imageService, DonationService donationService, 
+            ProductService productService, PaymentsService paymentsService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
+        this.paymentsService = paymentsService;
     }
 
     @GetMapping("/detail/{id}")
@@ -40,12 +53,10 @@ public class DonationController {
         Optional<WaitingDonation> notConfirmed = donationService.getWaitingDonationById(id);
 
         List<Image> images = List.of();
-        Long donationId = 0L;
 
+        // 승인된 기부인 경우
         if (donation.isPresent() && notConfirmed.isEmpty()) {
             model.addAttribute("donation", donation.get());
-            images = imageService.findImagesByDonationId(donation.get().getId());
-            donationId = donation.get().getId();
 
             if (donation.get().getEndDate().isBefore(LocalDate.now())) {
                 model.addAttribute("isEnded", true);
@@ -53,18 +64,33 @@ public class DonationController {
             else {
                 model.addAttribute("isEnded", false);
             }
+             // 상위 30개 닉네임 가져옴
+            List<Map.Entry<String, Integer>> topNicknames = donationService.getTopNicknameDonations(id);
+            // 상위 3개만 가져오기
+            List<Map.Entry<String, Integer>> top3Nicknames = topNicknames.stream()
+                .limit(3)
+                .collect(Collectors.toList());
+
+            // topNicknames가 null이 아니고 비어 있지 않을 경우에만 모델에 추가
+            if (topNicknames != null && !topNicknames.isEmpty()) {
+                model.addAttribute("topNicknames", topNicknames);
+            }
+            if (top3Nicknames != null && !top3Nicknames.isEmpty()) {
+                model.addAttribute("top3Nicknames", top3Nicknames);
+            }
         }
-        else if (notConfirmed.isPresent()) {
+        // 아직 승인되지 않은 기부인 경우
+        else if (notConfirmed.isPresent() && donation.isEmpty()) {
             model.addAttribute("donation", notConfirmed.get());
-            images = imageService.findImagesByDonationId(notConfirmed.get().getId());
-            donationId = notConfirmed.get().getId();
 
             model.addAttribute("isEnded", false);
 
         }
+
+        images = imageService.findImagesByDonationId(id);
         model.addAttribute("images", images);
 
-        List<Product> productList = productService.getProductsByDonationId(donationId);
+        List<Product> productList = productService.getProductsByDonationId(id);
         model.addAttribute("productList", productList);
 
         // 현재 기부 물품 개수
@@ -72,11 +98,15 @@ public class DonationController {
             Random random = new Random();
             int randInt = random.nextInt(productList.size());
 
-            model.addAttribute("random", random.nextInt(productList.size()));
+            model.addAttribute("random", randInt);
+        } else {
+            model.addAttribute("random", -1); // -1은 유효하지 않은 인덱스를 의미
         }
 
+        // 모델에 들어있는 데이터 확인
+        // logger.info("Model contains: {}", model.asMap());
 
-        return "donationDetail";
+        return "donationDetail2";
     }
 
     @GetMapping("/application/confirm/{id}")
