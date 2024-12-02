@@ -25,6 +25,10 @@ public class CustomUserService implements UserDetailsService {
         // MemberService의 findByEmail 사용
         MemberDomain member = memberService.findByEmail(username);
 
+        if (member == null) {
+        throw new UsernameNotFoundException("User not found");
+        }
+        
         // CustomUserDetails로 변환하여 반환
         return new CustomUserDetails(member);
     }

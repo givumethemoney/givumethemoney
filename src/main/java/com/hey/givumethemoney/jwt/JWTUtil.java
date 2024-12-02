@@ -67,7 +67,7 @@ public class JWTUtil {
 
     public Role getRole(String token) {
         String role = (String) validateJwt(token).get("role");
-        return Role.valueOf(role); // 문자열을 Enum으로 변환
+        return Role.valueOf(role.replace("ROLE_", ""));
     }
     
 

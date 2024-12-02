@@ -3,6 +3,7 @@ package com.hey.givumethemoney.jwt;
 import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -85,17 +86,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         // 로그 추가
         System.out.println("Authentication successful for: " + email + " with role: " + role);
 
-        // 역할에 따라 리다이렉션 설정
-        try {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            response.getWriter().write("{\"token\": \"" + token + "\", \"email\": \"" + email + "\", \"role\": \"" + role + "\"}");
+        // 로그인 성공 후 리다이렉트 (예: / 페이지로)
+        response.setHeader("Location", "/");
+        response.setStatus(HttpServletResponse.SC_FOUND);
 
-            // 로그인 성공 후 리다이렉트 (예: /index 페이지로)
-            response.sendRedirect("/");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // 리다이렉트 시 토큰을 쿠키에 저장할 수 있다면 쿠키에 저장하는 방식으로 처리 가능
+        Cookie jwtCookie = new Cookie("jwt_token", token);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setPath("/");
+        response.addCookie(jwtCookie);
     }
 
     @Override

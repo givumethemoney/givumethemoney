@@ -1,7 +1,6 @@
 package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.dto.CustomUserDetails;
-import com.hey.givumethemoney.service.CustomUserService;
 import com.hey.givumethemoney.service.MemberService;
 
 import org.springframework.security.core.context.SecurityContextHolder;
