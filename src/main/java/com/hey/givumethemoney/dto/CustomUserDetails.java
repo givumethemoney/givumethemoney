@@ -1,36 +1,35 @@
 package com.hey.givumethemoney.dto;
 
 import com.hey.givumethemoney.domain.MemberDomain;
+import com.hey.givumethemoney.domain.Role;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * CustomUserDetails는 Spring Security의 UserDetails를 구현하여
  * MemberDomain 객체를 기반으로 사용자 인증 및 권한 정보를 제공
  */
 public class CustomUserDetails implements UserDetails {
-    private final MemberDomain memberDomain;
-    private final Collection<? extends GrantedAuthority> authorities;
+    private final MemberDomain member;
 
     // 생성자
-    public CustomUserDetails(MemberDomain memberDomain) {
-        this.memberDomain = memberDomain;
-
-        // 사용자의 Role 기반으로 권한 설정
-        this.authorities = Collections.singletonList(
-            new SimpleGrantedAuthority("ROLE_" + memberDomain.getRole().name())
-        );
+    public CustomUserDetails(MemberDomain member) {
+        this.member = member;
     }
 
     /**
      * 사용자 권한 반환
      */
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public List<GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        // MemberDomain에서 가져온 role을 SimpleGrantedAuthority로 변환하여 추가
+        authorities.add(new SimpleGrantedAuthority(member.getRole().name()));  // 'ROLE_ADMIN' 또는 'ROLE_COMPANY'
         return authorities;
     }
 
@@ -38,15 +37,21 @@ public class CustomUserDetails implements UserDetails {
      * 사용자 이메일 반환 (추가적인 사용자 정보 제공)
      */
     public String getEmail() {
-        return memberDomain.getEmail();
+        return member.getEmail();
     }
+
+    public Role getRole(String roleString) {
+        // 접두사를 제거하고 열거형 값으로 변환
+        return Role.valueOf(roleString.replace("ROLE_", ""));
+    }
+    
 
     /**
      * 사용자 비밀번호 반환
      */
     @Override
     public String getPassword() {
-        return memberDomain.getPassword();
+        return member.getPassword();
     }
 
     /**
@@ -54,14 +59,14 @@ public class CustomUserDetails implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return memberDomain.getUserName();
+        return member.getUserName();
     }
 
     /**
      * 사용자 회사명 반환 (추가적인 사용자 정보 제공)
      */
     public String getCompanyName() {
-        return memberDomain.getCompanyName();
+        return member.getCompanyName();
     }
 
     /**
