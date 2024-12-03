@@ -93,8 +93,7 @@ public class DonationController {
         // 아직 승인되지 않은 기부인 경우
         else if (notConfirmed.isPresent() && donation.isEmpty()) {
             // 다른 사용자가 작성한 건 볼 수 없음
-            if (getUserType() == Role.ADMIN) {}
-            else if (!email.equals(notConfirmed.get().getUserId())) {
+            if (getUserType() != Role.ADMIN && !email.equals(notConfirmed.get().getUserId())) {
                 model.addAttribute("msg", "준비 중인 기부입니다.");
                 model.addAttribute("url", "/");
 

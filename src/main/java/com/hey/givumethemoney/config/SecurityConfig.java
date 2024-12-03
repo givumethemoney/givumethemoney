@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -57,7 +56,7 @@ public class SecurityConfig {
                 // JWTFilter: 요청에 포함된 JWT 토큰을 검증하고, 인증된 사용자 정보를 설정
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
         // SessionCreationPolicy.STATELESS: 세션을 생성하거나 유지하지 않음
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 // /login 페이지를 커스텀 로그인 페이지로 사용
                 // 이 페이지는 누구나 접근 가능

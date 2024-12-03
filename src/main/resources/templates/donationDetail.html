@@ -173,7 +173,7 @@
                 <a class="button" th:href="@{/application/edit(id = ${donation.getId()})}">수정</a>
             </th:block>
 
-            <th:block th:if="${isEnded}">
+            <th:block th:if="${isEnded} and ${#strings.equals(user.getEmail() == donation.getUserId())}">
                 <td><a class="button" th:name="donationId" th:onclick="popup([[${donation.getId()}]]);">영수증 첨부</a></td>
             </th:block>
         </th:block>
