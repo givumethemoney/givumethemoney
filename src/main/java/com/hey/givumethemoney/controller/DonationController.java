@@ -29,22 +29,29 @@ public class DonationController {
     ProductService productService;
     MemberService memberService;
     CustomUserService customUserService;
+    ThumbNailService thumbNailService;
 
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
 
     @Autowired
-    public DonationController(ImageService imageService, DonationService donationService, ProductService productService, MemberService memberService, CustomUserService customUserService) {
+    public DonationController(ImageService imageService, 
+                                DonationService donationService, 
+                                ProductService productService, 
+                                MemberService memberService, 
+                                CustomUserService customUserService,
+                                ThumbNailService thumbNailService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
         this.memberService = memberService;
         this.customUserService = customUserService;
+        this.thumbNailService = thumbNailService;
     }
 
     @GetMapping("/detail/{id}")
     //@ResponseBody
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(@PathVariable("id") Long id, Model model) {
         Optional<Donation> donation = donationService.getDonationById(id);
         Optional<WaitingDonation> notConfirmed = donationService.getWaitingDonationById(id);
 
@@ -128,7 +135,7 @@ public class DonationController {
     }
 
     @GetMapping("/application/confirm/{id}")
-    public String confirm(@PathVariable Long id, Model model) {
+    public String confirm(@PathVariable("id") Long id, Model model) {
 
         if (getUserType() != Role.ADMIN) {
             model.addAttribute("msg", "관리자가 아닙니다.");
@@ -151,7 +158,7 @@ public class DonationController {
     }
 
     @PostMapping("/application/reject/{id}")
-    public String reject(@PathVariable Long id, @RequestParam(value = "rejectionReason") String rejectionReason, Model model) {
+    public String reject(@PathVariable("id") Long id, @RequestParam(value = "rejectionReason") String rejectionReason, Model model) {
         
         if (getUserType() != Role.ADMIN) {
             model.addAttribute("msg", "관리자가 아닙니다.");
@@ -208,7 +215,7 @@ public class DonationController {
     }
 
     @GetMapping("/application/edit")
-    public String editingApplication(@RequestParam(value="id") Long id, Model model) {
+    public String editingApplication(@RequestParam("id") Long id, Model model) {
 
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
 
@@ -228,6 +235,8 @@ public class DonationController {
             model.addAttribute("images", images);
             List<Product> productList = productService.getProductsByDonationId(id);
             model.addAttribute("productList", productList);
+            // List<ThumbNail> thumbNails = thumbNailService.findByDonationId(id);
+            // model.addAttribute("thumbNails", thumbNails);
 
             return "donationForm";
         }
@@ -244,17 +253,20 @@ public class DonationController {
             @RequestParam(value = "images", required = false) List<MultipartFile> files,
             @RequestParam(value = "productName") List<String> productName,
             @RequestParam(value = "productPrice") List<Long> productPrice,
-            DonationForm form) throws IOException {
+            @ModelAttribute DonationForm form) throws IOException {
         // 유저 id 수정
         WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), customUserService.getEmail());
         donationService.saveWaitingDonation(waitingDonation);
 
         for (MultipartFile file : files) {
-            if (imageService.saveImages(file, waitingDonation.getId()) == null) {
-                // 이미지 확장자 외 파일 오류
-                System.out.println("다른 확장자");
+            Image savedImg = imageService.saveImage(file, waitingDonation.getId());
+            if(savedImg  == null) {
+                System.out.println("이미지 저장 실패");
             }
+            System.out.println("donationController: 썸네일 저장 완료... ");
         }
+        
+        
 
         List<Product> productList = new ArrayList<>();
         if (!productName.isEmpty() && !productPrice.isEmpty()) {
@@ -307,11 +319,15 @@ public class DonationController {
         }
 
         for (MultipartFile file : files) {
-            if (imageService.saveImages(file, id) == null) {
-                // 이미지 확장자 외 파일 오류
-                System.out.println("다른 확장자");
+            Image savedImg = imageService.saveImage(file, waitingDonation.get().getId());
+            if(savedImg  == null) {
+                System.out.println("이미지 저장 실패");
+            }
+            if (imageService.saveThumbNails(savedImg) == null) {
+                System.out.println("썸네일 저장 실패");
             }
         }
+        
 
         List<Product> productList = new ArrayList<>();
         if (!productName.isEmpty() && !productPrice.isEmpty()) {
@@ -471,5 +487,17 @@ public class DonationController {
 
     protected Role getUserType() {
         return customUserService.getRole();
+    }
+
+    @GetMapping("/thumbs/{id}")
+    @ResponseBody
+    public String showThumb(@PathVariable("id") Long id, Model model) throws IOException {
+        Image image = imageService.findImageById(id).get();
+        if (image != null) {
+            return image.getThumbUrl();
+        }
+        else {
+            return null;
+        }
     }
 }

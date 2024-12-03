@@ -6,27 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "image")
-public class Image implements Serializable {
-
+@Table(name = "thumbnail")
+public class ThumbNail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "origin_name", nullable = false)
-    private String originName;
-
     @Column(name = "saved_name", nullable = false)
     private String savedName;
-
-    @Column(name = "img_url", nullable = false)
-    private String imgUrl;
 
     @Column(name = "thumb_url", nullable = true)
     private String thumbUrl;
@@ -34,19 +25,17 @@ public class Image implements Serializable {
     @Column(name = "donation_id", nullable = false)
     private Long donationId;
 
-    @Builder
-    public Image(Long id, String originName, String savedName, 
-                 String imgUrl, Long donationId, String thumbUrl) {
-        this.id = id;
-        this.originName = originName;
-        this.savedName = savedName;
-        this.imgUrl = imgUrl;
-        this.donationId = donationId;
-        this.thumbUrl = thumbUrl;
-    }
+    @Column(name = "img_id", nullable = false)
+    private Long imgId;
 
-    public String getImgUrl() {
-        return imgUrl;
+    @Builder
+    public ThumbNail(Long id, String savedName, 
+                 Long donationId, String thumbUrl, Long imgId) {
+        this.id = id;
+        this.savedName = savedName;
+        this.thumbUrl = thumbUrl;
+        this.donationId = donationId;
+        this.imgId = imgId;
     }
 
 }

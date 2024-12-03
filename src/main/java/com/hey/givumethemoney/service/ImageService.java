@@ -3,19 +3,17 @@ package com.hey.givumethemoney.service;
 import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.repository.ImageRepository;
 import com.hey.givumethemoney.repository.S3Repository;
-
-import net.coobird.thumbnailator.Thumbnailator;
+import com.hey.givumethemoney.repository.S3RepositoryImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,50 +22,64 @@ import java.util.UUID;
 @Service
 public class ImageService {
 
-    // @Value("${image.dir}")
-    private String fileDir;
-
     private final ImageRepository imageRepository;
-    private final S3Repository s3Repository;
+    private final S3RepositoryImpl s3RepositoryImpl;
 
     @Autowired
-    public ImageService(ImageRepository imageRepository,  S3Repository s3Repository) {
+    public ImageService(ImageRepository imageRepository,  S3RepositoryImpl s3RepositoryImpl) {
         this.imageRepository = imageRepository;
-        this.s3Repository = s3Repository;
+        this.s3RepositoryImpl = s3RepositoryImpl;
     }
 
     @SuppressWarnings("null")
-    public Long saveImages(MultipartFile imageFiles, Long donationId) throws IOException {
-        if (imageFiles.isEmpty()) {
-            return null;
+    public Image saveImage(MultipartFile file, Long donationId) throws IOException {
+
+        Image image = new Image();
+
+        // 1. 파일 이름 및 확장자 추출
+        String originName = file.getOriginalFilename();
+        image.setOriginName(originName);
+        image.setDonationId(donationId);
+
+        if (originName == null) {
+            throw new IllegalArgumentException("파일 이름이 없습니다.");
         }
 
-        String originName = imageFiles.getOriginalFilename();
+        String extension = StringUtils.getFilenameExtension(originName);
+        if (!(extension.equalsIgnoreCase("jpg") || 
+            extension.equalsIgnoreCase("jpeg") || 
+            extension.equalsIgnoreCase("png") ||
+            extension.equalsIgnoreCase("gif"))) {
+            throw new IllegalArgumentException("지원되지 않는 파일 형식입니다: " + extension);
+        }
+
         String uuid = UUID.randomUUID().toString();
-
-        String extension = StringUtils.getFilenameExtension(imageFiles.getOriginalFilename());
-        if (!(extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("gif"))) {
-            throw new IllegalArgumentException("지원되지 않는 파일 형식입니다.");
-        }
-
         String savedName = uuid + "." + extension;
-        String imgUrl = s3Repository.uploadFile(imageFiles);
-        // thumbPath가 뭐지?
-        // String thumbPath = fileDir + "thumb_" + savedName;
+        image.setSavedName(savedName);
 
-        Image image = Image.builder()
-                .originName(originName)
-                .savedName(savedName)
-                .imgUrl(imgUrl)
-                // .thumbPath(thumbPath)
-                .donationId(donationId)
-                .build();
+        // S3에 파일 업로드 및 URL 반환
+        System.out.println("s3Repository에서 uploadFile 호출");
+        image.setImgUrl(s3RepositoryImpl.uploadImageFile(file, image));
 
-        // Thumbnailator.createThumbnail(new File(imageUrl), new File(thumbPath), 200, 200);
-
+        // DB에 Image 저장
         Image savedImage = imageRepository.save(image);
 
-        return savedImage.getId();
+        saveThumbNails(savedImage);
+
+        return savedImage;
+    }
+
+    @SuppressWarnings("null")
+    public List<Long> saveThumbNails(Image image) throws IOException {
+       
+        List<Long> savedImageIds = new ArrayList<>();
+        // 썸네일 생성
+        image.setThumbUrl(s3RepositoryImpl.createThumbNail(image));
+
+        savedImageIds.add(image.getId());
+        
+
+        return savedImageIds;
     }
 
     public Optional<Image> findImageById(Long id) {

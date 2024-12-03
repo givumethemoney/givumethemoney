@@ -19,11 +19,11 @@ public class S3Controller {
 
     private final S3Service s3Service;
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        String fileUrl = s3Service.uploadFile(file);
-        return ResponseEntity.ok(fileUrl);
-    }
+    // @PostMapping("/upload")
+    // public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    //     String fileUrl = s3Service.uploadFile(file);
+    //     return ResponseEntity.ok(fileUrl);
+    // }
 
     @DeleteMapping("/delete/{fileName}")
     public ResponseEntity<Void> deleteFile(@PathVariable String fileName) {

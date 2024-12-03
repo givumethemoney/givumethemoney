@@ -45,15 +45,11 @@ public class ReceiptService {
             throw new IllegalArgumentException("지원되지 않는 파일 형식입니다.");
         }
 
-        String savedName = uuid + "." + extension;
-        String imageUrl = s3Repository.uploadFile(receiptFiles);
+        Receipt receipt = new Receipt();
+        s3Repository.uploadReceiptFile(receiptFiles, receipt);
 
-        Receipt receipt = Receipt.builder()
-                .originName(originName)
-                .savedName(savedName)
-                .donationId(donationId)
-                .imageUrl(imageUrl)
-                .build();
+        receipt.setOriginName(originName);
+        receipt.setDonationId(donationId);
 
         Receipt savedReceipt = receiptRepository.save(receipt);
 
