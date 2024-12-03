@@ -24,10 +24,12 @@ body {
     font-weight: 500;
     /* color: #827fc0; */
     color: white;
+    background-color: #40534c;
 }
 
 .table thead {
-    background-color: #f3f2f7;
+    /* background-color: #f3f2f7; */
+    background-color: #40534c;
 }
 
 .table>tbody>tr>td,
@@ -35,10 +37,12 @@ body {
 .table>thead>tr>td {
     padding: 14px 12px;
     vertical-align: middle;
+    color: #40534c;
 }
 
 .table tr td {
-    color: #8887a9;
+    /* color: #8887a9; */
+    color: #40534c;
 }
 
 .thumb-sm {
