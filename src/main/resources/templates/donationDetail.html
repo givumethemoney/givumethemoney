@@ -146,7 +146,7 @@
         </th:block>
     </div>
     <!-- 기부 결제 버튼 -->
-    <a class="button" th:href="@{/payments(donationId = ${donation.getId()})}">기부하기</a>
+    <a class="button" th:if="${!isEnded}" th:href="@{/payments(donationId = ${donation.getId()})}">기부하기</a>
 
     <!-- 사용자 테이블 추가 후 admin인지 확인되면
     승인 버튼 추가
@@ -165,7 +165,7 @@
         </th:block>
 
         <!-- 기업 사용자일 때 -->
-        <th:block th:if="${#strings.equals(user.getRole(), 'COMPANY')}">
+        <th:block th:if="${#strings.equals(user.getRole(), 'COMPANY')} and ${#strings.equals(user.getEmail(), donation.getUserId())}">
             <th:block th:if="${!donation.isConfirmed()}">
                 <th:block th:if="${donation.isRejected()}">
                     <p th:text="${donation.getRejectionReason()}"></p>
@@ -173,7 +173,7 @@
                 <a class="button" th:href="@{/application/edit(id = ${donation.getId()})}">수정</a>
             </th:block>
 
-            <th:block th:if="${isEnded} and ${#strings.equals(user.getEmail() == donation.getUserId())}">
+            <th:block th:if="${isEnded}">
                 <td><a class="button" th:name="donationId" th:onclick="popup([[${donation.getId()}]]);">영수증 첨부</a></td>
             </th:block>
         </th:block>
