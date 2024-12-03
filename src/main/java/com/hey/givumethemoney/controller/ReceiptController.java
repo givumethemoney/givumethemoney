@@ -64,6 +64,7 @@ public class ReceiptController {
         }
         
         model.addAttribute("receipts", receipts);
+        model.addAttribute("donationId", donationId);
         model.addAttribute("ocrResults", ocrResults); // ocrResults 객체 배열 전달
 
         return "donationReceipt";

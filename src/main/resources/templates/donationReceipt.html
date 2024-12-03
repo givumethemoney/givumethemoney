@@ -42,7 +42,7 @@
       </tbody>
   </table>
 
-    <a class="button" th:href="@{/detail/{id}(id = ${receipts.get(0).getDonationId()})}">돌아가기</a>
+    <a class="button" th:href="@{/detail/{id}(id = ${donationId})}">돌아가기</a>
   </div>
 
   <header th:replace="layouts/footer::footer"></header>
