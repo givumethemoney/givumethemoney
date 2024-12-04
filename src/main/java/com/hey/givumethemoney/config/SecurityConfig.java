@@ -9,6 +9,7 @@ import com.hey.givumethemoney.jwt.LoginFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,8 +48,10 @@ public class SecurityConfig {
                         .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
                         .requestMatchers("/applicationList/*", "/application/agree", "/application/write", "/application/edit",
-                                "/application/submit", "/application/submitEdit", "waitingList/*", "/endList/*").hasAnyRole("COMPANY", "ADMIN")
-                        .requestMatchers("/receipt/submit", "/receiptPopup").hasRole("COMPANY")
+                                "waitingList/*", "/endList/*").hasAnyRole("COMPANY", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/application/submit", "/application/submitEdit").hasAnyRole("COMPANY", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/receipt/submit").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.GET, "/receiptPopup").hasRole("COMPANY")
                         .requestMatchers("/application/confirm/*", "/application/reject/*").hasRole("ADMIN")
                         // 그 외 모든 요청은 인증이 필요
                         .anyRequest().authenticated()
