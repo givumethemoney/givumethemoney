@@ -6,7 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,9 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.io.IOException;
-import java.util.Optional;
 
 // LoginFilter의 두 메서드(attemptAuthentication과 successfulAuthentication)는 
 // Spring Security의 필터 체인에 의해 자동으로 순차적으로 실행!!!!
@@ -97,19 +93,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         jwtCookie.setHttpOnly(true);
         jwtCookie.setPath("/");
         response.addCookie(jwtCookie);
-
-        Optional<MemberDomain> member = memberRepository.findByEmail(email);
-        HttpSession session = request.getSession();
-
-        if (member.isPresent()) {
-            session.setAttribute("isLoggedIn", true);
-            session.setAttribute("email", member.get().getEmail());
-            session.setAttribute("type", member.get().getRole());
-            // 세션 유지 기간, 토큰 유지 기간이랑 동일하게 설정?
-            session.setMaxInactiveInterval(60 * 30);
-
-            System.out.println("세션 저장 완료: " + session.getAttribute("isLoggedIn").toString());
-        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-
 
 @Component
 @WebFilter("/*")
@@ -87,6 +87,14 @@ public class JWTFilter extends OncePerRequestFilter {
                 MemberDomain member = new MemberDomain();
                 member.setEmail(email);// String -> Enum 변환
                 member.setRole(role);
+                
+                // 세션 저장
+                HttpSession session = request.getSession();
+                session.setAttribute("isLoggedIn", true);
+                session.setAttribute("email", member.getEmail());
+                session.setAttribute("type", member.getRole());
+
+                System.out.println("세션 저장 완료: " + session.getAttribute("isLoggedIn").toString());
 
                 // CustomUserDetails 생성
                 CustomUserDetails customerUserDetails = new CustomUserDetails(member);
