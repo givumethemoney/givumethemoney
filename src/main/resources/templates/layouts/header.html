@@ -10,19 +10,24 @@
 			<h1 id="logo">
 				<a th:href="@{/}">GIVU ME THE MONEY</a>
 			</h1>
-			<!--로그인이 되어있는 경우-->
-			<div th:if="${session.loggedInUser != null}">
-				<form action="#" th:action="@{/logout}" method="post">
-					<button type="submit">Logout</button>
-				</form>
-			</div>
 			<!-- 로그인이 되어있지 않은 경우 -->
-			<div th:if="${session.loggedInUser == null}">
+			<div th:if="${session.isLoggedIn == null}">
 				<!-- Login -->
 				<a th:href="@{/login}">로그인</a>
 				<a th:href="@{/join}">회원가입</a>
 
 			</div>
+			<!--로그인이 되어있는 경우-->
+			<div th:if="${session.isLoggedIn != null}">
+				<a th:text="${session.email}">Email</a>
+				<form action="#" th:action="@{/logout}" method="post">
+					<button type="submit">Logout</button>
+				</form>
+				<a class="button" href="/applicationList">전체 신청서</a>
+				<a class="button" href="/waitingList">대기 신청서</a>
+				<a class="button" href="/endList">마감 신청서</a>
+			</div>
+
 		</div>
 	</div>
 </div>
