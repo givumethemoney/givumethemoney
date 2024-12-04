@@ -25,23 +25,24 @@ public class Image implements Serializable {
     @Column(name = "saved_name", nullable = false)
     private String savedName;
 
-    @Column(name = "imgUrl", nullable = false)
+    @Column(name = "img_url", nullable = false)
     private String imgUrl;
 
-    // @Column(name = "thumb_path", nullable = true)
-    // private String thumbPath;
+    @Column(name = "thumb_url", nullable = false)
+    private String thumbUrl;
 
     @Column(name = "donation_id", nullable = false)
     private Long donationId;
 
     @Builder
-    public Image(Long id, String originName, String savedName, String imgUrl, Long donationId) {
+    public Image(Long id, String originName, String savedName, 
+                 String imgUrl, Long donationId, String thumbUrl) {
         this.id = id;
         this.originName = originName;
         this.savedName = savedName;
         this.imgUrl = imgUrl;
-        // this.thumbPath = thumbPath;
         this.donationId = donationId;
+        this.thumbUrl = thumbUrl;
     }
 
     public String getImgUrl() {

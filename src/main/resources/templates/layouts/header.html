@@ -1,44 +1,29 @@
-<!DOCTYPE HTML>
-<!--
-	Telephasic by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <!-- Header -->
-	<div id="header-wrapper" th:fragment="header">
+<div th:fragment="header">
+	<div id="header-wrapper">
 		<div id="header" class="container">
 
 			<!-- Logo -->
-			<h1 id="logo"><a href="index.html">GIVU ME THE MONEY</a></h1>
+			<h1 id="logo">
+				<a th:href="@{/}">GIVU ME THE MONEY</a>
+			</h1>
+			<!--로그인이 되어있는 경우-->
+			<div th:if="${session.loggedInUser != null}">
+				<form action="#" th:action="@{/logout}" method="post">
+					<button type="submit">Logout</button>
+				</form>
+			</div>
+			<!-- 로그인이 되어있지 않은 경우 -->
+			<div th:if="${session.loggedInUser == null}">
+				<!-- Login -->
+				<a th:href="@{/login}">로그인</a>
+				<a th:href="@{/join}">회원가입</a>
 
-			<!-- Nav -->
-			<nav id="nav">
-				<ul>
-					<li>
-						<a href="#">Dropdown</a>
-						<ul>
-							<li><a href="#">Lorem ipsum dolor</a></li>
-							<li><a href="#">Magna phasellus</a></li>
-							<li><a href="#">Etiam dolore nisl</a></li>
-							<li>
-								<a href="#">Phasellus consequat</a>
-								<ul>
-									<li><a href="#">Lorem ipsum dolor</a></li>
-									<li><a href="#">Phasellus consequat</a></li>
-									<li><a href="#">Magna phasellus</a></li>
-									<li><a href="#">Etiam dolore nisl</a></li>
-								</ul>
-							</li>
-							<li><a href="#">Veroeros feugiat</a></li>
-						</ul>
-					</li>
-					<li><a href="left-sidebar.html">Left Sidebar</a></li>
-					<li class="break"><a href="right-sidebar.html">Right Sidebar</a></li>
-					<li><a href="/application">기부 협업 신청</a></li>
-				</ul>
-			</nav>
-
+			</div>
 		</div>
 	</div>
+</div>
 </html>

@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import com.hey.givumethemoney.domain.*;
 import com.hey.givumethemoney.service.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,10 +39,27 @@ public class PaymentsController {
 
     @GetMapping("/payments")
     public String payments (
-        @RequestParam(name = "donationId") Long dontaionId,
+        @RequestParam(name = "donationId") Long donationId,
         Model model
     ) {
-        model.addAttribute("donationId", dontaionId);
+        Optional<Donation> donation = donationService.getDonationById(donationId);
+        
+        if (donation.isPresent()) {
+            if (donation.get().getEndDate().isBefore(LocalDate.now())) {
+                model.addAttribute("msg", "모금 기간이 아닙니다.");
+                model.addAttribute("url", "/detail/" + donationId.toString());
+
+                return "alert";
+            }
+        }
+        else {
+            model.addAttribute("msg", "유효한 기부가 아닙니다.");
+            model.addAttribute("url", "/");
+
+            return "alert";
+        }
+        
+        model.addAttribute("donationId", donationId);
         return "payments";
     }
 
@@ -90,8 +108,8 @@ public class PaymentsController {
         @RequestParam(name = "customAmount", required = false) Integer customAmount,
         @RequestParam(name = "donationId") Long donationId,
         @RequestParam(name = "nickName", required = false) String nickName,
-        Model model
-    ) {
+        Model model) {
+
         Integer finalAmount = 0;
         if (customAmount == null) {
             finalAmount = amount;
@@ -112,6 +130,12 @@ public class PaymentsController {
         Optional<Donation> donation = donationService.getDonationById(donationId);
         if (donation.isPresent()) {
             model.addAttribute("donation", donation.get());
+        }
+        else {
+            model.addAttribute("msg", "유효한 기부가 아닙니다.");
+            model.addAttribute("url", "/");
+
+            return "alert";
         }
 
         return "widget";

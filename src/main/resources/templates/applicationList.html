@@ -33,7 +33,7 @@
                                         <th>제목</th>
                                         <th>기업</th>
                                         <th>기부 시작 날짜</th>
-                                        <th>수락 / 반려</th>
+                                        <th>대기 / 반려</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -70,7 +70,7 @@
                     <th>제목</th>
                     <th>기업</th>
                     <th>기부 마감 날짜</th>
-                    <th></th>
+                    <th th:if="${isCompany}"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -79,7 +79,7 @@
                     <td><a th:text="${d.getTitle()}" th:href="@{/detail/{id}(id=${d.getId()})}">제목</a></td>
                     <td th:text="${d.getEnterName()}">기업</td>
                     <td th:text="${d.getEndDate()}">날짜</td>
-                    <td><a class="button" th:name="donationId" th:onclick="popup([[${d.getId()}]]);">영수증 첨부</a></td>
+                    <td th:if="${isCompany}"><a class="button" th:name="donationId" th:onclick="popup([[${d.getId()}]]);">영수증 첨부</a></td>
                 </tr>
                 </tbody>
             </table>

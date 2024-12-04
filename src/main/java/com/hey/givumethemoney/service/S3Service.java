@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.hey.givumethemoney.repository.S3Repository;
 
@@ -19,9 +21,9 @@ public class S3Service {
     /**
      * 파일 업로드
      */
-    public String uploadFile(MultipartFile multipartFile) throws IOException {
-        return s3Repository.uploadFile(multipartFile);    
-    }
+    // public String uploadFile(MultipartFile multipartFile) throws IOException {
+    //     return s3Repository.uploadFile(multipartFile);    
+    // }
 
     /**
      * 파일 삭제
@@ -37,12 +39,13 @@ public class S3Service {
         return s3Repository.listFiles(prefix);   
     }
 
-    /**
-     * S3에서 파일 다운로드
-     */
-    public S3ObjectInputStream downloadFile(String fileName) {
-        return s3Repository.downloadFile(fileName);
-    }
+    // /**
+    //  * S3에서 파일 다운로드
+    //  */
+    // public S3ObjectInputStream downloadFile(String fileName) {
+    //     S3Object s3Object = s3Client.getObject(new GetObjectRequest(bucketName, fileName));
+    //     return s3Object.getObjectContent();  // S3ObjectInputStream 반환
+    // }
 }
 
 

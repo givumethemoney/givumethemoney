@@ -3,7 +3,6 @@ package com.hey.givumethemoney.Config;
 import com.hey.givumethemoney.repository.*;
 import com.hey.givumethemoney.service.*;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +19,7 @@ public class GMTMConfig {
     private final JPAInquiryRepository inquiryRepository;
     private final NaverOCRRepository naverOCRRepository;
     private final S3Repository s3Repository;
+    private final S3RepositoryImpl s3RepositoryImpl;
     private final NicknameDonationRepository nicknameDonationRepository;
 
     @Bean
@@ -29,7 +29,7 @@ public class GMTMConfig {
 
     @Bean
     public ImageService imageService() {
-        return new ImageService(imageRepository, s3Repository);
+        return new ImageService(imageRepository, s3RepositoryImpl);
     }
 
     @Bean
@@ -62,27 +62,30 @@ public class GMTMConfig {
         return new NaverOCRService(naverOCRRepository, receiptRepository);
     }
 
-   GMTMConfig(DonationRepository donationRepository,
-                          WaitingDonationRepository waitingDonationRepository,
-                          ImageRepository imageRepository,
-                          ProductRepository productRepository,
-                          ReceiptRepository receiptRepository,
-                          JPAPaymentsRepository paymentsRepository,
-                          JPAInquiryRepository inquiryRepository,
-                          NaverOCRRepository naverOCRRepository,
-                          S3Repository s3Repository,
-                          NicknameDonationRepository nicknameDonationRepository
-                          )
-    {
-        this.donationRepository = donationRepository;
-        this.waitingDonationRepository = waitingDonationRepository;
-        this.imageRepository = imageRepository;
-        this.productRepository = productRepository;
-        this.receiptRepository = receiptRepository;
-        this.paymentsRepository = paymentsRepository;
-        this.inquiryRepository = inquiryRepository;
-        this.naverOCRRepository = naverOCRRepository;
-        this.s3Repository= s3Repository;
-        this.nicknameDonationRepository = nicknameDonationRepository;
+    @Autowired
+    GMTMConfig(DonationRepository donationRepository,
+                            WaitingDonationRepository waitingDonationRepository,
+                            ImageRepository imageRepository,
+                            ProductRepository productRepository,
+                            ReceiptRepository receiptRepository,
+                            JPAPaymentsRepository paymentsRepository,
+                            JPAInquiryRepository inquiryRepository,
+                            NaverOCRRepository naverOCRRepository,
+                            S3Repository s3Repository,
+                            NicknameDonationRepository nicknameDonationRepository,
+                            S3RepositoryImpl s3RepositoryImpl
+                            )
+        {
+            this.donationRepository = donationRepository;
+            this.waitingDonationRepository = waitingDonationRepository;
+            this.imageRepository = imageRepository;
+            this.productRepository = productRepository;
+            this.receiptRepository = receiptRepository;
+            this.paymentsRepository = paymentsRepository;
+            this.inquiryRepository = inquiryRepository;
+            this.naverOCRRepository = naverOCRRepository;
+            this.s3Repository= s3Repository;
+            this.nicknameDonationRepository = nicknameDonationRepository;
+            this.s3RepositoryImpl = s3RepositoryImpl;
+        }
     }
-}

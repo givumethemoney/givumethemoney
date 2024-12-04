@@ -1,5 +1,7 @@
 package com.hey.givumethemoney.service;
 
+import com.hey.givumethemoney.domain.Role;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,5 +33,26 @@ public class CustomUserService implements UserDetailsService {
         
         // CustomUserDetails로 변환하여 반환
         return new CustomUserDetails(member);
+    }
+
+    public Role getRole() throws UsernameNotFoundException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails)principal).getRole();
+        }
+        else {
+            return Role.ANONYMOUS;
+        }
+    }
+
+    public String getEmail() throws UsernameNotFoundException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof CustomUserDetails) {
+            return ((CustomUserDetails)principal).getEmail();
+        }
+        else {
+            return "anonymous";
+        }
     }
 }
