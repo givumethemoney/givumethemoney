@@ -29,7 +29,6 @@ public class DonationController {
     ProductService productService;
     MemberService memberService;
     CustomUserService customUserService;
-    ThumbNailService thumbNailService;
 
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
@@ -39,14 +38,12 @@ public class DonationController {
                                 DonationService donationService, 
                                 ProductService productService, 
                                 MemberService memberService, 
-                                CustomUserService customUserService,
-                                ThumbNailService thumbNailService) {
+                                CustomUserService customUserService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
         this.memberService = memberService;
         this.customUserService = customUserService;
-        this.thumbNailService = thumbNailService;
     }
 
     @GetMapping("/detail/{id}")
@@ -254,7 +251,7 @@ public class DonationController {
             @RequestParam(value = "productName") List<String> productName,
             @RequestParam(value = "productPrice") List<Long> productPrice,
             @ModelAttribute DonationForm form) throws IOException {
-        // 유저 id 수정
+
         WaitingDonation waitingDonation = new WaitingDonation(form.getTitle(), form.getStartDate(), form.getEndDate(), form.getGoal(), 0, form.getDescript(), 0, form.getEnterName(), customUserService.getEmail());
         donationService.saveWaitingDonation(waitingDonation);
 
@@ -263,7 +260,7 @@ public class DonationController {
             if(savedImg  == null) {
                 System.out.println("이미지 저장 실패");
             }
-            System.out.println("donationController: 썸네일 저장 완료... ");
+            System.out.println("donationController: 이미지 저장 완료... ");
         }
         
         
@@ -297,6 +294,21 @@ public class DonationController {
         // 전부 지운 후 새로 들어온 리스트로 저장
         productService.deleteProductsByDonationId(id);
 
+        List<Product> productList = new ArrayList<>();
+        if (!productName.isEmpty() && !productPrice.isEmpty()) {
+            if (productName.size() != productPrice.size()) {
+                // 오류 메시지
+            }
+            else {
+                for (int i = 0; i < productName.size(); i++) {
+                    Product p = new Product(productName.get(i), productPrice.get(i), id);
+                    productList.add(p);
+                }
+
+                productService.saveProducts(productList);
+            }
+        }
+
         StringTokenizer st = new StringTokenizer(deleteImageList);
         while (st.hasMoreTokens()) {
             Long imageId = Long.parseLong(st.nextToken().trim());
@@ -323,26 +335,11 @@ public class DonationController {
             if(savedImg  == null) {
                 System.out.println("이미지 저장 실패");
             }
-            if (imageService.saveThumbNails(savedImg) == null) {
-                System.out.println("썸네일 저장 실패");
-            }
+            System.out.println("donationController: 이미지 저장 완료... ");
         }
         
 
-        List<Product> productList = new ArrayList<>();
-        if (!productName.isEmpty() && !productPrice.isEmpty()) {
-            if (productName.size() != productPrice.size()) {
-                // 오류 메시지
-            }
-            else {
-                for (int i = 0; i < productName.size(); i++) {
-                    Product p = new Product(productName.get(i), productPrice.get(i), id);
-                    productList.add(p);
-                }
-
-                productService.saveProducts(productList);
-            }
-        }
+        
         
         return "redirect:/detail/" + id.toString();
     }

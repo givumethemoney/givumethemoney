@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.domain.Receipt;
-import com.hey.givumethemoney.domain.ThumbNail;
 
 import net.coobird.thumbnailator.Thumbnailator;
 
@@ -15,12 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -31,7 +26,6 @@ import javax.imageio.ImageIO;
 public class S3RepositoryImpl implements S3Repository {
 
     private final AmazonS3 amazonS3;
-    private final ThumbNailRepository thumbNailRepository;
     private final ImageRepository imageRepository;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -39,10 +33,8 @@ public class S3RepositoryImpl implements S3Repository {
 
     // AmazonS3 객체를 생성자 주입 방식으로 받음
     public S3RepositoryImpl(AmazonS3 amazonS3,
-                            ThumbNailRepository thumbNailRepository, 
                             ImageRepository imageRepository) {
         this.amazonS3 = amazonS3;
-        this.thumbNailRepository = thumbNailRepository;
         this.imageRepository = imageRepository;
     }
 
@@ -115,7 +107,7 @@ public class S3RepositoryImpl implements S3Repository {
         System.out.println("imgUrl: " + imgUrl);
         
         // 3. 원본 이미지 파일을 S3에서 다운로드하여 InputStream을 받기
-        InputStream s3InputStream = downloadFile(imgUrl); // S3에서 파일을 다운로드하는 메서드
+        S3ObjectInputStream s3InputStream = downloadFile(image); // S3에서 파일을 다운로드하는 메서드
         if (s3InputStream == null) {
             throw new RuntimeException("S3에서 파일을 다운로드할 수 없습니다.");
         }
@@ -123,7 +115,7 @@ public class S3RepositoryImpl implements S3Repository {
         // 4. 원본 이미지 InputStream을 BufferedImage로 읽기
         BufferedImage originalImage = null;
         try {
-            originalImage = ImageIO.read(s3InputStream);
+            originalImage = ImageIO.read(ImageIO.createImageInputStream(s3InputStream));
         } catch (IOException e) {
             throw new RuntimeException("원본 이미지를 읽을 수 없습니다.", e);
         }
@@ -143,8 +135,8 @@ public class S3RepositoryImpl implements S3Repository {
             BufferedImage thumbnail = Thumbnailator.createThumbnail(originalImage, 200, 200);
         
             // 7. 썸네일을 ByteArrayOutputStream에 저장
-            ImageIO.write(thumbnail, "jpg", byteArrayOutputStream);  // JPG 형식으로 저장 (원하는 형식에 맞게 조정)
-            byteArrayOutputStream.flush();  // 버퍼 비우기
+            ImageIO.write(thumbnail, "png", byteArrayOutputStream);  // JPG 형식으로 저장 (원하는 형식에 맞게 조정)
+            //byteArrayOutputStream.flush();  // 버퍼 비우기
             
             // 썸네일 생성 완료 후, ByteArrayOutputStream에서 InputStream으로 변환
             ByteArrayInputStream thumbInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
@@ -158,16 +150,6 @@ public class S3RepositoryImpl implements S3Repository {
 
             System.out.println("s3에 이미지 업로드 완료!!!!\n\n");
             System.out.println("thumbUrl: " + thumbUrl);
-
-            ThumbNail thumbNail = ThumbNail.builder()
-            .savedName(thumbFileName)
-            .thumbUrl(thumbUrl)
-            .donationId(image.getDonationId())
-            .imgId(image.getId())
-            .build();
-
-            // 5. DB에 Image 저장
-            thumbNailRepository.save(thumbNail);
 
             // 10. 썸네일 URL 반환
             return thumbUrl;
@@ -277,18 +259,12 @@ public class S3RepositoryImpl implements S3Repository {
     //     return s3Object.getObjectContent();
     // }
 
-    private String extractFileNameFromUrl(String s3Url) {
-        Image image = imageRepository.findByImgUrl(s3Url).get();
-        String filename = image.getSavedName();
-        return filename;
-    }
-    
-    @Override
     // S3에서 파일을 다운로드하는 메서드 (입력 받은 URL로 파일을 다운로드하여 InputStream 반환)
-    public InputStream downloadFile(String s3Url) {
+    @Override
+    public S3ObjectInputStream downloadFile(Image image) {
         // s3Url에서 파일명 추출 (파일 URL에서 경로와 파일명을 분리하는 작업 필요)
-        String fileName = extractFileNameFromUrl(s3Url);
-        System.out.println("[InputStream downloadFile] fileName: " + fileName);
+        String fileName = image.getSavedName();
+        System.out.println("[InputStream downloadFile] fileName: " + image.getSavedName());
         
         // S3에서 파일을 다운로드
         try {
@@ -302,9 +278,9 @@ public class S3RepositoryImpl implements S3Repository {
     @Override
     // S3에 파일 업로드하는 메서드 (입력 받은 InputStream을 S3에 업로드)
     public String uploadInputStreamFile(ByteArrayInputStream thumbInputStream, String fileName, ObjectMetadata metadata) {
-                try {
-                    // S3에 파일 업로드
-                    amazonS3.putObject(new PutObjectRequest(bucket, fileName, thumbInputStream, metadata));
+        try {
+            // S3에 파일 업로드
+            amazonS3.putObject(new PutObjectRequest(bucket, fileName, thumbInputStream, metadata));
             // 업로드가 완료되면, 업로드된 파일의 URL 반환
             return amazonS3.getUrl(bucket, fileName).toString();
         } catch (AmazonS3Exception e) {

@@ -60,26 +60,12 @@ public class ImageService {
         // S3에 파일 업로드 및 URL 반환
         System.out.println("s3Repository에서 uploadFile 호출");
         image.setImgUrl(s3RepositoryImpl.uploadImageFile(file, image));
+        image.setThumbUrl(s3RepositoryImpl.createThumbNail(image));
 
         // DB에 Image 저장
         Image savedImage = imageRepository.save(image);
 
-        saveThumbNails(savedImage);
-
         return savedImage;
-    }
-
-    @SuppressWarnings("null")
-    public List<Long> saveThumbNails(Image image) throws IOException {
-       
-        List<Long> savedImageIds = new ArrayList<>();
-        // 썸네일 생성
-        image.setThumbUrl(s3RepositoryImpl.createThumbNail(image));
-
-        savedImageIds.add(image.getId());
-        
-
-        return savedImageIds;
     }
 
     public Optional<Image> findImageById(Long id) {

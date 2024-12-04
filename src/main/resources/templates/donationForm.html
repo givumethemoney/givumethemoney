@@ -62,7 +62,7 @@
                 <input type="file" class="image" name="images" multiple="multiple"><br><br>
                 <input type="hidden" id="deleteImages" name="deleteImages" value="">
                 <div class="image-container" th:each="i : ${images}">
-                    <img th:src="|/thumbs/${i.getId()}|" alt="Image">
+                    <img th:src="@{${i.getThumbUrl() ?: '/images/default-image.png'}}" alt="Image">
                     <a class="button delete-button" th:onclick="addDeleteImages(this, [[${i.getId()}]])">X</a>
                 </div>
                 <input type="submit" value="수정">
@@ -102,7 +102,7 @@
                 <input type="file" class="image" name="images" multiple="multiple"><br><br>
                 <input type="hidden" id="deleteImages" name="deleteImages" value="">
                 <div class="image-container" th:each="i : ${images}">
-                    <img th:src="@{/thumbs/{id}(id=${i.id})}" alt="thumbNail">
+                    <img th:src="@{${i.getThumbUrl() ?: '/images/default-image.png'}}" alt="thumbNail">
                     <a class="button delete-button" th:onclick="addDeleteImages(this, [[${i.getId()}]])">X</a>
                 </div>
                 <input type="submit" value="신청">

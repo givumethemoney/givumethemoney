@@ -28,7 +28,7 @@ public class Image implements Serializable {
     @Column(name = "img_url", nullable = false)
     private String imgUrl;
 
-    @Column(name = "thumb_url", nullable = true)
+    @Column(name = "thumb_url", nullable = false)
     private String thumbUrl;
 
     @Column(name = "donation_id", nullable = false)
