@@ -374,18 +374,25 @@ public class DonationController {
         }
 
         List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
-            if (i >= waitingDonations.size()) {
+        int dCnt = 0;
+        for (int i = 0; i < waitingDonations.size(); i++) {
+            if (dCnt >= (page - 1) * LIST_COUNT + LIST_COUNT) {
                 break;
             }
             // 마감되지 않은 기부만 추출
             if (waitingDonations.get(i).getEndDate().compareTo(LocalDate.now()) >= 0) {
-                waitingDonationsByPage.add(waitingDonations.get(i));
+                if (dCnt >= (page - 1) * LIST_COUNT) {
+                    waitingDonationsByPage.add(waitingDonations.get(i));
+                }
+                dCnt++;
             }
         }
 
         model.addAttribute("isEnded", false);
         model.addAttribute("donations", waitingDonationsByPage);
+        model.addAttribute("pageCnt", waitingDonations.size() / LIST_COUNT);
+        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("listType", "waiting");
 
         return "applicationList";
     }
@@ -422,21 +429,26 @@ public class DonationController {
             return "alert";
         }
 
-        result.sort((d1, d2) -> d1.getEndDate().compareTo(d2.getEndDate()) * -1);
-
         List<DonationBase> donationsByPage = new ArrayList<>();
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
-            if (i >= result.size()) {
+        int dCnt = 0;
+        for (int i = 0; i < result.size(); i++) {
+            if (dCnt >= (page - 1) * LIST_COUNT + LIST_COUNT) {
                 break;
             }
             // 마감되지 않은 기부만 추출
             if (result.get(i).getEndDate().compareTo(LocalDate.now()) >= 0) {
-                donationsByPage.add(result.get(i));
+                if (dCnt >= (page - 1) * LIST_COUNT) {
+                    donationsByPage.add(result.get(i));
+                }
+                dCnt++;
             }
         }
 
         model.addAttribute("donations", donationsByPage);
         model.addAttribute("isEnded", false);
+        model.addAttribute("pageCnt", result.size() / LIST_COUNT);
+        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("listType", "application");
         
         return "applicationList";
     }
@@ -466,18 +478,22 @@ public class DonationController {
             donations = donationService.getDonations();
         }
 
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT; i++ ) {
+        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT;) {
             if (i >= donations.size()) {
                 break;
             }
             if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
                 donationsByPage.add(donations.get(i));
+                i++;
             }
         }
 
         model.addAttribute("isCompany", getUserType() == Role.COMPANY);
         model.addAttribute("isEnded", true);
         model.addAttribute("donations", donationsByPage);
+        model.addAttribute("pageCnt", donations.size() / LIST_COUNT);
+        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("listType", "end");
 
         return "applicationList";
 
