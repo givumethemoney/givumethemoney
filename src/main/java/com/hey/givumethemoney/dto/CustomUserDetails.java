@@ -69,6 +69,10 @@ public class CustomUserDetails implements UserDetails {
         return member.getCompanyName();
     }
 
+    public Role getRole() {
+        return member.getRole();
+    }
+
     /**
      * 계정이 만료되지 않았음을 반환
      */

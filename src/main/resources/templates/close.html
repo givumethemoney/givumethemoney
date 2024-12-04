@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Givu Me The Money</title>
+</head>
+<body>
+<script>
+  window.onload=function () {
+    opener.document.location.href="/receiptList/" + [[${donationId}]];
+    self.close();
+  }
+</script>
+
+</body>
+</html>

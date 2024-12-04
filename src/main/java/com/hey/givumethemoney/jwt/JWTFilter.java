@@ -39,6 +39,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
         System.out.println("JWTFilter is processing request: " + request.getRequestURI());
 
         // 쿠키에서 JWT 토큰을 찾음

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Header -->
+<div th:fragment="header">
+	<div id="header-wrapper">
+		<div id="header" class="container">
+
+			<!-- Logo -->
+			<h1 id="logo">
+				<a th:href="@{/}">GIVU ME THE MONEY</a>
+			</h1>
+			<!--로그인이 되어있는 경우-->
+			<div th:if="${session.loggedInUser != null}">
+				<form action="#" th:action="@{/logout}" method="post">
+					<button type="submit">Logout</button>
+				</form>
+			</div>
+			<!-- 로그인이 되어있지 않은 경우 -->
+			<div th:if="${session.loggedInUser == null}">
+				<!-- Login -->
+				<a th:href="@{/login}">로그인</a>
+				<a th:href="@{/join}">회원가입</a>
+
+			</div>
+		</div>
+	</div>
+</div>
+</html>

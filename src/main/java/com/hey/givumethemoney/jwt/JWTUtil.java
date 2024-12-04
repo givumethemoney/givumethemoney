@@ -62,7 +62,7 @@ public class JWTUtil {
     }
 
     public String getEmail(String token) {
-        return validateJwt(token).getSubject();
+        return validateJwt(token).get("email").toString();
     }
 
     public Role getRole(String token) {

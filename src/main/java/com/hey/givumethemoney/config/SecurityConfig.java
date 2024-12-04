@@ -9,6 +9,7 @@ import com.hey.givumethemoney.jwt.LoginFilter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,13 +41,18 @@ public class SecurityConfig {
         LoginFilter loginFilter = new LoginFilter(authenticationManager, jwtUtil, memberRepository, passwordEncoder);
 
         http
-                .csrf(csrf -> csrf.disable()) // RESTful API에서는 보통 CSRF가 필요하지 않으므로 
+                .csrf(csrf -> csrf.disable()) // RESTful API에서는 보통 CSRF가 필요하지 않으므로
                 .authorizeHttpRequests(auth -> auth
                         // 특정 URL은 인증 없이 접근 가능(permitAll())
-                        .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/member").permitAll() 
+                        .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/**").permitAll()
+                        .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
-                        .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/company").hasRole("COMPANY")
+                        .requestMatchers("/applicationList/*", "/application/agree", "/application/write", "/application/edit",
+                                "waitingList/*", "/endList/*").hasAnyRole("COMPANY", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/application/submit", "/application/submitEdit").hasAnyRole("COMPANY", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/receipt/submit").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.GET, "/receiptPopup").hasRole("COMPANY")
+                        .requestMatchers("/application/confirm/*", "/application/reject/*").hasRole("ADMIN")
                         // 그 외 모든 요청은 인증이 필요
                         .anyRequest().authenticated()
                 )
@@ -54,8 +60,8 @@ public class SecurityConfig {
                 // LoginFilter는 일반적으로 POST 요청만 처리하는 필터임
                 .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class)
                 // JWTFilter: 요청에 포함된 JWT 토큰을 검증하고, 인증된 사용자 정보를 설정
-                .addFilterBefore(jwtFilter, LoginFilter.class)
-                // SessionCreationPolicy.STATELESS: 세션을 생성하거나 유지하지 않음
+                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        // SessionCreationPolicy.STATELESS: 세션을 생성하거나 유지하지 않음
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 // /login 페이지를 커스텀 로그인 페이지로 사용
