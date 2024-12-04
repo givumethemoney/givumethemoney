@@ -7,6 +7,7 @@ import com.hey.givumethemoney.repository.MemberRepository;
 
 import com.hey.givumethemoney.jwt.LoginFilter;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -48,7 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
                         .requestMatchers("/applicationList/*", "/application/agree", "/application/write", "/application/edit",
-                                "waitingList/*", "/endList/*").hasAnyRole("COMPANY", "ADMIN")
+                                "waitingList/*", "/endList/*", "/logout").hasAnyRole("COMPANY", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/application/submit", "/application/submitEdit").hasAnyRole("COMPANY", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/receipt/submit").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.GET, "/receiptPopup").hasRole("COMPANY")
@@ -75,6 +76,13 @@ public class SecurityConfig {
                 // 로그아웃 성공 후 /로 리다이렉트
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .addLogoutHandler((request, reponse, authentication) -> {
+                            HttpSession session = request.getSession();
+                            if (session != null) {
+                                session.invalidate(); // 세션 무효화
+                            }
+                        })
+                        .deleteCookies("jwt_token")
                         .logoutSuccessUrl("/")
                         .permitAll());
 
