@@ -256,11 +256,13 @@ public class DonationController {
         donationService.saveWaitingDonation(waitingDonation);
 
         for (MultipartFile file : files) {
-            Image savedImg = imageService.saveImage(file, waitingDonation.getId());
-            if(savedImg  == null) {
-                System.out.println("이미지 저장 실패");
+            if (!file.getOriginalFilename().isEmpty() && file.getName() != null) {
+                Image savedImg = imageService.saveImage(file, waitingDonation.getId());
+                if (savedImg == null) {
+                    System.out.println("이미지 저장 실패");
+                }
+                System.out.println("donationController: 이미지 저장 완료... ");
             }
-            System.out.println("donationController: 이미지 저장 완료... ");
         }
         
         
@@ -291,6 +293,7 @@ public class DonationController {
             @RequestParam(value = "productPrice") List<Long> productPrice,
             @RequestParam(value = "deleteImages") String deleteImageList,
             DonationForm form) throws IOException {
+
         // 전부 지운 후 새로 들어온 리스트로 저장
         productService.deleteProductsByDonationId(id);
 
@@ -313,7 +316,6 @@ public class DonationController {
         while (st.hasMoreTokens()) {
             Long imageId = Long.parseLong(st.nextToken().trim());
             imageService.deleteImageById(imageId);
-            // 실제 저장된 이미지도 지워야 함
         }
 
         Optional<WaitingDonation> waitingDonation = donationService.getWaitingDonationById(id);
@@ -331,15 +333,14 @@ public class DonationController {
         }
 
         for (MultipartFile file : files) {
-            Image savedImg = imageService.saveImage(file, waitingDonation.get().getId());
-            if(savedImg  == null) {
-                System.out.println("이미지 저장 실패");
+            if (!file.getOriginalFilename().isEmpty() && file.getName() != null) {
+                Image savedImg = imageService.saveImage(file, waitingDonation.get().getId());
+                if (savedImg == null) {
+                    System.out.println("이미지 저장 실패");
+                }
+                System.out.println("donationController: 이미지 저장 완료... ");
             }
-            System.out.println("donationController: 이미지 저장 완료... ");
         }
-        
-
-        
         
         return "redirect:/detail/" + id.toString();
     }

@@ -85,11 +85,18 @@ public class ImageService {
     }
 
     public void deleteImageById(Long id) {
-        imageRepository.deleteById(id);
+        Optional<Image> image = findImageById(id);
+        if (image.isPresent()) {
+            s3RepositoryImpl.deleteFile(image.get().getSavedName());
+            imageRepository.deleteById(id);
+        }
     }
 
     public void deleteImagesByDonationId(Long donationId) {
         List<Image> images = findImagesByDonationId(donationId);
+        for (Image image : images) {
+            s3RepositoryImpl.deleteFile(image.getSavedName());
+        }
         imageRepository.deleteAll(images);
     }
 }
