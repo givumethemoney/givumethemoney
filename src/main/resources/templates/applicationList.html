@@ -66,6 +66,9 @@
                 </tbody>
             </table>
         </th:block>
+        <div th:each="p : ${#numbers.sequence(0, pageCnt - 1)}">
+            <a th:if="${p <= listCnt}" th:href="@{/{type}List/{page}(type=${listType}, page=${p + 1})}" th:text="${p + 1}"></a>
+        </div>
     </div>
 <header th:replace="~{layouts/footer::footer}"></header>
 </div>

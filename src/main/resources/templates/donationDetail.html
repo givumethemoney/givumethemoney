@@ -22,14 +22,11 @@
 
     <div class="content-wrapper">
         <th:block th:if="${donation.isConfirmed()}">
-            <a href="/applicationList/end" class="button">목록</a>
+            <a href="/endList" class="button">목록</a>
         </th:block>
-        <!-- 사용자 타입 확인 가능하게 리스트 합치면 링크 수정 -->
         <th:block th:if="!${donation.isConfirmed()}">
-            <a href="/admin/applicationList" class="button">목록</a>
+            <a href="/applicationList" class="button">목록</a>
         </th:block>
-        <!-- 사용자 테이블 추가되면 admin인지 확인
-        <th:block th:if="${donation.isConfirmed()}">-->
         <th:block>
             <br>
             <hr>
