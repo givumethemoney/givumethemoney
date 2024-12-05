@@ -3,6 +3,8 @@ package com.hey.givumethemoney.jwt;
 import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
 
 // LoginFilter의 두 메서드(attemptAuthentication과 successfulAuthentication)는 
 // Spring Security의 필터 체인에 의해 자동으로 순차적으로 실행!!!!
@@ -96,8 +100,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) {
-
-        response.setStatus(401);
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws ServletException, IOException {
+        request.getRequestDispatcher("/login-fail").forward(request, response);
     }
 }

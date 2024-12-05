@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,10 +17,19 @@ public class LoginController {
     @Autowired
     public LoginController() { }
 
+    @PostMapping("/login-fail")
+    public String errorLogin(Model model) {
+        model.addAttribute("fail", "true");
+
+        return "login";
+    }
+
 
     // 로그인 화면 반환
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(Model model) {
+        model.addAttribute("fail", "false");
+
         return "login";
     }
 
