@@ -45,12 +45,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // RESTful API에서는 보통 CSRF가 필요하지 않으므로
                 .authorizeHttpRequests(auth -> auth
                         // 특정 URL은 인증 없이 접근 가능(permitAll())
-                        .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/**").permitAll()
+                        .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/*", "/error").permitAll()
                         .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
                         .requestMatchers("/applicationList/*", "/application/agree", "/application/write", "/application/edit",
                                 "waitingList/*", "/endList/*", "/logout").hasAnyRole("COMPANY", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/application/submit", "/application/submitEdit").hasAnyRole("COMPANY", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/application/submit", "/application/submitEdit", "/api/files").hasAnyRole("COMPANY", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/receipt/submit").hasRole("COMPANY")
                         .requestMatchers(HttpMethod.GET, "/receiptPopup").hasRole("COMPANY")
                         .requestMatchers("/application/confirm/*", "/application/reject/*").hasRole("ADMIN")
