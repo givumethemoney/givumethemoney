@@ -77,6 +77,8 @@ public class JWTFilter extends OncePerRequestFilter {
                     System.out.println("token expired");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("Token has expired. Please log in again.");
+                    // 만료된 경우 로그인 페이지로 리디렉션
+                    response.sendRedirect("/login");
                     return;
                 }
 

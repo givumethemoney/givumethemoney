@@ -28,7 +28,7 @@ public class JWTUtil {
     public String createJwt(String email, String role, Long expiredMs) {
         try {
             if (expiredMs == null) {
-                expiredMs = 1000L * 60 * 60 * 10; // 기본 10시간
+                expiredMs = 1000L * 60 * 60 * 100; // 기본 10시간
             }
             System.out.println("JWT 생성 시작");
             String jwt = Jwts.builder()

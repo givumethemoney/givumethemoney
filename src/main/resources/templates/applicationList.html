@@ -54,9 +54,6 @@
                 </div>
             </div>
         </div>
-        
-        
-            
             
             
         </th:block>
@@ -84,7 +81,7 @@
                 </tbody>
             </table>
         </th:block>
-        <div th:if="${pageCnt != 0}" th:each="p : ${#numbers.sequence(0, pageCnt - 1)}">
+        <div class="page" th:if="${pageCnt != 0}" th:each="p : ${#numbers.sequence(0, pageCnt - 1)}">
             <a th:if="${p <= listCnt}" th:href="@{/{type}List/{page}(type=${listType}, page=${p + 1})}" th:text="${p + 1}"></a>
         </div>
     </div>
