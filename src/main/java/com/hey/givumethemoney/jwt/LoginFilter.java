@@ -79,7 +79,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         //JWT 생성
         System.out.println("loginFilter [successfulAuthentication]: jwt 토큰 생성을 위해 jwtUtil의 createJwt 호출\n\n");
-        String token = jwtUtil.createJwt(email, role, 60 * 60 * 10L);
+        String token = jwtUtil.createJwt(email, role, 1000L * 60 * 60 * 2);
 
         // 로그 추가
         System.out.println("Authentication successful for: " + email + " with role: " + role);
