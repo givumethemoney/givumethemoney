@@ -17,7 +17,6 @@
         <form action="/login" method="post">
             e-mail : <input type="email" name="email" placeholder="이메일을 입력하세요."> <br>
             password : <input type="password" name="password" placeholder="비밀번호를 입력하세요."> <br>
-            <a href="#">비밀번호를 잊으셨나요?</a>
             <input type="submit" class="button" value="로그인">
         </form>
 
@@ -33,7 +32,7 @@
 </div>
 
     <!-- 오류 메시지 표시 -->
-    <div th:if="${param.error}" class="errorMessage">
+    <div th:if="${fail}" class="errorMessage">
         <p>로그인 실패: 이메일 또는 비밀번호가 잘못되었습니다.</p>
     </div>
 
