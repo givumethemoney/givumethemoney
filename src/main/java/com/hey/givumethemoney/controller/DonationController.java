@@ -177,6 +177,15 @@ public class DonationController {
 
     @GetMapping("/application/agree")
     public String agree(Model model) {
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = customUserService.getEmail();
+        if (currentUserId.equals("anonymous")) {
+            model.addAttribute("user", null);
+        }
+        else {
+            MemberDomain member = memberService.findByEmail(currentUserId);
+            model.addAttribute("user", member);
+        }
 
         if (getUserType() != Role.ADMIN && getUserType() != Role.COMPANY) {
             model.addAttribute("msg", "로그인이 필요합니다.");
@@ -215,6 +224,16 @@ public class DonationController {
     public String editingApplication(@RequestParam("id") Long id, Model model) {
 
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
+
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = customUserService.getEmail();
+        if (currentUserId.equals("anonymous")) {
+            model.addAttribute("user", null);
+        }
+        else {
+            MemberDomain member = memberService.findByEmail(currentUserId);
+            model.addAttribute("user", member);
+        }
 
         // 유저id 일치한지 확인하는 것으로 수정
         if (!customUserService.getEmail().equals(donation.get().getUserId())) {
@@ -351,18 +370,26 @@ public class DonationController {
     }
 
     @GetMapping("/waitingList/{page}")
-    public String showWaitingList(@PathVariable int page, Model model) {
+    public String showWaitingList(@PathVariable("page") int page, Model model) {
         Role userType = getUserType();
 
         List<WaitingDonation> waitingDonations = new ArrayList<>();
+
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = customUserService.getEmail();
+        if (currentUserId.equals("anonymous")) {
+            model.addAttribute("user", null);
+        }
+        else {
+            MemberDomain member = memberService.findByEmail(currentUserId);
+            model.addAttribute("user", member);
+        }
+        
 
         if (userType == Role.ADMIN) {
             waitingDonations = donationService.getWaitingDonations();
         }
         else if (userType == Role.COMPANY) {
-            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-            String currentUserId = customUserService.getEmail();
-
             // 해당 기업이 작성한 목록으로 받아오기
             waitingDonations = donationService.getWaitingDonationsByUserId(currentUserId);
         }
@@ -403,10 +430,20 @@ public class DonationController {
     }
 
     @GetMapping("/applicationList/{page}")
-    public String showApplicationList(@PathVariable int page, Model model) {
+    public String showApplicationList(@PathVariable("page") int page, Model model) {
         // 홈에서 기부자에게 보여질 목록과 다른 목록임
 
         Role userType = getUserType();
+
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = customUserService.getEmail();
+        if (currentUserId.equals("anonymous")) {
+            model.addAttribute("user", null);
+        }
+        else {
+            MemberDomain member = memberService.findByEmail(currentUserId);
+            model.addAttribute("user", member);
+        }
 
         List<DonationBase> result = new ArrayList<>();;
 
@@ -415,8 +452,6 @@ public class DonationController {
             result.addAll(donationService.getDonations());
         }
         else if (userType == Role.COMPANY) {
-            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-            String currentUserId = customUserService.getEmail();
 
             // 해당 기업이 작성한 목록으로 받아오기
             result.addAll(donationService.getWaitingDonationsByUserId(currentUserId));
@@ -453,6 +488,7 @@ public class DonationController {
         return "applicationList";
     }
 
+
     @GetMapping("/endList")
     public String redirectEndList() {
         return "redirect:/endList/1";
@@ -460,16 +496,23 @@ public class DonationController {
 
     // 마감된 기부 보기
     @GetMapping("/endList/{page}")
-    public String showEndedApplicationList(@PathVariable int page, Model model) {
+    public String showEndedApplicationList(@PathVariable("page") int page, Model model) {
 
         List<Donation> donations;
+        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+        String currentUserId = customUserService.getEmail();
+        if (currentUserId.equals("anonymous")) {
+            model.addAttribute("user", null);
+        }
+        else {
+            MemberDomain member = memberService.findByEmail(currentUserId);
+            model.addAttribute("user", member);
+        }
 
         // 보여질 리스트
         List<Donation> donationsByPage = new ArrayList<>();
 
         if (getUserType() == Role.COMPANY) {
-            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-            String currentUserId = customUserService.getEmail();
 
             donations = donationService.getDonationsByUserId(currentUserId);
         }
