@@ -5,32 +5,31 @@
     <title>GIVU ME THE MONEY</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="/css/home.css"/>
     <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/header.css" />
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
-    <!--  header-->
+    <!--header-->
     <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
 
     <div class="content-wrapper">
         오류가 발생하였습니다.
     </div>
 
-    <!--    footer-->
+    <!--footer-->
     <header th:replace="layouts/footer::footer"></header>
 
 
 </div>
 
 <!-- Scripts -->
-<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/home.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
 </body>
 
 </html>
