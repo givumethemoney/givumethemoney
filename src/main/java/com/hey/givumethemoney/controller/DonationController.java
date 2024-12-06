@@ -476,7 +476,7 @@ public class DonationController {
         List<Donation> donationsByPage = allDonations.subList((page - 1) * LIST_COUNT,
                 Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allDonations.size()));
 
-        model.addAttribute("isEnded", false);
+        model.addAttribute("isEnded", true);
         model.addAttribute("donations", donationsByPage);
         model.addAttribute("pageCnt", allDonations.size() / LIST_COUNT);
 
