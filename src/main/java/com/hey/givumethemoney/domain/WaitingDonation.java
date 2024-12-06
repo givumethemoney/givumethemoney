@@ -21,13 +21,6 @@ public class WaitingDonation extends DonationBase {
     @Column(name = "id", nullable = false)
     protected Long id;
 
-    @Column(name = "is_rejected")
-    @Builder.Default 
-    protected boolean isRejected = false;
-
-    @Column(name="rejection_reason")
-    protected String rejectionReason;
-
     //@Builder
     public WaitingDonation(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, String userId) {
         this.title = title;

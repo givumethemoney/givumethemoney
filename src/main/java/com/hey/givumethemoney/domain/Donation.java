@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -15,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Getter
+@Setter
 public class Donation extends DonationBase {
 
     @Id
@@ -25,28 +27,9 @@ public class Donation extends DonationBase {
     @Builder.Default
     private List<NicknameDonation> nicknameDonations = new ArrayList<>();
 
-
     @ManyToOne
     @JoinColumn(name = "waiting_donation_id")  // WaitingDonation과의 연관 관계 추가
     private WaitingDonation waitingDonation;
-
-    // 추가된 필드
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate; // 마감일 필드 추가
-
-    // Getter와 Setter
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public boolean isRejected() {
-        // WaitingDonation이 null이 아니면 isRejected 값을 반환
-        return waitingDonation != null && waitingDonation.isRejected();
-    }
 
     //@Builder
     public Donation(WaitingDonation waitingDonation) {
@@ -61,5 +44,6 @@ public class Donation extends DonationBase {
         this.isConfirmed = !waitingDonation.isConfirmed();
         this.userId = waitingDonation.getUserId();
         this.id = waitingDonation.getId();
+        this.isRejected = waitingDonation.isRejected();
     }
 }

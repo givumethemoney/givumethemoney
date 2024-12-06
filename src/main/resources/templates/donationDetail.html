@@ -24,11 +24,17 @@
     <div class="content-wrapper">
         <div class="list-button">
             <!-- 목록으로 돌아가기 -->
-            <th:block th:if="${donation.isConfirmed()}">
-                <a href="/endList" class="button">목록</a>
+            <th:block th:if="${#strings.equals(session.role, 'ANONYMOUS')}">
+                <a href="/donationList" class="button">목록</a>
             </th:block>
-            <th:block th:if="!${donation.isConfirmed()}">
+            <th:block th:if="!${isEnded} and ${!donation.isConfirmed()}">
+                <a href="/waitingList" class="button">목록</a>
+            </th:block>
+            <th:block th:if="!${isEnded} and ${donation.isConfirmed()}">
                 <a href="/applicationList" class="button">목록</a>
+            </th:block>
+            <th:block th:if="${isEnded}">
+                <a href="/endList" class="button">목록</a>
             </th:block>
         </div>
         <th:block>
