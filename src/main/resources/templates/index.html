@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>GIVU ME THE MONEY</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <!-- <link rel="stylesheet" th:href="@{/css/home.css}"/> -->
-    <link rel="stylesheet" href="/css/home.css" />
+    <link rel="stylesheet" th:href="@{/css/home.css}" />
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -22,7 +20,6 @@
             <div class="slides">
                 <a href="https://link1.com" class="slide">
                     <img th:src="@{/images/pic01.jpg}" alt="Image 1">
-
                 </a>
                 <a href="https://link2.com" class="slide">
                     <img th:src="@{/images/pic02.jpg}" alt="Image 2">
@@ -32,18 +29,48 @@
                 </a>
             </div>
         </div>
+
+        <!-- 진행 중인 GIVU -->
         <div class="givuing">
-            <h1 id="givuing-title"><a>진행중인 GIVU ❯</a></h1>
+            <h1 id="givuing-title"><a href="/donationList">진행중인 GIVU ❯</a></h1>
+            <div class="donation-container">
+                <!-- donationList에서 최대 3개의 항목만 렌더링 -->
+                <<div th:each="donation : ${donationList}" class="donation-card">
+            <!-- 진행률 표시 -->
+<!--                    <div class="donation-progress">-->
+<!--                        <div class="progress-bar"-->
+<!--                             th:style="'width:' + (${donation.goal != null and donation.goal > 0} ? T(Integer).valueOf((donation.currentAmount * 100 / donation.goal)) : 0) + '%;'">-->
+<!--                        </div>-->
+<!--                        <span th:text="${donation.goal != null and donation.goal > 0 ? T(Integer).valueOf((donation.currentAmount * 100 / donation.goal)) : 0} + '%'"></span>-->
+<!--                    </div>-->
+                    <!-- 기부 정보 -->
+                    <div class="donation-info">
+                        <p th:text="'마감일: ' + ${donation.endDate}"></p>
+
+                        <!-- 남은 일수 표시 -->
+<!--                        <p th:if="${donation.endDate != null}"-->
+<!--                           th:text="'D-' + ${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), donation.endDate)}"></p>-->
+<!--                        <p th:if="${donation.endDate == null}">종료일 정보 없음</p>-->
+
+<!--                        <p th:if="${donation.daysLeft < 0}">마감됨</p>-->
+                        <!-- 제목 -->
+                        <p th:text="${donation.title}"></p>
+                        <!-- 목표 금액 -->
+<!--                        <p th:if="${donation.goal != null}" th:text="'목표 금액: ' + #numbers.formatNumber(donation.goal, '###,###') + '원'"></p>-->
+<!--                        <p th:if="${donation.goal == null}">목표 금액 정보 없음</p>-->
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- 마감된 GIVU -->
         <div class="ending">
             <h1 id="ending-title"><a>마감된 GIVU ❯</a></h1>
-
         </div>
     </div>
-    <!--    footer-->
+
+    <!-- Footer -->
     <div th:replace="~{layouts/footer::footer}"></div>
-
-
 </div>
 
 <!-- Scripts -->
@@ -54,5 +81,4 @@
 <script type="text/javascript" th:src="@{/js/home.js}"></script>
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
 </body>
-
 </html>

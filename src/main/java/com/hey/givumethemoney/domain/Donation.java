@@ -24,6 +24,16 @@ public class Donation extends DonationBase {
     @Builder.Default
     private List<NicknameDonation> nicknameDonations = new ArrayList<>();
 
+
+    // Donation과 Image의 관계 매핑
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "donation_id", insertable = false, updatable = false)
+    private Image image;
+
+    public String getThumbnail() {
+        return (image != null) ? image.getThumbUrl() : "/images/default-thumbnail.jpg";
+    }
+
     //@Builder
     public Donation(WaitingDonation waitingDonation) {
         this.title = waitingDonation.getTitle();

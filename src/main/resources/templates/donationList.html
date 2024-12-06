@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>기부 목록</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/donationList.css">
+
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <!--  header-->
+    <div th:replace="~{layouts/header::header}"></div>
+
+    <div class="content-wrapper">
+
+        <!-- 버튼 컨테이너 -->
+        <div class="button-container">
+            <button id="ongoingButton" class="toggle-button active">진행 중인 GIVU</button>
+            <button id="completedButton" class="toggle-button">전해진 GIVU</button>
+        </div>
+
+        <div id="ongoing-donations" class="donation-list">
+            <h2 class="givu-title">진행 중인 GIVU</h2>
+            <div th:each="donation : ${ongoingDonations}" class="donation-card">
+                <div class="donation-card-inner">
+                    <div class="thumbnail-placeholder"></div>
+                    <div class="donation-content">
+                        <div class="donation-info">
+                            <h3 th:text="${donation.title}"></h3>
+                            <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                        </div>
+                        <div class="donation-date">
+                            <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                            <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                        </div>
+                    </div>
+                    <button class="give-btn">기부하기</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="completed-donations" class="donation-list" style="display: none;">
+            <h2 class="givu-title">전해진 GIVU</h2>
+            <div th:each="donation : ${finishedDonations}" class="donation-card">
+                <div class="donation-card-inner">
+                    <div class="thumbnail-placeholder"></div>
+                    <div class="donation-content">
+                        <div class="donation-info">
+                            <h3 th:text="${donation.title}"></h3>
+                            <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                        </div>
+                        <div class="donation-date">
+                            <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                            <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                        </div>
+                    </div>
+                    <button class="receipt-btn">영수증 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        <script type="text/javascript" th:src="@{/js/donation.list.js}"></script>
+
+        <script>
+            // 버튼 클릭 이벤트
+            document.getElementById('ongoingButton').addEventListener('click', function () {
+                document.getElementById('ongoing-donations').style.display = 'block';
+                document.getElementById('completed-donations').style.display = 'none';
+                this.classList.add('active');
+                document.getElementById('completedButton').classList.remove('active');
+            });
+
+            document.getElementById('completedButton').addEventListener('click', function () {
+                document.getElementById('ongoing-donations').style.display = 'none';
+                document.getElementById('completed-donations').style.display = 'block';
+                this.classList.add('active');
+                document.getElementById('ongoingButton').classList.remove('active');
+            });
+        </script>
+</body>
+</html>

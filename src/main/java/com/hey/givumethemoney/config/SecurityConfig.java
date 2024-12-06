@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // 특정 URL은 인증 없이 접근 가능(permitAll())
                         .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/*", "/error").permitAll()
-                        .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*").permitAll()
+                        .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*","/donationList", "/donationList/**").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
                         .requestMatchers("/applicationList/*", "/application/agree", "/application/write", "/application/edit",
                                 "waitingList/*", "/endList/*", "/logout").hasAnyRole("COMPANY", "ADMIN")

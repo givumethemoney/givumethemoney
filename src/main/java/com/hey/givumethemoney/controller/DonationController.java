@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,19 @@ public class DonationController {
         this.memberService = memberService;
         this.customUserService = customUserService;
     }
+
+    // 전체 기부 목록 페이지
+    @GetMapping("/donationList")
+    public String donationList(Model model) {
+        List<Donation> ongoingDonations = donationService.getOngoingDonations();
+        List<Donation> finishedDonations = donationService.getFinishedDonations();
+        model.addAttribute("ongoingDonations", ongoingDonations);
+        model.addAttribute("finishedDonations", finishedDonations);
+
+        return "donationList";
+    }
+
+
 
     @GetMapping("/detail/{id}")
     //@ResponseBody
