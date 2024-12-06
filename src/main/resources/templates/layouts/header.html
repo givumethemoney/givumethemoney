@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/header.css" />
-<link rel="stylesheet" href="/css/main.css" />
-
-
 <!-- Header -->
 <div th:fragment="header">
 	<div id="header-wrapper">
@@ -11,7 +7,7 @@
 
 			<!-- Logo -->
 			<h1 id="logo">
-				<a th:href="@{/}">GIVU ME THE MONEY</a>
+				<a href="/">GIVU ME THE MONEY</a>
 			</h1>
 			<!-- Nav -->
 			<nav id="nav">
@@ -52,7 +48,7 @@
 			<!--로그인이 되어있는 경우-->
 			<div class="header-button-wrapper" th:if="${session.isLoggedIn != null}">
 				<a id="email" th:text="${session.email}">Email</a>
-				<form action="#" th:action="@{/logout}" method="post">
+				<form action="/logout" method="post">
 					<button id ="logout-button" type="submit">Logout</button>
 				</form>
 				<br>

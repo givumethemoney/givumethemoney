@@ -35,4 +35,4 @@ setInterval(showNextSlide, 3000);
 				$body.removeClass('is-preload');
 			}, 100);
 		});
-}
+});
