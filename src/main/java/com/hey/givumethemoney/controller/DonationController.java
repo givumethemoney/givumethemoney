@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ public class DonationController {
     ProductService productService;
     MemberService memberService;
     CustomUserService customUserService;
+    DonationRecommendationService recommendationService;
 
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
@@ -38,12 +40,14 @@ public class DonationController {
                                 DonationService donationService, 
                                 ProductService productService, 
                                 MemberService memberService, 
-                                CustomUserService customUserService) {
+                                CustomUserService customUserService,
+                                DonationRecommendationService recommendationService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
         this.memberService = memberService;
         this.customUserService = customUserService;
+        this.recommendationService = recommendationService;
     }
 
     @GetMapping("/detail/{id}")
@@ -124,6 +128,11 @@ public class DonationController {
         } else {
             model.addAttribute("random", -1); // -1은 유효하지 않은 인덱스를 의미
         }
+
+        // 추천 금액
+        // BigDecimal recommendedAmount = recommendationService.getSuggestedDonationAmount(id);
+        // model.addAttribute("recommendedAmount", recommendedAmount);
+        // return "donate";
 
         // 모델에 들어있는 데이터 확인
         // logger.info("Model contains: {}", model.asMap());

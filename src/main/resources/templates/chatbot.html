@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="/css/chatbot.css" />
+
+<div id="chatbot">
+    <div id="chatbox">
+        <div id="messages"></div>
+    </div>
+    <input type="text" id="userQuestion" placeholder="궁금한 점을 입력하세요">
+    <button onclick="sendQuestion()">질문하기</button>
+</div>
+
+<script>
+    function sendQuestion() {
+        var question = document.getElementById("userQuestion").value;
+        fetch("/chatbot/ask", {
+            method: "POST",
+            body: JSON.stringify({ question: question }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            var messages = document.getElementById("messages");
+            messages.innerHTML += "<div class='question'>Q: " + question + "</div>";
+            messages.innerHTML += "<div class='answer'>A: " + data.answer + "</div>";
+        });
+    }
+</script>
