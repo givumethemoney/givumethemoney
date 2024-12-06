@@ -373,25 +373,20 @@ public class DonationController {
             return "alert";
         }
 
-        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
-        int dCnt = 0;
+        List<WaitingDonation> allWaitingDonations = new ArrayList<>();
         for (int i = 0; i < waitingDonations.size(); i++) {
-            if (dCnt >= (page - 1) * LIST_COUNT + LIST_COUNT) {
-                break;
-            }
             // 마감되지 않은 기부만 추출
             if (waitingDonations.get(i).getEndDate().compareTo(LocalDate.now()) >= 0) {
-                if (dCnt >= (page - 1) * LIST_COUNT) {
-                    waitingDonationsByPage.add(waitingDonations.get(i));
-                }
-                dCnt++;
+                allWaitingDonations.add(waitingDonations.get(i));
             }
         }
 
+        List<WaitingDonation> waitingDonationsByPage = allWaitingDonations.subList((page - 1) * LIST_COUNT,
+                Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allWaitingDonations.size()));
+
         model.addAttribute("isEnded", false);
         model.addAttribute("donations", waitingDonationsByPage);
-        model.addAttribute("pageCnt", waitingDonations.size() / LIST_COUNT);
-        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("pageCnt", allWaitingDonations.size() / LIST_COUNT);
         model.addAttribute("listType", "waiting");
 
         return "applicationList";
@@ -429,25 +424,20 @@ public class DonationController {
             return "alert";
         }
 
-        List<DonationBase> donationsByPage = new ArrayList<>();
-        int dCnt = 0;
+        List<DonationBase> allDonations = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
-            if (dCnt >= (page - 1) * LIST_COUNT + LIST_COUNT) {
-                break;
-            }
             // 마감되지 않은 기부만 추출
             if (result.get(i).getEndDate().compareTo(LocalDate.now()) >= 0) {
-                if (dCnt >= (page - 1) * LIST_COUNT) {
-                    donationsByPage.add(result.get(i));
-                }
-                dCnt++;
+                allDonations.add(result.get(i));
             }
         }
 
-        model.addAttribute("donations", donationsByPage);
+        List<DonationBase> donationsByPage = allDonations.subList((page - 1) * LIST_COUNT,
+                Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allDonations.size()));
+
         model.addAttribute("isEnded", false);
-        model.addAttribute("pageCnt", result.size() / LIST_COUNT);
-        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("donations", donationsByPage);
+        model.addAttribute("pageCnt", allDonations.size() / LIST_COUNT);
         model.addAttribute("listType", "application");
         
         return "applicationList";
@@ -464,9 +454,6 @@ public class DonationController {
 
         List<Donation> donations;
 
-        // 보여질 리스트
-        List<Donation> donationsByPage = new ArrayList<>();
-
         if (getUserType() == Role.COMPANY) {
             // 유저 서비스에서 현재 로그인된 유저 id 받아옴
             String currentUserId = customUserService.getEmail();
@@ -478,21 +465,22 @@ public class DonationController {
             donations = donationService.getDonations();
         }
 
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT;) {
-            if (i >= donations.size()) {
-                break;
-            }
+        List<Donation> allDonations = new ArrayList<>();
+        for (int i = 0; i < donations.size(); i++) {
+            // 마감된 기부만 추출
             if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
-                donationsByPage.add(donations.get(i));
-                i++;
+                allDonations.add(donations.get(i));
             }
         }
 
-        model.addAttribute("isCompany", getUserType() == Role.COMPANY);
-        model.addAttribute("isEnded", true);
+        List<Donation> donationsByPage = allDonations.subList((page - 1) * LIST_COUNT,
+                Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allDonations.size()));
+
+        model.addAttribute("isEnded", false);
         model.addAttribute("donations", donationsByPage);
-        model.addAttribute("pageCnt", donations.size() / LIST_COUNT);
-        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("pageCnt", allDonations.size() / LIST_COUNT);
+
+        model.addAttribute("isCompany", getUserType() == Role.COMPANY);
         model.addAttribute("listType", "end");
 
         return "applicationList";
