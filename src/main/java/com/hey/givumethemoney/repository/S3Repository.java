@@ -1,9 +1,7 @@
 package com.hey.givumethemoney.repository;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import com.amazonaws.services.s3.model.S3ObjectInputStream;

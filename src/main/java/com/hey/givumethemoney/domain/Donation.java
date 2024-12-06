@@ -25,13 +25,13 @@ public class Donation extends DonationBase {
     private List<NicknameDonation> nicknameDonations = new ArrayList<>();
 
 
-    // Donation과 Image의 관계 매핑
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "donation_id", insertable = false, updatable = false)
-    private Image image;
+    @ManyToOne
+    @JoinColumn(name = "waiting_donation_id")  // WaitingDonation과의 연관 관계 추가
+    private WaitingDonation waitingDonation;
 
-    public String getThumbnail() {
-        return (image != null) ? image.getThumbUrl() : "/images/default-thumbnail.jpg";
+    public boolean isRejected() {
+        // WaitingDonation이 null이 아니면 isRejected 값을 반환
+        return waitingDonation != null && waitingDonation.isRejected();
     }
 
     //@Builder
@@ -46,7 +46,6 @@ public class Donation extends DonationBase {
         this.enterName = waitingDonation.getEnterName();
         this.isConfirmed = !waitingDonation.isConfirmed();
         this.userId = waitingDonation.getUserId();
-
         this.id = waitingDonation.getId();
     }
 }

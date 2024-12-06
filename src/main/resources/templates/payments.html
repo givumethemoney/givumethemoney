@@ -14,7 +14,7 @@
   <body class="homepage is-preload">
 
     <div id="page-wrapper">
-      <header th:replace="~{layouts/header :: header}"></header>
+      <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
       <div class="container">
         <!-- <h1>GIVU ME THE MONEY</h1> -->
         <hr>

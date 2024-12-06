@@ -1,7 +1,6 @@
 package com.hey.givumethemoney.repository;
 
 import com.hey.givumethemoney.domain.Donation;
-import com.hey.givumethemoney.domain.Image;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import java.util.Optional;
 
 @Repository

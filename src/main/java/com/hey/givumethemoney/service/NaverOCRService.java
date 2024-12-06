@@ -1,9 +1,7 @@
 package com.hey.givumethemoney.service;
 
-import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.domain.OCRResult;
 import com.hey.givumethemoney.domain.Receipt;
-import com.hey.givumethemoney.repository.ImageRepository;
 import com.hey.givumethemoney.repository.NaverOCRRepository;
 import com.hey.givumethemoney.repository.ReceiptRepository;
 import com.fasterxml.jackson.databind.JsonNode;

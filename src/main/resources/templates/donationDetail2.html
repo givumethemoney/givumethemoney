@@ -119,9 +119,9 @@
                 </ul> -->
                 <ul>
                     <li class="wreath" th:each="entry, iterStat : ${top3Nicknames}">
-                        <img src="/image/wreath_1_BG.png" th:if="${iterStat.index == 0}"/>
-                        <img src="/image/wreath_1_BG.png" th:if="${iterStat.index == 1}"/>
-                        <img src="/image/wreath_1_BG.png" th:if="${iterStat.index == 2}"/>
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/wreath_1_bg.png" th:if="${iterStat.index == 0}"/>
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/wreath_1_bg.png" th:if="${iterStat.index == 1}"/>
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/wreath_1_bg.png" th:if="${iterStat.index == 2}"/>
                         <p class="rank-number" th:text="${iterStat.index == 0 ? '1st' : iterStat.index == 1 ? '2nd' : '3rd'}"></p>
                         <p class="rank-name" th:text="${entry != null ? entry.key : '없음'}"></p>
                     </li>

@@ -15,7 +15,7 @@
 <body class="homepage is-preload">
 <div id="page-wrapper">
 
-    <header th:replace="layouts/header::header"></header>
+    <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
 
     <div class="content-wrapper">
         <a href="#" class="button">목록</a>

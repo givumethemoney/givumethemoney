@@ -23,9 +23,10 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String index(Model model) {
         List<Donation> donationList = donationService.getTop3Donations(); // 진행 중인 상위 3개의 기부를 가져옴
         model.addAttribute("donationList", donationList);
+
         return "index";
     }
 }

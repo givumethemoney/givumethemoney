@@ -4,7 +4,6 @@ import com.hey.givumethemoney.jwt.JWTFilter;
 import com.hey.givumethemoney.jwt.JWTUtil;
 import com.hey.givumethemoney.repository.MemberRepository;
 
-
 import com.hey.givumethemoney.jwt.LoginFilter;
 
 import jakarta.servlet.http.HttpSession;
@@ -47,6 +46,7 @@ public class SecurityConfig {
                         // 특정 URL은 인증 없이 접근 가능(permitAll())
                         .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/*", "/error").permitAll()
                         .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*","/donationList", "/donationList/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login-fail").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
                         .requestMatchers("/applicationList/*", "/application/agree", "/application/write", "/application/edit",
                                 "waitingList/*", "/endList/*", "/logout").hasAnyRole("COMPANY", "ADMIN")

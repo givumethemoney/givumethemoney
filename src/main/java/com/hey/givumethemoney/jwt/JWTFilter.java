@@ -64,6 +64,18 @@ public class JWTFilter extends OncePerRequestFilter {
         //Bearer 부분 제거 후 순수 토큰만 획득
         // String token = authorization.split(" ")[1];
 
+        if (jwtUtil.isExpired(token)) {
+            System.out.println("token expired");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            Cookie deleteCookie = new Cookie("jwt_token", null);
+            deleteCookie.setMaxAge(0);
+            deleteCookie.setPath("/");
+            response.addCookie(deleteCookie);
+
+            response.sendRedirect("/login");
+            return;
+        }
+
             //토큰 소멸 시간 검증
             try {
                 // 토큰 검증 및 Claims 가져오기
@@ -71,14 +83,6 @@ public class JWTFilter extends OncePerRequestFilter {
                 // Claims는 토큰에 저장된 데이터(email, role 등)를 포함.
                 Claims claims = jwtUtil.validateJwt(token);
                 System.out.println("Claims: " + claims);
-
-                // 토큰이 만료되었는지 확인
-                if (jwtUtil.isExpired(token)) {
-                    System.out.println("token expired");
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Token has expired. Please log in again.");
-                    return;
-                }
 
                 String email = jwtUtil.getEmail(token);
                 com.hey.givumethemoney.domain.Role role = jwtUtil.getRole(token);
@@ -92,9 +96,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 HttpSession session = request.getSession();
                 session.setAttribute("isLoggedIn", true);
                 session.setAttribute("email", member.getEmail());
-                session.setAttribute("type", member.getRole());
+                session.setAttribute("role", member.getRole());
 
-                System.out.println("세션 저장 완료: " + session.getAttribute("isLoggedIn").toString());
+                System.out.println("세션 저장 완료: " + session.getAttribute("role").toString());
 
                 // CustomUserDetails 생성
                 CustomUserDetails customerUserDetails = new CustomUserDetails(member);
@@ -112,7 +116,12 @@ public class JWTFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 System.out.println("Token is expired: " + e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Token has expired. Please log in again.");
+                Cookie deleteCookie = new Cookie("jwt_token", null);
+                deleteCookie.setMaxAge(0);
+                deleteCookie.setPath("/");
+                response.addCookie(deleteCookie);
+
+                response.sendRedirect("/login");
                 return;
             }
             filterChain.doFilter(request, response);
