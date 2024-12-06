@@ -35,19 +35,21 @@
 						</ul>
 					</li>
 					<!-- 기업 사용자일 때 -->
-					<th:block th:if="${user != null} and ${#strings.equals(user.getRole(), 'COMPANY')}">
+					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'COMPANY')}">
 						<li><a href="/application/agree">기부 신청하기</a></li>
-						<li class="break"><a href="/donationList">나의 기부</a></li>
-						<li><a href="/applicationList">나의 신청서</a></li>
+						<li><a href="/donationList">기부 신청하기</a></li>
+						<li><a href="/applicationList">전체 신청서</a></li>
+						<li><a href="/waitingList">대기 신청서</a></li>
+						<li><a href="/endList">마감 신청서</a></li>
 					</th:block>
 					<!-- 관리자일 때 -->
-					<th:block th:if="${user != null} and ${#strings.equals(user.getRole(), 'ADMIN')}">
+					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'ADMIN')}">
 						<li><a href="/applicationList">전체 신청서</a></li>
-						<li class="break"><a href="/waitingList">대기 신청서</a></li>
+						<li><a href="/waitingList">대기 신청서</a></li>
 						<li><a href="/endList">마감 신청서</a></li>
 					</th:block>
 					<!-- 비회원일 때 -->
-					<th:block th:if="${user == null}">
+					<th:block th:if="${session.isLoggedIn == null}">
 						<li><a href="/login">로그인</a></li>
 						<li class="break"><a href="/join">회원가입</a></li>
 						<li><a href="/">기부를 진행하고 싶어요</a></li>

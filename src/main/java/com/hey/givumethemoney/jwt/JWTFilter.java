@@ -99,9 +99,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 HttpSession session = request.getSession();
                 session.setAttribute("isLoggedIn", true);
                 session.setAttribute("email", member.getEmail());
-                session.setAttribute("type", member.getRole());
+                session.setAttribute("role", member.getRole());
 
-                System.out.println("세션 저장 완료: " + session.getAttribute("isLoggedIn").toString());
+                System.out.println("세션 저장 완료: " + session.getAttribute("role").toString());
 
                 // CustomUserDetails 생성
                 CustomUserDetails customerUserDetails = new CustomUserDetails(member);
