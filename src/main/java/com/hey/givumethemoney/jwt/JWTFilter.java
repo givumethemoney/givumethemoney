@@ -78,9 +78,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
             //토큰 소멸 시간 검증
             try {
-                // 토큰이 만료되었는지 확인
-
-
                 // 토큰 검증 및 Claims 가져오기
                 // JWT의 유효성을 확인하고, 내부 데이터를 Claims 객체로 반환.
                 // Claims는 토큰에 저장된 데이터(email, role 등)를 포함.

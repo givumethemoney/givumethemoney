@@ -1,19 +1,15 @@
 package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Receipt;
-import com.hey.givumethemoney.repository.NaverOCRRepository;
 import com.hey.givumethemoney.repository.ReceiptRepository;
 import com.hey.givumethemoney.repository.S3Repository;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

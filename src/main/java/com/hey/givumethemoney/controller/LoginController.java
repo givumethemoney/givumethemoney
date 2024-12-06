@@ -24,7 +24,6 @@ public class LoginController {
         return "login";
     }
 
-
     // 로그인 화면 반환
     @GetMapping("/login")
     public String loginForm(Model model) {

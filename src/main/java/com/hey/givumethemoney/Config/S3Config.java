@@ -1,4 +1,4 @@
-package com.hey.givumethemoney.Config;
+package com.hey.givumethemoney.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

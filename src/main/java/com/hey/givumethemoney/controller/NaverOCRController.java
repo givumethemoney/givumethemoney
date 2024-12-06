@@ -2,7 +2,6 @@ package com.hey.givumethemoney.controller;
 
 import org.springframework.stereotype.Controller;
 
-import com.hey.givumethemoney.service.InquiryService;
 import com.hey.givumethemoney.service.NaverOCRService;
 
 @Controller

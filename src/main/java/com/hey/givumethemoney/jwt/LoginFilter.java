@@ -3,7 +3,6 @@ package com.hey.givumethemoney.jwt;
 import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.repository.MemberRepository;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

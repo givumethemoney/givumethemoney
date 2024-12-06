@@ -2,11 +2,9 @@ package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.*;
 import com.hey.givumethemoney.service.*;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -489,17 +487,5 @@ public class DonationController {
 
     protected Role getUserType() {
         return customUserService.getRole();
-    }
-
-    @GetMapping("/thumbs/{id}")
-    @ResponseBody
-    public String showThumb(@PathVariable("id") Long id, Model model) throws IOException {
-        Image image = imageService.findImageById(id).get();
-        if (image != null) {
-            return image.getThumbUrl();
-        }
-        else {
-            return null;
-        }
     }
 }
