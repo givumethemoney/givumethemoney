@@ -1,5 +1,6 @@
 package com.hey.givumethemoney.domain;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,19 @@ public class Donation extends DonationBase {
     @ManyToOne
     @JoinColumn(name = "waiting_donation_id")  // WaitingDonation과의 연관 관계 추가
     private WaitingDonation waitingDonation;
+
+    // 추가된 필드
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate; // 마감일 필드 추가
+
+    // Getter와 Setter
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
 
     public boolean isRejected() {
         // WaitingDonation이 null이 아니면 isRejected 값을 반환

@@ -7,6 +7,8 @@
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <link rel="stylesheet" th:href="@{/css/home.css}"/>
 
+
+
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -27,48 +29,69 @@
             </div>
             <!-- 진행 중인 GIVU -->
             <div class="givuing">
-                <h1 id="givuing-title"><a href="/donationList">진행중인 GIVU ❯</a></h1>
-                <div class="donation-container">
-                    <!-- donationList에서 최대 3개의 항목만 렌더링 -->
-                    <
-                    <div th:each="donation : ${donationList}" class="donation-card">
-                        <!-- 진행률 표시 -->
-                        <!-- 기부 정보 -->
-                        <div class="donation-info">
-                            <p th:text="'마감일: ' + ${donation.endDate}"></p>
-
-                            <!-- 남은 일수 표시 -->
-                            <!-- 제목 -->
-                            <p th:text="${donation.title}"></p>
-                            <!-- 목표 금액 -->
+                <a class="givu-title" href="/donationList">
+                    <h1>진행중인 GIVU ❯</h1>
+                </a>
+                <div th:each="donation : ${ongoingDonations}" class="donation-card">
+                    <div class="donation-card-inner">
+                        <div class="thumbnail-placeholder"></div>
+                        <div class="donation-content">
+                            <div class="donation-info">
+                                <h3 th:text="${donation.title}"></h3>
+                                <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                            </div>
+                            <div class="donation-date">
+                                <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                                <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- 마감된 GIVU -->
-            <div class="ending">
-                <h1 id="ending-title"><a>마감된 GIVU ❯</a></h1>
-
             </div>
 
+            <!-- 전해진 GIVU -->
+            <div class="ending">
+                <a class="givu-title" href="/donationList">
+                    <h1>전해진 GIVU ❯</h1>
+                </a>
+                <div th:each="donation : ${finishedDonations}" class="donation-card">
+                    <div class="donation-card-inner">
+                        <div class="thumbnail-placeholder"></div>
+                        <div class="donation-content">
+                            <div class="donation-info">
+                                <h3 th:text="${donation.title}"></h3>
+                                <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                            </div>
+                            <div class="donation-date">
+                                <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                                <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-
-        <!-- Footer -->
-        <header th:replace="layouts/footer::footer"></header>
-
-        <!--navigation bar-->
-        <!-- <div th:replace="~{navBar :: navBar}"></div> -->
     </div>
-
-    <!-- Scripts -->
-    <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/home.js}"></script>
-    <script type="text/javascript" th:src="@{/js/util.js}"></script>
+    </div>
+    <!-- 진행률 표시 -->
+    <!-- 남은 일수 표시 -->
+    <!-- 목표 금액 -->
 </div>
+
+
+<!-- Footer -->
+<header th:replace="layouts/footer::footer"></header>
+
+<!--navigation bar-->
+<!-- <div th:replace="~{navBar :: navBar}"></div> -->
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/home.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
 </body>
 </html>

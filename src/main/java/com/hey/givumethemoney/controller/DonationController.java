@@ -48,8 +48,9 @@ public class DonationController {
     // 전체 기부 목록 페이지
     @GetMapping("/donationList")
     public String donationList(Model model) {
-        List<Donation> ongoingDonations = donationService.getOngoingDonations();
-        List<Donation> finishedDonations = donationService.getFinishedDonations();
+        List<Donation> allDonations = donationService.getDonations(); // 전체 기부 목록 가져오기
+        List<Donation> ongoingDonations = allDonations;
+        List<Donation> finishedDonations = allDonations;
         model.addAttribute("ongoingDonations", ongoingDonations);
         model.addAttribute("finishedDonations", finishedDonations);
 

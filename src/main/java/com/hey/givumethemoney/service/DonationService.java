@@ -184,13 +184,5 @@ public class DonationService {
                 .collect(Collectors.toList());
     }
 
-    public List<Donation> getTop3Donations() {
-        return donationRepository.findAllByEndDateAfter(LocalDate.now())
-                .stream()
-                .sorted(Comparator.comparing(Donation::getStartDate).reversed()) // 최근 시작한 기부 순서대로 정렬
-                .limit(3)
-                .collect(Collectors.toList());
-    }
-
 
 }

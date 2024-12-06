@@ -24,8 +24,21 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(Model model) {
-        List<Donation> donationList = donationService.getTop3Donations(); // 진행 중인 상위 3개의 기부를 가져옴
-        model.addAttribute("donationList", donationList);
+        // 진행 중인 기부 중 상위 3개 가져오기
+        List<Donation> ongoingDonations = donationService.getDonations().stream()
+                .filter(donation -> donation.getEndDate().isAfter(LocalDate.now())) // 마감일이 지나지 않은 기부만 필터링
+                .limit(3) // 상위 3개만 가져오기
+                .collect(Collectors.toList());
+
+        model.addAttribute("ongoingDonations", ongoingDonations);
+
+        // 마감된 기부 중 상위 3개 가져오기
+        List<Donation> finishedDonations = donationService.getDonations().stream()
+                .filter(donation -> donation.getEndDate().isBefore(LocalDate.now())) // 마감일이 지난 기부만 필터링
+                .limit(3) // 상위 3개만 가져오기
+                .collect(Collectors.toList());
+
+        model.addAttribute("finishedDonations", finishedDonations);
 
         return "index";
     }
