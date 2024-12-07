@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>GIVU ME THE MONEY</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/chatbot.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <!--  header-->
+    <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
+
+    <div class="content-wrapper">
+        <!-- Slider -->
+        <div id="body-wrapper">
+            <div class="slider">
+                <div class="slides">
+                    <a href="https://link1.com" class="slide">
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/IMG_3350.JPG" alt="Image 1">
+
+                    </a>
+                    <a href="https://link2.com" class="slide">
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/IMG_9636.JPG" alt="Image 2">
+                    </a>
+                    <a href="https://link3.com" class="slide">
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/0411448d-0d0a-4b14-8a8d-5d2f3ebba49b.jpg" alt="Image 3">
+                        <!-- <img th:src="@{/images/pic03.jpg}" alt="Image 3"> -->
+                    </a>
+                </div>
+            </div>
+            <div class="givuing">
+                <h1 id="givuing-title"><a>진행중인 GIVU ❯</a></h1>
+            </div>
+            <div class="ending">
+                <h1 id="ending-title"><a>마감된 GIVU ❯</a></h1>
+
+            </div>
+        </div>
+    </div>
+    
+
+    
+    <!--    footer-->
+    <header th:replace="layouts/footer::footer"></header>
+
+    <!--navigation bar-->
+    <!-- <div th:replace="~{navBar :: navBar}"></div> -->
+    <div th:insert="~{chatbot :: chatbot}"></div>
+
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/home.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script>
+    function sendQuestion() {
+                var question = document.getElementById("userQuestion").value;
+                fetch("/chatbot/ask", {
+                    method: "POST",
+                    body: JSON.stringify({ question: question }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var messages = document.getElementById("messages");
+                    messages.innerHTML += "<div class='question'>Q: " + question + "</div>";
+                    messages.innerHTML += "<div class='answer'>A: " + data.answer + "</div>";
+                });
+            }
+
+    function toggleChat() {
+        const chatPopup = document.getElementById("chat-popup");
+        if (chatPopup.style.display === "none" || chatPopup.style.display === "") {
+            chatPopup.style.display = "flex"; // 보이기
+        } else {
+            chatPopup.style.display = "none"; // 숨기기
+        }
+    }
+</script>
+</body>
+
+</html>

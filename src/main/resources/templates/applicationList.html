@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<!--
+	Telephasic by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/paymentsList.css" />
+    <link rel="stylesheet" href="/css/chatbot.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+    <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
+    <div class="content-wrapper">
+        <th:block th:if="!${isEnded}">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="header-title pb-3 mt-0">협업 신청 목록</h2>
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead>
+                                    <tr class="align-self-center">
+                                        <th>번호</th>
+                                        <th>제목</th>
+                                        <th>기업</th>
+                                        <th>기부 시작 날짜</th>
+                                        <th>대기 / 반려</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="d : ${donations}">
+                                        <td th:text="${d.getId()}">id</td>
+                                        <td><a th:text="${d.getTitle()}" th:href="@{/detail/{id}(id=${d.getId()})}">제목</a></td>
+                                        <td th:text="${d.getEnterName()}">기업</td>
+                                        <td th:text="${d.getStartDate()}">날짜</td>
+                                        <td th:if="${d.isConfirmed()}">승인</td>
+                                        <td th:if="${d.isRejected()}">반려</td>
+                                        <td th:if="${!d.isConfirmed() and !d.isRejected()}">대기</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+            
+        </th:block>
+        <th:block th:if="${isEnded}">
+            <h2>마감된 기부 목록</h2>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>기업</th>
+                    <th>기부 마감 날짜</th>
+                    <th th:if="${isCompany}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="d : ${donations}">
+                    <td th:text="${d.getId()}">id</td>
+                    <td><a th:text="${d.getTitle()}" th:href="@{/detail/{id}(id=${d.getId()})}">제목</a></td>
+                    <td th:text="${d.getEnterName()}">기업</td>
+                    <td th:text="${d.getEndDate()}">날짜</td>
+                    <td th:if="${isCompany}"><a class="button" th:name="donationId" th:onclick="popup([[${d.getId()}]]);">영수증 첨부</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </th:block>
+        <div class="page" th:if="${pageCnt != 0}" th:each="p : ${#numbers.sequence(0, pageCnt - 1)}">
+            <a th:if="${p <= listCnt}" th:href="@{/{type}List/{page}(type=${listType}, page=${p + 1})}" th:text="${p + 1}"></a>
+        </div>
+    </div>
+    
+<header th:replace="~{layouts/footer::footer}"></header>
+</div>
+<div th:insert="~{chatbot :: chatbot}"></div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script>
+    function popup(id) {
+        var url = "/receiptPopup?id=" + id.toString();
+        var name = "Givu me the money";
+        var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+        window.open(url, name, option);
+    }
+
+    function sendQuestion() {
+                var question = document.getElementById("userQuestion").value;
+                fetch("/chatbot/ask", {
+                    method: "POST",
+                    body: JSON.stringify({ question: question }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var messages = document.getElementById("messages");
+                    messages.innerHTML += "<div class='question'>Q: " + question + "</div>";
+                    messages.innerHTML += "<div class='answer'>A: " + data.answer + "</div>";
+                });
+            }
+
+            function toggleChat() {
+                const chatPopup = document.getElementById("chat-popup");
+                if (chatPopup.style.display === "none" || chatPopup.style.display === "") {
+                    chatPopup.style.display = "flex"; // 보이기
+                } else {
+                    chatPopup.style.display = "none"; // 숨기기
+                }
+            }
+</script>
+</body>
+</html>

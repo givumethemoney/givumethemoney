@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<!--
+	Telephasic by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <title>Givu Me The Money</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/applicationAgree.css" />
+  <link rel="stylesheet" href="/css/chatbot.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+  <div th:replace="~{layouts/header::header}"></div>
+  <div class="content-wrapper">
+    <form id="application-agree-form" method="GET" action="/application/write">
+      <div class="form-content">
+        <div class="form-section">
+          <div class="check_wrap">
+            <input type="checkbox" id="chk-all" name="chk-all"/>
+            <label for="chk-all">
+              <span class="check-all">전체 동의하기</span>
+            </label>
+          </div>
+          <ul class="terms-list">
+            <li class="terms-item">
+              <div class="check-terms">
+                <div class="check-wrap">
+                  <input type="checkbox" id="term-service" />
+                  <label for="term-service">
+                    <em class="option point">[필수]</em>
+                    <div class="text-wrap">
+                      <span class="text">기업 모금 신청 및 기부 방식 약관</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="terms-box">
+                <div class="article">
+                  <p class="article-text">
+                    본 약관은 기업이 기부미더머니(이하 플랫폼)를 통해 모금에 참여하고, 기부를 이행함으로써 모금액을 지급받는 절차와 조건을 규정합니다. 기업은 플랫폼이 제공하는 신청 양식을 작성하여 모금 활동을 요청할 수 있으며, 신청서에는 기업 정보, 모금 목적, 목표 금액, 사용 계획 등이 포함되어야 하고, 제출된 내용은 플랫폼 운영 주체의 심사를 거칩니다. 플랫폼 운영 주체는 모금액을 기업에게 일괄 지급하지 않으며, 기업은 모금액 전액을 사회 공익 활동을 위해 기부해야 하고, 해당 기부는 반드시 해당 기업에서 제조하거나 판매하는 물품으로 이루어져야 하며, 이를 이행한 후에 나머지 금액을 분배받을 수 있습니다. 기부물품 사용 내역과 관련 증빙 자료를 플랫폼 운영 주체에게 제공하는 것은 필수입니다. 기업이 약정된 기부 조건을 충족하지 않을 경우 플랫폼 운영 주체는 모금액 지급을 중단하며, 해당 기업은 플랫폼과의 협업이 제한되고 재참여가 불가할 수 있습니다.
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li class="terms-item">
+              <div class="check-terms">
+                <div class="check-wrap">
+                  <input type="checkbox" id="term-faith" />
+                  <label for="term-faith">
+                    <em class="option point">[필수]</em>
+                    <div class="text-wrap">
+                      <span class="text">신뢰 유지 약관</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="terms-box">
+                <div class="article">
+                  <p class="article-text">
+                    본 약관은 플랫폼 운영의 공정성과 신뢰성을 유지하기 위해 기업이 준수해야 할 의무와 책임을 규정합니다. 기업은 플랫폼을 통해 제공된 모든 모금액을 약정된 목적에 따라 투명하고 윤리적으로 사용해야 하며, 기부 관련 조건을 준수하고 이와 관련된 모든 자료와 증빙을 성실히 제공해야 합니다. 기업이 약관을 위반하거나 플랫폼 운영 주체와의 신뢰를 훼손하는 행위를 할 경우, 플랫폼 운영 주체는 모금액 지급 중단, 플랫폼 사용 제한, 재참여 영구 금지 등의 조치를 취할 수 있으며, 위반 사항 발생 시 문제 해결을 위한 추가 조치를 요청할 수 있습니다.
+                  </p>
+                </div>
+              </div>
+            </li>
+            <li class="terms-item">
+              <div class="check-terms">
+                <div class="check-wrap">
+                  <input type="checkbox" id="term-agree" />
+                  <label for="term-agree">
+                    <em class="option point">[필수]</em>
+                    <div class="text-wrap">
+                      <span class="text">약관 개정 동의</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <div class="terms-box">
+                <div class="article">
+                  <p class="article-text">
+                    본 약관은 플랫폼 운영의 공정성과 신뢰성을 유지하기 위한 규정으로, 기업은 이를 준수하여야 하며, 플랫폼 운영 주체는 필요에 따라 본 약관을 개정할 수 있습니다. 약관 변경 시 플랫폼을 통해 사전에 고지되며, 기업은 변경된 약관에 동의하지 않을 경우 플랫폼 이용을 중단할 수 있습니다.
+                  </p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="btn-submit-wrap">
+        <button type="button" id="btn-agree" class="button" disabled>다음</button>
+      </div>
+    </form>
+  </div>
+  <header th:replace="~{layouts/footer::footer}"></header>
+  <div th:insert="~{chatbot :: chatbot}"></div>
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(window).on("pageshow", function () {
+      $("#chk-all").prop("checked",false);
+      setTerms();
+    });
+
+    $("#chk-all").prop("checked",false);
+    setTerms();
+
+    $("#chk-all").click(function() {
+      setTerms();
+    })
+
+    $("#term-service").click(function() {
+      viewTerms();
+    })
+
+    $("#term-faith").click(function() {
+      viewTerms();
+    })
+
+    $("#term-agree").click(function() {
+      viewTerms();
+    })
+
+    $("#btn-agree").click(function(event) {
+      submitAgree();
+      return false;
+    })
+
+  });
+
+  function setTerms() {
+    if ($("#chk-all").is(":checked")) {
+      $("#term-service").prop("checked",true);
+      $("#term-faith").prop("checked",true);
+      $("#term-agree").prop("checked",true);
+    } else {
+      $("#term-service").prop("checked",false);
+      $("#term-faith").prop("checked",false);
+      $("#term-agree").prop("checked",false);
+    }
+    checkTerms();
+    return true;
+  }
+  function viewTerms() {
+
+    if( !$("#term-service").is(":checked") || !$("#term-faith").is(":checked")
+    || !$("#term-agree").is(":checked")
+            // 추가 가능
+    ) {
+      $("#chk-all").prop("checked",false);
+    }
+
+    if( $("#term-service").is(":checked") && $("#term-faith").is(":checked")
+    && $("#term-agree").is(":checked")
+            // 추가 가능
+    ) {
+      $("#chk-all").prop("checked",true);
+    }
+
+    checkTerms();
+    return true;
+  }
+
+  function checkTerms() {
+    let res = true;
+
+    if ($("#term-service").is(":checked") == false || $("#term-faith").is(":checked") == false || $("#term-agree").is(":checked") == false) {
+      $("#btn-agree").prop("disabled", true);
+      res = false;
+    } else {
+      $("#btn-agree").prop("disabled", false);
+    }
+
+    return res;
+  }
+
+  function submitAgree() {
+    if (checkTerms() != true) {
+      return false;
+    }
+
+    $("#application-agree-form").submit();
+    return true;
+  }
+
+</script>
+</body>
+</html>

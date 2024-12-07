@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<!--
+	Telephasic by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Givu Me The Money</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/donationDetail.css" />
+    <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+    <!-- 새로운 방식 -->
+    <div th:replace="~{layouts/header::header}"></div>
+
+
+    <div class="content-wrapper">
+        <th:block th:if="${donation.isConfirmed()}">
+            <a href="/applicationList/end" class="button">목록</a>
+        </th:block>
+        <!-- 사용자 타입 확인 가능하게 리스트 합치면 링크 수정 -->
+        <th:block th:if="!${donation.isConfirmed()}">
+            <a href="/admin/applicationList" class="button">목록</a>
+        </th:block>
+        <!-- 사용자 테이블 추가되면 admin인지 확인
+        <th:block th:if="${donation.isConfirmed()}">-->
+        <th:block>
+            <br>
+        <hr>
+            <p id="donation-title" th:text="${donation.getTitle()}"></p>
+            <div id="enter-name-container">
+                <p>With </p>
+                <p id="enter-name" th:text="${donation.getEnterName()}"></p>
+            </div>
+            <hr>
+            <table id="detail">
+                <tbody>
+                <tr>
+                    <th>시작 날짜</th>
+                    <td th:text="${donation.getStartDate()}"></td>
+                </tr>
+                <tr>
+                    <th>종료 날짜</th>
+                    <td th:text="${donation.getEndDate()}"></td>
+                </tr>
+                <tr>
+                    <th>목표 금액</th>
+                    <td class="money" th:text="|${donation.getGoal()}|"></td>
+                </tr>
+                <tr>
+                    <th>현재 금액</th>
+                    <td class="money" th:text="|${donation.getCurrentAmount()}|"></td>
+                </tr>
+                <tr>
+                    <th class="last">참여자 수</th>
+                    <td class="last" th:text="${donation.getParticipant()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <hr>
+            <!-- 여기가 오류 
+             - productList random 접근.... 
+             그리고 이미지가 일단.. -->
+            <div id="product-count">
+                <!-- random 값이 유효할 때만 처리 -->
+                <p id="product-name">
+                    <!-- random 값이 유효할 경우 productName 출력, 아니면 기본 메시지 출력 -->
+                    <span th:if="${random != -1 and productList[random] != null}" th:text="${productList[random].productName}"></span>
+                    <span th:if="${random == -1 or productList[random] == null}">기부 품목 정보가 없습니다.</span>
+                </p>
+                <p>을(를) </p>
+                <p id="count">
+                    <!-- random 값이 유효할 경우, price에 대한 계산을 하여 인원수를 출력 -->
+                    <span th:if="${random != -1 and productList[random] != null}" th:text="${donation.getCurrentAmount() / productList[random].getProductPrice()}"></span>
+                    <span th:if="${random == -1 or productList[random] == null}">0</span>
+                </p>
+                <p> 명에게 선물할 수 있습니다.</p>
+            </div>
+            
+            
+            
+            <div id="product-count" th:if="${productList == null or productList.isEmpty()}">
+                <p>현재 기부 물품이 없습니다.</p>
+            </div>
+            
+            <p id="current-percent" hidden="hidden">현재 모금 진행률</p>
+
+            <div class="align-right">
+                <p class="amount money2 current" th:text="${donation.getCurrentAmount() ?: '진행 중인 금액이 없습니다.'}"></p>
+                <p class="amount"> / </p>
+                <p class="amount money2" th:text="${donation.getGoal() ?: '목표 금액이 없습니다.'}"></p>
+                <p class="amount"> 원</p>
+            </div>
+            <progress class="progress" id="progress" th:value="${donation.getCurrentAmount() ?: 0}" min="0" th:max="${donation.getGoal() ?: 1}"></progress>
+            <hr>
+            <div class="ranking" th:if="${top3Nicknames != null && !#lists.isEmpty(top3Nicknames)}">
+                <!-- <ul>
+                    <li class="wreath">
+                        <img src="/image/wreath_1_BG.png"/>
+                        <p class="rank-number">2nd</p>
+                        <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                    <li class="wreath">
+                        <img src="/image/wreath_1_BG.png"/>
+                        <p class="rank-number">1st</p>
+                        <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                    <li class="wreath">
+                        <img src="/image/wreath_1_BG.png"/>
+                        <p class="rank-number">3rd</p>
+                        <p class="rank-name" th:text="|test|"></p>
+                    </li>
+                </ul> -->
+                <ul>
+                    <li class="wreath" th:each="entry, iterStat : ${top3Nicknames}">
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/wreath_1_bg.png" th:if="${iterStat.index == 0}"/>
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/wreath_1_bg.png" th:if="${iterStat.index == 1}"/>
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/wreath_1_bg.png" th:if="${iterStat.index == 2}"/>
+                        <p class="rank-number" th:text="${iterStat.index == 0 ? '1st' : iterStat.index == 1 ? '2nd' : '3rd'}"></p>
+                        <p class="rank-name" th:text="${entry != null ? entry.key : '없음'}"></p>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <table>
+                <tbody>
+                    <tr th:each="i : ${images}">
+                        <th hidden="hidden">이미지</th>
+                        <td><img th:src="@{${i.getImgUrl() ?: '/images/default-image.png'}}"/></td>
+                    </tr>
+                    <tr>
+                        <th hidden="hidden">설명</th>
+                        <td th:text="${donation.getDescription() ?: '설명이 없습니다.'}"></td>
+                    </tr>
+                    <!-- 추가 행은 여기서부터 작성 -->
+                </tbody>
+            </table>
+            <hr>
+            <table id="product-list">
+                <tbody>
+                    <tr>
+                        <th>기부 품목 목록</th>
+                    </tr>
+                    <tr th:each="p : ${productList}">
+                        <td th:text="${p.getProductName() ?: '품목명이 없습니다.'}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </th:block>
+    </div>
+    <h1>상위 30개 닉네임</h1>
+    <div th:if="${topNicknames == null && #lists.isEmpty(topNicknames)}">
+        <p>현재 닉네임이 없습니다.</p>
+    </div>
+    <div th:if="${topNicknames != null && !#lists.isEmpty(topNicknames)}">
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>닉네임</th>
+                    <th>기부 금액</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry, iterStat : ${topNicknames}">
+                    <td th:text="${iterStat.index + 1}">1</td> <!-- 순위 -->
+                    <td th:text="${entry.key}">닉네임</td> <!-- 닉네임 -->
+                    <td th:text="${entry.value}">금액</td> <!-- 금액 -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 기부 결제 버튼 -->
+    <a class="button" th:href="@{/payments(donationId = ${donation.getId()})}">기부하기</a>
+
+    <!-- 사용자 테이블 추가 후 admin인지 확인되면
+    승인 버튼 추가
+    <th:block th:if="${!user.isAdmin() && !donation.isConfirmed()}">
+        <button class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">신청</button>
+    </th:block>
+    -->
+    <th:block th:if="${!donation.isConfirmed()}">
+        <form th:action="@{/application/reject/{id}(id = ${donation.getId()})}" method="POST" enctype="multipart/form-data">
+            <input type="text" id="rejectionReason" name="rejectionReason" required>
+            <input type="submit" value="반려">
+        </form>
+        <a class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">수락</a>
+    </th:block>
+
+    <!-- 기업 사용자일 때 -->
+    <th:block th:if="${!donation.isConfirmed()}">
+        <th:block th:if="${donation.isRejected()}">
+            <p th:text="${donation.getRejectionReason()}"></p>
+        </th:block>
+        <a class="button" th:href="@{/application/edit(id = ${donation.getId()})}">수정</a>
+    </th:block>
+
+    <th:block th:if="${isEnded}">
+        <td><a class="button" th:name="donationId" th:onclick="popup([[${donation.getId()}]]);">영수증 첨부</a></td>
+    </th:block>
+
+    <!-- 일반 사용자도 가능 -->
+    <th:block th:if="${isEnded}">
+        <a class="button" th:href="@{/receiptList/{id}(id = ${donation.getId()})}">기부 영수증 확인</a>
+    </th:block>
+
+
+    <header th:replace="layouts/footer::footer"></header>
+    </div>
+
+    <!-- Scripts -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/util.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+<script>
+    window.onload = function() {
+        var money = document.getElementsByClassName('money');
+        var money2 = document.getElementsByClassName('money2');
+
+        for (var i = 0; i < money.length; i++) {
+            money.item(i).innerText = toLoc(money.item(i)) + ' 원';
+        }
+
+        for (var i = 0; i < money2.length; i++) {
+            money2.item(i).innerText = toLoc(money2.item(i));
+        }
+    }
+
+    function toLoc(money) {
+        var text = money.innerText;
+        var localeString = Number(text).toLocaleString('ko-kr');
+
+        return localeString;
+    }
+
+    function popup(id) {
+        var url = "/receiptPopup?id=" + id.toString();
+        var name = "Givu me the money";
+        var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+        window.open(url, name, option);
+    }
+</script>
+</body>
+</html>

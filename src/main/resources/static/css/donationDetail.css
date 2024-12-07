@@ -1,0 +1,569 @@
+/* 상세 페이지 */
+
+.content-wrapper {
+    padding: 100px;
+    text-align: center;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+    align-items: center;
+}
+
+#detail {
+    table-layout: fixed;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#detail th {
+    width: 40%;  /* 3:7 비율을 위해 30% 설정 */
+    border-right: 1px solid #40534c;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 600;
+    font-size: 20px;
+    /* color: #40534c; */
+    color: white;
+    background-color: #40534c;
+}
+
+#detail td {
+    width: 60%;  /* 3:7 비율을 위해 70% 설정 */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+#description {
+    text-align: left;
+    padding-top: 20px;
+    padding-bottom: 30px;
+}
+
+.image-and-description {
+    margin-top: 40px;
+    margin-bottom: 50px;
+    border: 1px #f5f7fa;
+}
+
+/* th, td 요소에서 경계선 없애기 */
+.image-and-description th, 
+.image-and-description td {
+    border: 1px #f5f7fa;
+}
+
+
+.product-list th, .nickname-list th {
+    border-right: 1px solid #40534c;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 600;
+    font-size: 18px;
+    /* color: #40534c; */
+    color: white;
+    background-color: #40534c;
+}
+
+.product-list td, .nickname-list td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 400;
+    font-size: 18px;
+}
+.product-list {
+    margin-bottom: 30px;
+}
+
+#progress {
+    margin-bottom: 30px;
+}
+
+.ranking {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.product-list {
+    margin-bottom: 30px;
+}
+
+.content-wrapper img {
+    width: 100%;
+    object-fit: cover;
+    max-width: 500px;
+    max-height: 500px;
+}
+
+.list-button {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+#donation-title {
+    margin-top:30px;
+    margin-bottom: 30px;
+    font-weight: bolder;
+    color: #40534c;
+    line-height: 90px;
+}
+
+#enter-name-container {
+    margin-bottom: 0px;
+}
+
+#enter-name-container p:first-of-type {
+    display: inline-block;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+#enter-name {
+    display: inline-block;
+    font-size: 20px;
+    font-weight: 600;
+    color: #40534c;
+    margin-bottom: 0px;
+}
+
+.receipts {
+    width: 500px;
+}
+
+.detail-button-wrapper {
+    /* padding: 100px; */
+    margin-bottom: 50px;
+    margin-top: 50px;
+    text-align: left;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.button {
+    display: inline;
+}
+
+.payment-button {
+    height: 45px;
+    width: 60%;
+    border: none;
+    border-radius: 10px;
+    background-color: #3A6F2B;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    vertical-align: middle;
+    margin-bottom: 80px;
+    margin-top: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10px;
+}
+
+.payment-button:hover {
+    text-decoration: none;
+    background-color: #4B8A3A;
+}
+
+.payment-button a {
+    color: white !important;  
+    text-decoration: none !important; 
+    background: none !important; 
+}
+
+.payment-button a:hover {
+    color: white !important;
+    text-decoration: none !important;  
+}
+
+.top-nicknames {
+    text-align: left;
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+@media screen and (max-width: 1280px) {
+
+    #donation-title {
+        font-size:60px;
+        margin-bottom: 20px;
+    }
+
+}
+
+@media screen and (max-width: 1080px) {
+
+    #donation-title {
+        font-size:60px;
+    }
+
+}
+
+@media screen and (max-width: 950px) {
+
+    #donation-title {
+        margin-top: 20px;
+        font-size:50px;
+        line-height: 80px;
+    }
+
+}
+
+@media screen and (max-width: 860px) {
+
+    #donation-title {
+        font-size:40px;
+        line-height: 70px;
+        margin-top: 30px;
+    }
+
+}
+
+@media screen and (max-width: 760px) {
+
+    #donation-title {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size:30px;
+        line-height: 40px;
+    }
+
+}
+
+@media screen and (max-width: 670px) {
+    #donation-title {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size:30px;
+        line-height: 50px;
+    }
+}
+
+@media screen and (max-width: 580px) {
+    #donation-title {
+        font-size:30px;
+        line-height: 50px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+#current-percent {
+    margin-top: 50px;
+    font-size:50px;
+    font-weight: 900;
+}
+
+.amount {
+    font-size: 20px;
+    font-weight: 500;
+    display: inline;
+}
+
+#progress {
+    appearance: none;
+    width: 95%;
+    height: 30px;
+    margin-top: 5px;
+    margin-bottom:20px;
+}
+progress::-webkit-progress-bar {
+    background-color: #c2c7cc;
+    border-radius: 30px;
+    overflow: hidden;
+}
+progress::-webkit-progress-value {
+    background-color: #677D6A;
+    border-radius: 30px;
+}
+
+.align-right .money2:first-of-type {
+    font-size: 40px;
+    font-weight: 700;
+    color: #677D6A;
+}
+
+#product-list {
+    table-layout: fixed;
+}
+
+#product-list th {
+    border-bottom: 1px solid #40534c;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 600;
+    font-size: 23px;
+    color: #40534c;
+}
+
+#product-list td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 400;
+    font-size: 20px;
+    border-bottom: 1px solid #c2c7cc;
+}
+
+#product-count {
+    margin-top: 50px;
+    margin-bottom: 40px;
+    line-height: 40px;
+}
+
+#product-count p {
+    display: inline;
+}
+
+#product-name, #count {
+    font-weight: bold;
+    font-size: 40px;
+    color: #40534c;
+}
+
+.align-right {
+    float: right;
+    margin-right: 30px;
+}
+
+.ranking li {
+    width: 25%;
+    object-fit: cover;
+    list-style-type: none;
+}
+
+.wreath {
+    display: inline-block;
+    margin-top: 50px;
+    position: relative;
+}
+
+.wreath p {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    font-weight: bold;
+}
+
+.rank-number {
+    font-size: 40px;
+    left: 50%;
+    top: -10%;
+    z-index: 1;
+}
+
+.wreath:first-of-type p:nth-child(2) {
+    color: silver;
+}
+
+.wreath:nth-of-type(2) p:nth-child(2) {
+    color: gold;
+}
+
+.wreath:nth-of-type(3) p:nth-child(2) {
+    color: saddlebrown;
+}
+
+.rank-name {
+    font-size: 30px;
+    left: 53%;
+    top: 45%;
+    z-index: 1;
+    color: #40534c;
+}
+
+/* 반응형 */
+
+@media screen and (max-width: 1280px) {
+
+    .content-wrapper {
+        width: 100%;
+    }
+
+}
+
+@media screen and (max-width: 1080px) {
+    .content-wrapper {
+        width: 100%;
+    }
+
+    .rank-number {
+        top: -12%;
+        font-size: 35px;
+    }
+
+    .rank-name {
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    #enter-name-container p:first-of-type {
+        margin-bottom: 10px;
+    }
+
+    .ranking li {
+        width: 28%;
+    }
+
+    .wreath {
+        margin-top: 40px;
+    }
+
+    .rank-number {
+        top: -12%;
+        font-size: 30px;
+    }
+
+    .rank-name {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 820px) {
+
+    .content-wrapper {
+        padding: 20px;
+        width: 100%;
+    }
+    #enter-name-container p:first-of-type {
+        margin-bottom: 5px;
+    }
+
+    .ranking li {
+        width: 25%;
+    }
+}
+
+@media screen and (max-width: 736px) {
+
+    .content-wrapper {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .wreath {
+        margin-top: 35px;
+    }
+
+    .rank-number {
+        top: -10%;
+        font-size: 25px;
+    }
+
+    .rank-name {
+        font-size: 20px;
+    }
+
+}
+
+@media screen and (max-width: 640px) {
+    .wreath {
+        margin-top: 30px;
+    }
+
+    .rank-number {
+        font-size: 20px;
+    }
+
+    .rank-name {
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 540px) {
+    .wreath {
+        margin-top: 30px;
+    }
+
+    .rank-number {
+        top: -12%;
+        font-size: 15px;
+    }
+
+    .rank-name {
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+
+    .content-wrapper {
+        padding: 10px;
+        width: 100%;
+    }
+
+    #detail th, #product-list th {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 17px;
+    }
+
+    #detail td, #product-list td {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        font-size: 15px;
+    }
+
+    #product-count {
+        margin-top: 20px;
+        margin-bottom: 15px;
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
+
+    #product-count p {
+        display: inline;
+    }
+
+    #product-name, #count {
+        font-size: 30px;
+    }
+
+    .amount {
+        font-size: 15px;
+    }
+
+    .align-right .money:first-of-type {
+        font-size: 30px;
+    }
+
+    .align-right {
+        margin-right: 10px;
+    }
+
+    #enter-name-container p:first-of-type {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    #enter-name {
+        font-size: 15px;
+    }
+
+    .wreath {
+        margin-top: 25px;
+    }
+
+    .rank-number {
+        top: -12%;
+        font-size: 17px;
+    }
+
+    .rank-name {
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .ranking li {
+        width: 28%;
+    }
+
+    .rank-name {
+        font-size: 10px;
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<!--
+	Telephasic by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <title>Givu Me The Money</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="/css/donationDetail.css" />
+  <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/chatbot.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+
+  <div th:replace="layouts/header::header"></div>
+
+  <div class="content-wrapper">
+    <ul th:each="r : ${receipts}">
+      <li><img class="receipts" th:src="@{${r.getImageUrl()}}" /></li>
+    </ul>
+    <table>
+      <thead>
+          <tr>
+              <th>Product Name</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total Amount</th>
+          </tr>
+      </thead>
+      <tbody>
+          <!-- ocrResults 배열을 반복하여 각 항목 출력 -->
+          <tr th:each="ocrResult : ${ocrResults}">
+              <td th:text="${ocrResult.productName}"></td>
+              <td th:text="${ocrResult.quantity}"></td>
+              <td th:text="${ocrResult.unitPrice}"></td>
+              <td th:text="${ocrResult.totalAmount}"></td>
+          </tr>
+      </tbody>
+  </table>
+
+    <a class="button" th:href="@{/detail/{id}(id = ${donationId})}">돌아가기</a>
+  </div>
+
+  <header th:replace="layouts/footer::footer"></header>
+  <div th:insert="~{chatbot :: chatbot}"></div>
+</div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+</body>
+</html>
