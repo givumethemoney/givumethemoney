@@ -10,56 +10,67 @@
 		$body = $('body');
 
 	// Breakpoints.
-		breakpoints({
-			normal:    [ '1081px',  '1280px'  ],
-			narrow:    [ '821px',   '1080px'  ],
-			narrower:  [ '737px',   '820px'   ],
-			mobile:    [ '481px',   '736px'   ],
-			mobilep:   [ null,      '480px'   ]
-		});
+    breakpoints({
+        normal:    [ '1081px',  '1280px'  ],
+        narrow:    [ '821px',   '1080px'  ],
+        narrower:  [ '737px',   '820px'   ],
+        mobile:    [ '481px',   '736px'   ],
+        mobilep:   [ null,      '480px'   ]
+    });
 
 	// Play initial animations on page load.
-		$window.on('load', function() {
-			window.setTimeout(function() {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+    $window.on('load', function() {
+        window.setTimeout(function() {
+            $body.removeClass('is-preload');
+        }, 100);
+    });
 
 	// Dropdowns.
-		$('#nav > ul').dropotron({
-			mode: 'fade',
-			speed: 300,
-			alignment: 'center',
-			noOpenerFade: true
-		});
+    $('#nav > ul').dropotron({
+        mode: 'fade',
+        speed: 300,
+        alignment: 'center',
+        noOpenerFade: true
+    });
 
 	// Nav.
 
 		// Button.
-			$(
-				'<div id="navButton">' +
-					'<a href="#navPanel" class="toggle"></a>' +
-				'</div>'
-			)
-				.appendTo($body);
+    $(
+        '<div id="navButton">' +
+            '<a href="#navPanel" class="toggle"></a>' +
+        '</div>'
+    )
+        .appendTo($body);
 
-		// Panel.
-			$(
-				'<div id="navPanel">' +
-					'<nav>' +
-						$('#nav').navList() +
-					'</nav>' +
-				'</div>'
-			)
-				.appendTo($body)
-				.panel({
-					delay: 500,
-					hideOnClick: true,
-					resetScroll: true,
-					resetForms: true,
-					side: 'top',
-					target: $body,
-					visibleClass: 'navPanel-visible'
-				});
+    // Panel.
+    $(
+        '<div id="navPanel">' +
+            '<nav>' +
+                $('#nav').navList() +
+            '</nav>' +
+        '</div>'
+    )
+        .appendTo($body)
+        .panel({
+            delay: 500,
+            hideOnClick: true,
+            resetScroll: true,
+            resetForms: true,
+            side: 'top',
+            target: $body,
+            visibleClass: 'navPanel-visible'
+    });
+
+    $('#navButton').on('click', function() {
+            const $navPanel = $("#navPanel");
+            const $root = $(":root");
+
+            console.log(`${$navPanel.outerHeight()}px`);
+
+            $root.css("--navPanel-height", `${$navPanel.outerHeight()}px`);
+        });
+
+
 
 })(jQuery);
