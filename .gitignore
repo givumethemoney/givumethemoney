@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 application.properties
+# JSON 파일이 포함된 폴더를 무시
+/src/main/resources/keys/*.json
+
 
 ### STS ###
 .apt_generated
