@@ -23,11 +23,11 @@ public class DonationController {
 
     final int LIST_COUNT = 10;
 
-    DonationService donationService;
-    ImageService imageService;
-    ProductService productService;
-    MemberService memberService;
-    CustomUserService customUserService;
+    private final DonationService donationService;
+    private final ImageService imageService;
+    private final ProductService productService;
+    private final MemberService memberService;
+    private final CustomUserService customUserService;
 
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);

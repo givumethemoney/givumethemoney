@@ -19,8 +19,8 @@ import java.util.UUID;
 public class ReceiptService {
 
 
-    ReceiptRepository receiptRepository;
-    S3Repository s3Repository;
+    private final ReceiptRepository receiptRepository;
+    private final S3Repository s3Repository;
 
     public ReceiptService(ReceiptRepository receiptRepository, S3Repository s3Repository) {
         this.receiptRepository = receiptRepository;

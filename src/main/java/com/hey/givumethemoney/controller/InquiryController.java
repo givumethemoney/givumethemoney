@@ -10,7 +10,7 @@ import com.hey.givumethemoney.service.*;
 @Controller
 public class InquiryController {
 
-    InquiryService inquiryService;
+    private final InquiryService inquiryService;
 
     // 생성자 주입
     public InquiryController(InquiryService inquiryService) {

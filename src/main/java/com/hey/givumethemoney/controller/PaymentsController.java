@@ -21,10 +21,10 @@ import java.util.Optional;
 
 @Controller
 public class PaymentsController {
-    
-    PaymentsService paymentsService;
-    DonationService donationService;
-    NicknameDonationService nicknameDonationService;
+
+    private final PaymentsService paymentsService;
+    private final DonationService donationService;
+    private final NicknameDonationService nicknameDonationService;
 
     // 생성자 주입
     @Autowired
