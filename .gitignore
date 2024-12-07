@@ -4,10 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-application.properties
-# JSON 파일이 포함된 폴더를 무시
-/src/main/resources/json/*.json
-
 
 ### STS ###
 .apt_generated
@@ -39,5 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-*/.DS_Store
