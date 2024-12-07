@@ -39,14 +39,12 @@ public class DonationController {
                                 DonationService donationService, 
                                 ProductService productService, 
                                 MemberService memberService, 
-                                CustomUserService customUserService,
-                                DonationRecommendationService recommendationService) {
+                                CustomUserService customUserService) {
         this.donationService = donationService;
         this.imageService = imageService;
         this.productService = productService;
         this.memberService = memberService;
         this.customUserService = customUserService;
-        this.recommendationService = recommendationService;
     }
 
     // 전체 기부 목록 페이지
