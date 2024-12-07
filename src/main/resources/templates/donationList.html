@@ -35,6 +35,10 @@
                             <p th:text="'시작일: ' + ${donation.startDate}"></p>
                             <p th:text="'마감일: ' + ${donation.endDate}"></p>
                         </div>
+                        <div class="donation-price">
+                            <p th:text="'목표 금액: ' + ${donation.getGoal()}"></p>
+                            <p th:text="'모금된 금액: ' + ${donation.getCurrentAmount()}"></p>
+                        </div>
                     </div>
                     <button class="give-btn">기부하기</button>
                 </div>
@@ -54,6 +58,10 @@
                         <div class="donation-date">
                             <p th:text="'시작일: ' + ${donation.startDate}"></p>
                             <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                        </div>
+                        <div class="donation-price">
+                            <p th:text="'목표 금액: ' + ${donation.getGoal()}"></p>
+                            <p th:text="'모금된 금액: ' + ${donation.getCurrentAmount()}"></p>
                         </div>
                     </div>
                     <button class="receipt-btn">영수증 보기</button>

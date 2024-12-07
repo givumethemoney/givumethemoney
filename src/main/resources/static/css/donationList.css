@@ -156,20 +156,22 @@ donation.content-wrapper {
 
     .donation-content {
         display: flex;
-        flex-direction: column; /* 세로 정렬 */
+        flex-direction: row; /* 세로 정렬 */
         align-items: center;
         gap: 8px; /* 정보와 날짜 간격 */
     }
 
     /* 정보 영역 스타일 */
     .donation-info,
-    .donation-date {
+    .donation-date,
+    .donation-price{
         padding: 0px; /* 정보 간 여백 축소 */
     }
 
     .donation-info h3,
     .donation-info p,
-    .donation-date p {
+    .donation-date p,
+     .donation-price p{
         font-size: 0.8rem; /* 폰트 크기 축소 */
         padding: 0; /* 내부 여백 */
         margin:0;
