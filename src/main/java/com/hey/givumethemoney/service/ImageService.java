@@ -86,6 +86,7 @@ public class ImageService {
         Optional<Image> image = findImageById(id);
         if (image.isPresent()) {
             s3RepositoryImpl.deleteFile(image.get().getSavedName());
+            s3RepositoryImpl.deleteFile("th_" + image.get().getSavedName());
             imageRepository.deleteById(id);
         }
     }
