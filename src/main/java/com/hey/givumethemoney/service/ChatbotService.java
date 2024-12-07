@@ -2,31 +2,50 @@ package com.hey.givumethemoney.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.util.Value;
 import com.google.auth.oauth2.GoogleCredentials;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class ChatbotService {
 
+    // @Value("${chatbot.credentials.path}") // application.properties에서 경로를 읽어옴
+    // private String credentialsPath;
+
     private final String dialogflowProjectId = "givumethemoney";
     private final String sessionId = UUID.randomUUID().toString(); // 세션 ID를 고유하게 설정
     private final String dialogflowApiUrl = "https://dialogflow.googleapis.com/v2/projects/{your-project-id}/agent/sessions/{session-id}:detectIntent";
 
+
     public String getAnswerFromChatbot(String question) {
         try {
-            // 서비스 계정 키 파일을 사용하여 OAuth 2.0 인증
-            GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("/Users/junheekim/Downloads/givumethemoney-40f84b2585de.json"))
-                    .createScoped("https://www.googleapis.com/auth/cloud-platform");
 
+            // 서비스 계정 키 파일을 사용하여 OAuth 2.0 인증
+            // GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream("/Users/junheekim/Downloads/givumethemoney-40f84b2585de.json"))
+            //     .createScoped("https://www.googleapis.com/auth/cloud-platform");
+
+
+            // classpath 경로에서 파일 읽기
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("json/givumethemoney-40f84b2585de.json");
+            Objects.requireNonNull(inputStream, "Resource file not found: data/chatbot_config.json");
+
+            GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream)
+                .createScoped("https://www.googleapis.com/auth/cloud-platform");
+
+
+           
             // 액세스 토큰 얻기
             String accessToken = credentials.refreshAccessToken().getTokenValue();
 
