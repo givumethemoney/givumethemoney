@@ -14,8 +14,7 @@
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
-
-    <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
+    <div th:replace="~{layouts/header::header}"></div>
     <div class="content-wrapper">
         <th:block th:if="!${isEnded}">
 
