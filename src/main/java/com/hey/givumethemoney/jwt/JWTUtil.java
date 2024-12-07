@@ -1,7 +1,7 @@
 package com.hey.givumethemoney.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,16 +49,11 @@ public class JWTUtil {
 
     // JWT를 검증하여 유효한 경우 Claims를 반환
     public Claims validateJwt(String token) {
-        try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-        } catch (JwtException e) {
-            System.out.println("Invalid JWT token: " + e.getMessage());
-            throw new IllegalArgumentException("Invalid JWT token", e);
-        }
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public String getEmail(String token) {
@@ -72,11 +67,22 @@ public class JWTUtil {
     
 
     public boolean isExpired(String token) {
-        Claims claims = validateJwt(token);
-        if (claims.getExpiration() == null) {
-            System.out.println("Expiration date is null. Token is considered expired.");
-            return true; // 만료로 간주
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            if (claims.getExpiration() == null) {
+                System.out.println("Expiration date is null. Token is considered expired.");
+                return true; // 만료로 간주
+            }
+
+            return claims.getExpiration().before(new Date());
         }
-        return claims.getExpiration().before(new Date());
+        catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 }

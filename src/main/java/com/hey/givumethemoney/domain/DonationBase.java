@@ -47,6 +47,13 @@ public abstract class DonationBase {
     @Column(name = "user_id", nullable = false)
     protected String userId;
 
+    @Column(name = "is_rejected")
+    @Builder.Default
+    protected boolean isRejected = false;
+
+    @Column(name="rejection_reason")
+    protected String rejectionReason = "";
+
 //    //@Builder
     public DonationBase(String title, LocalDate startDate, LocalDate endDate, int goal, int currentAmount, String description, int participant, String enterName, String userId) {
         this.title = title;

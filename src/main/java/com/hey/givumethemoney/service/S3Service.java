@@ -1,13 +1,8 @@
 package com.hey.givumethemoney.service;
 
-import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.hey.givumethemoney.repository.S3Repository;
 
 import lombok.RequiredArgsConstructor;

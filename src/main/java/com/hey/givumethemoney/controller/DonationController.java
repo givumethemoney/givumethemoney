@@ -2,11 +2,9 @@ package com.hey.givumethemoney.controller;
 
 import com.hey.givumethemoney.domain.*;
 import com.hey.givumethemoney.service.*;
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,12 +24,12 @@ public class DonationController {
 
     final int LIST_COUNT = 10;
 
-    DonationService donationService;
-    ImageService imageService;
-    ProductService productService;
-    MemberService memberService;
-    CustomUserService customUserService;
-    DonationRecommendationService recommendationService;
+
+    private final DonationService donationService;
+    private final ImageService imageService;
+    private final ProductService productService;
+    private final MemberService memberService;
+    private final CustomUserService customUserService;
 
     // 컨트롤러 클래스 내에 로거 추가
     private static final Logger logger = LoggerFactory.getLogger(DonationController.class);
@@ -49,6 +48,20 @@ public class DonationController {
         this.customUserService = customUserService;
         this.recommendationService = recommendationService;
     }
+
+    // 전체 기부 목록 페이지
+    @GetMapping("/donationList")
+    public String donationList(Model model) {
+        List<Donation> allDonations = donationService.getDonations(); // 전체 기부 목록 가져오기
+        List<Donation> ongoingDonations = donationService.getOngoingDonations();
+        List<Donation> finishedDonations = donationService.getFinishedDonations();
+        model.addAttribute("ongoingDonations", ongoingDonations);
+        model.addAttribute("finishedDonations", finishedDonations);
+
+        return "donationList";
+    }
+
+
 
     @GetMapping("/detail/{id}")
     //@ResponseBody
@@ -186,15 +199,6 @@ public class DonationController {
 
     @GetMapping("/application/agree")
     public String agree(Model model) {
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = customUserService.getEmail();
-        if (currentUserId.equals("anonymous")) {
-            model.addAttribute("user", null);
-        }
-        else {
-            MemberDomain member = memberService.findByEmail(currentUserId);
-            model.addAttribute("user", member);
-        }
 
         if (getUserType() != Role.ADMIN && getUserType() != Role.COMPANY) {
             model.addAttribute("msg", "로그인이 필요합니다.");
@@ -233,16 +237,6 @@ public class DonationController {
     public String editingApplication(@RequestParam("id") Long id, Model model) {
 
         Optional<WaitingDonation> donation = donationService.getWaitingDonationById(id);
-
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = customUserService.getEmail();
-        if (currentUserId.equals("anonymous")) {
-            model.addAttribute("user", null);
-        }
-        else {
-            MemberDomain member = memberService.findByEmail(currentUserId);
-            model.addAttribute("user", member);
-        }
 
         // 유저id 일치한지 확인하는 것으로 수정
         if (!customUserService.getEmail().equals(donation.get().getUserId())) {
@@ -384,21 +378,13 @@ public class DonationController {
 
         List<WaitingDonation> waitingDonations = new ArrayList<>();
 
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = customUserService.getEmail();
-        if (currentUserId.equals("anonymous")) {
-            model.addAttribute("user", null);
-        }
-        else {
-            MemberDomain member = memberService.findByEmail(currentUserId);
-            model.addAttribute("user", member);
-        }
-        
-
         if (userType == Role.ADMIN) {
             waitingDonations = donationService.getWaitingDonations();
         }
         else if (userType == Role.COMPANY) {
+            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+            String currentUserId = customUserService.getEmail();
+
             // 해당 기업이 작성한 목록으로 받아오기
             waitingDonations = donationService.getWaitingDonationsByUserId(currentUserId);
         }
@@ -409,25 +395,20 @@ public class DonationController {
             return "alert";
         }
 
-        List<WaitingDonation> waitingDonationsByPage = new ArrayList<>();
-        int dCnt = 0;
+        List<WaitingDonation> allWaitingDonations = new ArrayList<>();
         for (int i = 0; i < waitingDonations.size(); i++) {
-            if (dCnt >= (page - 1) * LIST_COUNT + LIST_COUNT) {
-                break;
-            }
             // 마감되지 않은 기부만 추출
             if (waitingDonations.get(i).getEndDate().compareTo(LocalDate.now()) >= 0) {
-                if (dCnt >= (page - 1) * LIST_COUNT) {
-                    waitingDonationsByPage.add(waitingDonations.get(i));
-                }
-                dCnt++;
+                allWaitingDonations.add(waitingDonations.get(i));
             }
         }
 
+        List<WaitingDonation> waitingDonationsByPage = allWaitingDonations.subList((page - 1) * LIST_COUNT,
+                Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allWaitingDonations.size()));
+
         model.addAttribute("isEnded", false);
         model.addAttribute("donations", waitingDonationsByPage);
-        model.addAttribute("pageCnt", waitingDonations.size() / LIST_COUNT);
-        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("pageCnt", allWaitingDonations.size() / LIST_COUNT);
         model.addAttribute("listType", "waiting");
 
         return "applicationList";
@@ -444,16 +425,6 @@ public class DonationController {
 
         Role userType = getUserType();
 
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = customUserService.getEmail();
-        if (currentUserId.equals("anonymous")) {
-            model.addAttribute("user", null);
-        }
-        else {
-            MemberDomain member = memberService.findByEmail(currentUserId);
-            model.addAttribute("user", member);
-        }
-
         List<DonationBase> result = new ArrayList<>();;
 
         if (userType == Role.ADMIN) {
@@ -461,6 +432,8 @@ public class DonationController {
             result.addAll(donationService.getDonations());
         }
         else if (userType == Role.COMPANY) {
+            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+            String currentUserId = customUserService.getEmail();
 
             // 해당 기업이 작성한 목록으로 받아오기
             result.addAll(donationService.getWaitingDonationsByUserId(currentUserId));
@@ -473,30 +446,24 @@ public class DonationController {
             return "alert";
         }
 
-        List<DonationBase> donationsByPage = new ArrayList<>();
-        int dCnt = 0;
+        List<DonationBase> allDonations = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
-            if (dCnt >= (page - 1) * LIST_COUNT + LIST_COUNT) {
-                break;
-            }
             // 마감되지 않은 기부만 추출
             if (result.get(i).getEndDate().compareTo(LocalDate.now()) >= 0) {
-                if (dCnt >= (page - 1) * LIST_COUNT) {
-                    donationsByPage.add(result.get(i));
-                }
-                dCnt++;
+                allDonations.add(result.get(i));
             }
         }
 
-        model.addAttribute("donations", donationsByPage);
+        List<DonationBase> donationsByPage = allDonations.subList((page - 1) * LIST_COUNT,
+                Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allDonations.size()));
+
         model.addAttribute("isEnded", false);
-        model.addAttribute("pageCnt", result.size() / LIST_COUNT);
-        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("donations", donationsByPage);
+        model.addAttribute("pageCnt", allDonations.size() / LIST_COUNT);
         model.addAttribute("listType", "application");
         
         return "applicationList";
     }
-
 
     @GetMapping("/endList")
     public String redirectEndList() {
@@ -508,20 +475,10 @@ public class DonationController {
     public String showEndedApplicationList(@PathVariable("page") int page, Model model) {
 
         List<Donation> donations;
-        // 유저 서비스에서 현재 로그인된 유저 id 받아옴
-        String currentUserId = customUserService.getEmail();
-        if (currentUserId.equals("anonymous")) {
-            model.addAttribute("user", null);
-        }
-        else {
-            MemberDomain member = memberService.findByEmail(currentUserId);
-            model.addAttribute("user", member);
-        }
-
-        // 보여질 리스트
-        List<Donation> donationsByPage = new ArrayList<>();
 
         if (getUserType() == Role.COMPANY) {
+            // 유저 서비스에서 현재 로그인된 유저 id 받아옴
+            String currentUserId = customUserService.getEmail();
 
             donations = donationService.getDonationsByUserId(currentUserId);
         }
@@ -530,21 +487,22 @@ public class DonationController {
             donations = donationService.getDonations();
         }
 
-        for (int i = (page - 1) * LIST_COUNT; i < (page - 1) * LIST_COUNT + LIST_COUNT;) {
-            if (i >= donations.size()) {
-                break;
-            }
+        List<Donation> allDonations = new ArrayList<>();
+        for (int i = 0; i < donations.size(); i++) {
+            // 마감된 기부만 추출
             if (donations.get(i).getEndDate().isBefore(LocalDate.now())) {
-                donationsByPage.add(donations.get(i));
-                i++;
+                allDonations.add(donations.get(i));
             }
         }
 
-        model.addAttribute("isCompany", getUserType() == Role.COMPANY);
+        List<Donation> donationsByPage = allDonations.subList((page - 1) * LIST_COUNT,
+                Math.min((page - 1) * LIST_COUNT + LIST_COUNT, allDonations.size()));
+
         model.addAttribute("isEnded", true);
         model.addAttribute("donations", donationsByPage);
-        model.addAttribute("pageCnt", donations.size() / LIST_COUNT);
-        model.addAttribute("listCnt", LIST_COUNT);
+        model.addAttribute("pageCnt", allDonations.size() / LIST_COUNT);
+
+        model.addAttribute("isCompany", getUserType() == Role.COMPANY);
         model.addAttribute("listType", "end");
 
         return "applicationList";
@@ -553,17 +511,5 @@ public class DonationController {
 
     protected Role getUserType() {
         return customUserService.getRole();
-    }
-
-    @GetMapping("/thumbs/{id}")
-    @ResponseBody
-    public String showThumb(@PathVariable("id") Long id, Model model) throws IOException {
-        Image image = imageService.findImageById(id).get();
-        if (image != null) {
-            return image.getThumbUrl();
-        }
-        else {
-            return null;
-        }
     }
 }

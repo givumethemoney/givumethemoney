@@ -2,7 +2,6 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Image;
 import com.hey.givumethemoney.repository.ImageRepository;
-import com.hey.givumethemoney.repository.S3Repository;
 import com.hey.givumethemoney.repository.S3RepositoryImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -88,6 +86,7 @@ public class ImageService {
         Optional<Image> image = findImageById(id);
         if (image.isPresent()) {
             s3RepositoryImpl.deleteFile(image.get().getSavedName());
+            s3RepositoryImpl.deleteFile("th_" + image.get().getSavedName());
             imageRepository.deleteById(id);
         }
     }

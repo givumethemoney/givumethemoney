@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>GIVU ME THE MONEY</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+
     <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/home.css"/>
     <link rel="stylesheet" href="/css/header.css" />
     <link rel="stylesheet" href="/css/chatbot.css" />
+
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
     <!--  header-->
-    <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
+    <div th:replace="~{layouts/header::header}"></div>
 
     <div class="content-wrapper">
         <!-- Slider -->
@@ -21,28 +22,70 @@
             <div class="slider">
                 <div class="slides">
                     <a href="https://link1.com" class="slide">
-                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/IMG_3350.JPG" alt="Image 1">
+                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/IMG_3350.JPG"
+                             alt="Image 1">
 
-                    </a>
-                    <a href="https://link2.com" class="slide">
-                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/IMG_9636.JPG" alt="Image 2">
-                    </a>
-                    <a href="https://link3.com" class="slide">
-                        <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/0411448d-0d0a-4b14-8a8d-5d2f3ebba49b.jpg" alt="Image 3">
-                        <!-- <img th:src="@{/images/pic03.jpg}" alt="Image 3"> -->
                     </a>
                 </div>
             </div>
+            <!-- 진행 중인 GIVU -->
             <div class="givuing">
-                <h1 id="givuing-title"><a>진행중인 GIVU ❯</a></h1>
+                <a class="givu-title" href="/donationList">
+                    <h1>진행중인 GIVU ❯</h1>
+                </a>
+                <div th:each="donation : ${ongoingDonations}" class="donation-card">
+                    <div class="donation-card-inner">
+                        <div class="thumbnail-placeholder"></div>
+                        <div class="donation-content">
+                            <div class="donation-info">
+                                <h3 th:text="${donation.title}"></h3>
+                                <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                            </div>
+                            <div class="donation-date">
+                                <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                                <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                            </div>
+                            <div class="donation-price">
+                                <p th:text="'목표 금액: ' + ${donation.getGoal()}"></p>
+                                <p th:text="'모금된 금액: ' + ${donation.getCurrentAmount()}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="ending">
-                <h1 id="ending-title"><a>마감된 GIVU ❯</a></h1>
+            </div>
 
+            <!-- 전해진 GIVU -->
+            <div class="ending">
+                <a class="givu-title" href="/donationList">
+                    <h1>전해진 GIVU ❯</h1>
+                </a>
+                <div th:each="donation : ${finishedDonations}" class="donation-card">
+                    <div class="donation-card-inner">
+                        <div class="thumbnail-placeholder"></div>
+                        <div class="donation-content">
+                            <div class="donation-info">
+                                <h3 th:text="${donation.title}"></h3>
+                                <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                            </div>
+                            <div class="donation-date">
+                                <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                                <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                            </div>
+                            <div class="donation-price">
+                                <p th:text="'목표 금액: ' + ${donation.getGoal()}"></p>
+                                <p th:text="'모금된 금액: ' + ${donation.getCurrentAmount()}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
+    <!-- 진행률 표시 -->
+    <!-- 남은 일수 표시 -->
+    <!-- 목표 금액 -->
+
 
     
     <!--    footer-->
@@ -52,7 +95,9 @@
     <!-- <div th:replace="~{navBar :: navBar}"></div> -->
     <div th:insert="~{chatbot :: chatbot}"></div>
 
-</div>
+
+<!--navigation bar-->
+<!-- <div th:replace="~{navBar :: navBar}"></div> -->
 
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
@@ -88,6 +133,6 @@
         }
     }
 </script>
-</body>
 
+</body>
 </html>

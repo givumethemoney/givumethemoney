@@ -35,14 +35,4 @@ setInterval(showNextSlide, 3000);
 				$body.removeClass('is-preload');
 			}, 100);
 		});
-
-	// Nav.
-
-		// Button.
-			$(
-				'<div id="navButton">' +
-					'<a href="#navPanel" class="toggle"></a>' +
-				'</div>'
-			)
-				.appendTo($body);
-})(jQuery);
+});

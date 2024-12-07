@@ -8,14 +8,13 @@ import com.hey.givumethemoney.repository.NicknameDonationRepository;
 import com.hey.givumethemoney.repository.WaitingDonationRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -49,6 +48,20 @@ public class DonationService {
 
     public List<Donation> getDonations() {
         return donationRepository.findAll();
+    }
+
+    public List<Donation> getOngoingDonations() {
+        LocalDate today = LocalDate.now();
+        return getDonations().stream()
+                .filter(donation -> donation.getEndDate() != null && donation.getEndDate().isAfter(today))
+                .collect(Collectors.toList());
+    }
+
+    public List<Donation> getFinishedDonations() {
+        LocalDate today = LocalDate.now();
+        return getDonations().stream()
+                .filter(donation -> donation.getEndDate() != null && !donation.getEndDate().isAfter(today))
+                .collect(Collectors.toList());
     }
 
     public Optional<WaitingDonation> getWaitingDonationById(Long id) {

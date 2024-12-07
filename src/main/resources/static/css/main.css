@@ -2872,7 +2872,7 @@ input, select, textarea {
 				position: fixed;
 				top: 0;
 				width: 100%;
-				height: 50vh;
+				height: auto;
 				z-index: 10002;
 				box-shadow: inset 0px -2px 5px 0px rgba(0, 0, 0, 0.25);
 				font-size: 1em;
@@ -2926,17 +2926,17 @@ input, select, textarea {
 				}
 
 			body.navPanel-visible #page-wrapper {
-				-moz-transform: translateY(50vh);
-				-webkit-transform: translateY(50vh);
-				-ms-transform: translateY(50vh);
-				transform: translateY(50vh);
+				-moz-transform: translateY(var(--navPanel-height));
+				-webkit-transform: translateY(var(--navPanel-height));
+				-ms-transform: translateY(var(--navPanel-height));
+				transform: translateY(var(--navPanel-height));
 			}
 
 			body.navPanel-visible #navButton {
-				-moz-transform: translateY(50vh);
-				-webkit-transform: translateY(50vh);
-				-ms-transform: translateY(50vh);
-				transform: translateY(50vh);
+				-moz-transform: translateY(var(--navPanel-height));
+				-webkit-transform: translateY(var(--navPanel-height));
+				-ms-transform: translateY(var(--navPanel-height));
+				transform: translateY(var(--navPanel-height));
 			}
 
 			body.navPanel-visible #navPanel {
@@ -3135,3 +3135,29 @@ input, select, textarea {
 		padding: 10px;
 		width: 100%;
 	}
+}
+
+/* header */
+#email {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    font-size: 20px;
+}
+
+#logout-button {
+    color: white;
+    -moz-transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+    -webkit-transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+    -ms-transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+    transition: color 0.25s ease-in-out, border-color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+    display: inline-block;
+    background: none;
+    text-decoration: none;
+    border: solid 1px #c2c7cc;
+    border-radius: 0.35em;
+    padding: 0.8em 1em 0.8em 1em;
+    cursor: pointer;
+    outline: 0;
+    margin: 5px;
+}

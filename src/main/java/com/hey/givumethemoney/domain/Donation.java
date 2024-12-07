@@ -1,5 +1,6 @@
 package com.hey.givumethemoney.domain;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -14,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Getter
+@Setter
 public class Donation extends DonationBase {
 
     @Id
@@ -28,11 +31,6 @@ public class Donation extends DonationBase {
     @JoinColumn(name = "waiting_donation_id")  // WaitingDonation과의 연관 관계 추가
     private WaitingDonation waitingDonation;
 
-    public boolean isRejected() {
-        // WaitingDonation이 null이 아니면 isRejected 값을 반환
-        return waitingDonation != null && waitingDonation.isRejected();
-    }
-
     //@Builder
     public Donation(WaitingDonation waitingDonation) {
         this.title = waitingDonation.getTitle();
@@ -46,5 +44,6 @@ public class Donation extends DonationBase {
         this.isConfirmed = !waitingDonation.isConfirmed();
         this.userId = waitingDonation.getUserId();
         this.id = waitingDonation.getId();
+        this.isRejected = waitingDonation.isRejected();
     }
 }

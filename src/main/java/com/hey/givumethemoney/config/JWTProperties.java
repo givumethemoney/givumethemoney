@@ -1,5 +1,4 @@
-package com.hey.givumethemoney.Config;
-
+package com.hey.givumethemoney.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

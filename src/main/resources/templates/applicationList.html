@@ -15,8 +15,7 @@
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
-
-    <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
+    <div th:replace="~{layouts/header::header}"></div>
     <div class="content-wrapper">
         <th:block th:if="!${isEnded}">
 
@@ -25,7 +24,8 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <h2 class="header-title pb-3 mt-0">협업 신청 목록</h2>
+                            <h2 th:if="${#strings.equals(listType, 'application')}" class="header-title pb-3 mt-0">전체 신청서 목록</h2>
+                            <h2 th:if="${#strings.equals(listType, 'waiting')}" class="header-title pb-3 mt-0">대기 신청서 목록</h2>
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                     <thead>
@@ -59,31 +59,43 @@
             
         </th:block>
         <th:block th:if="${isEnded}">
-            <h2>마감된 기부 목록</h2>
 
-            <table>
-                <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>기업</th>
-                    <th>기부 마감 날짜</th>
-                    <th th:if="${isCompany}"></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="d : ${donations}">
-                    <td th:text="${d.getId()}">id</td>
-                    <td><a th:text="${d.getTitle()}" th:href="@{/detail/{id}(id=${d.getId()})}">제목</a></td>
-                    <td th:text="${d.getEnterName()}">기업</td>
-                    <td th:text="${d.getEndDate()}">날짜</td>
-                    <td th:if="${isCompany}"><a class="button" th:name="donationId" th:onclick="popup([[${d.getId()}]]);">영수증 첨부</a></td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="header-title pb-3 mt-0">마감된 기부 목록</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                        <tr class="align-self-center">
+                                            <th>번호</th>
+                                            <th>제목</th>
+                                            <th>기업</th>
+                                            <th>기부 시작 날짜</th>
+                                            <th th:if="${isCompany}"></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="d : ${donations}">
+                                            <td th:text="${d.getId()}">id</td>
+                                            <td><a th:text="${d.getTitle()}" th:href="@{/detail/{id}(id=${d.getId()})}">제목</a></td>
+                                            <td th:text="${d.getEnterName()}">기업</td>
+                                            <td th:text="${d.getStartDate()}">날짜</td>
+                                            <td th:if="${isCompany}"><a class="button" th:name="donationId" th:onclick="popup([[${d.getId()}]]);">영수증 첨부</a></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </th:block>
-        <div class="page" th:if="${pageCnt != 0}" th:each="p : ${#numbers.sequence(0, pageCnt - 1)}">
-            <a th:if="${p <= listCnt}" th:href="@{/{type}List/{page}(type=${listType}, page=${p + 1})}" th:text="${p + 1}"></a>
+        <div class="page" th:each="p : ${#numbers.sequence(0, pageCnt)}">
+            <a th:href="@{/{type}List/{page}(type=${listType}, page=${p + 1})}" th:text="${p + 1}"></a>
         </div>
     </div>
     
@@ -102,7 +114,7 @@
     function popup(id) {
         var url = "/receiptPopup?id=" + id.toString();
         var name = "Givu me the money";
-        var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+        var option = "width = 200, height = 200, top = 100, left = 200, location = no";
         window.open(url, name, option);
     }
 

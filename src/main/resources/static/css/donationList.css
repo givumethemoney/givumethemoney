@@ -1,0 +1,187 @@
+donation.content-wrapper {
+    padding: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.button-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.toggle-button {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+    background-color: #ddd;
+}
+
+.toggle-button.active {
+    background-color: #677d6a;
+    color: white;
+    border-color: #4caf50;
+}
+.givu-title {
+    font-size: 2rem; /* 제목 크기 */
+    font-weight: bold;
+    text-align: center; /* 제목 중앙 정렬 */
+    margin-bottom: 20px; /* 제목 아래 간격 */
+    color:#677d6a;
+}
+
+.donation-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* 카드 스타일 */
+.donation-card {
+    display: flex;
+    width: 100%; /* 카드의 유연한 너비 */
+    background: #fff;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 카드 내부 레이아웃 */
+.donation-card-inner {
+    display: flex;
+    align-items: center; /* 세로 가운데 정렬 */
+    justify-content: space-between; /* 공간 분배 */
+    width: 100%; /* 전체 공간 사용 */
+    gap: 20px;
+}
+
+/* 썸네일 스타일 */
+.thumbnail-placeholder {
+    width: 150px;
+    height: 150px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
+}
+
+/* 콘텐츠 스타일 */
+.donation-content {
+    display: flex; /* 가로 정렬 */
+    flex-grow: 1; /* 남은 공간을 모두 차지 */
+    justify-content: space-between; /* info와 date 간격 자동 배분 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 20px; /* info와 date 간격 */
+}
+
+/* 정보 영역 스타일 */
+.donation-info,
+.donation-date {
+    display: flex; /* 가로 정렬 */
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 수직 가운데 정렬 */
+    gap: 2px;
+}
+
+/* 기부하기 버튼 스타일 */
+.give-btn {
+    background-color: #677d6a; /* 녹색 배경 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
+    align-self: center; /* 세로 가운데 정렬 */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* 영수증 조회 버튼 스타일 */
+.receipt-btn {
+    background-color: #677d6a; /* 녹색 배경 */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
+    align-self: center; /* 세로 가운데 정렬 */
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.give-btn:hover {
+    background-color: #45a049; /* 호버 시 어두운 녹색 */
+    transform: translateY(-2px);
+}
+
+/* Hover 효과 */
+.donation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 반응형 처리 */
+/* 카드 및 콘텐츠 스타일 (모바일 최적화) */
+@media (max-width: 736px) {
+    .donation-card {
+        flex: 1 1 calc(100% - 20px); /* 카드가 한 줄에 꽉 차게 설정 */
+        margin: 10px;
+        padding: 2px; /* 내부 여백 축소 */
+    }
+
+    .donation-card-inner {
+        display: flex;
+        align-items: center; /* 중앙 정렬 */
+        gap: 10px; /* 요소 간 간격 */
+        padding: 2px; /* 내부 여백 */
+    }
+
+    .thumbnail-placeholder {
+        width: 80px; /* 썸네일 너비 축소 */
+        height: 80px; /* 썸네일 높이 축소 */
+        margin: 5px; /* 썸네일 여백 */
+    }
+
+    .donation-content {
+        display: flex;
+        flex-direction: row; /* 세로 정렬 */
+        align-items: center;
+        gap: 8px; /* 정보와 날짜 간격 */
+    }
+
+    /* 정보 영역 스타일 */
+    .donation-info,
+    .donation-date,
+    .donation-price{
+        padding: 0px; /* 정보 간 여백 축소 */
+    }
+
+    .donation-info h3,
+    .donation-info p,
+    .donation-date p,
+     .donation-price p{
+        font-size: 0.8rem; /* 폰트 크기 축소 */
+        padding: 0; /* 내부 여백 */
+        margin:0;
+        line-height: 1.2; /* 줄 간격 축소 */
+        }
+
+    .givu-title {
+        font-size: 1rem; /* 타이틀 폰트 크기 */
+        margin: 10px 0; /* 위아래 간격 조정 */
+        text-align: left; /* 왼쪽 정렬 */
+    }
+
+}

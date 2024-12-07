@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="/css/header.css" />
-
-
 <!-- Header -->
 <div th:fragment="header">
 	<div id="header-wrapper">
@@ -10,70 +7,39 @@
 
 			<!-- Logo -->
 			<h1 id="logo">
-				<a th:href="@{/}">GIVU ME THE MONEY</a>
+				<a href="/">GIVU ME THE MONEY</a>
 			</h1>
 			<!-- Nav -->
 			<nav id="nav">
 				<ul>
-					<li>
-						<a href="/">기부 알아보기</a>
-						<!-- <a href="#">Dropdown</a> -->
-						<ul>
-							<li><a href="#">진행중인 기부</a></li>
-							<li><a href="#">마감된 기부</a></li>
-							<li><a href="#">Etiam dolore nisl</a></li>
-							<li>
-								<a href="#">Phasellus consequat</a>
-								<!-- <ul>
-									<li><a href="#">Lorem ipsum dolor</a></li>
-									<li><a href="#">Phasellus consequat</a></li>
-									<li><a href="#">Magna phasellus</a></li>
-									<li><a href="#">Etiam dolore nisl</a></li>
-								</ul> -->
-							</li>
-							<li><a href="#">Veroeros feugiat</a></li>
-						</ul>
-					</li>
-					<!-- 기업 사용자일 때 -->
-					<th:block th:if="${user != null} and ${#strings.equals(user.getRole(), 'COMPANY')}">
+					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'COMPANY')}">
 						<li><a href="/application/agree">기부 신청하기</a></li>
-						<li class="break"><a href="/donationList">나의 기부</a></li>
-						<li><a href="/applicationList">나의 신청서</a></li>
+						<li><a href="/donationList">나의 기부</a></li>
+						<li class="break"><a href="/applicationList">전체 신청서</a></li>
+						<li><a href="/waitingList">대기 신청서</a></li>
+						<li><a href="/endList">마감 신청서</a></li>
 					</th:block>
 					<!-- 관리자일 때 -->
-					<th:block th:if="${user != null} and ${#strings.equals(user.getRole(), 'ADMIN')}">
+					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'ADMIN')}">
 						<li><a href="/applicationList">전체 신청서</a></li>
 						<li class="break"><a href="/waitingList">대기 신청서</a></li>
 						<li><a href="/endList">마감 신청서</a></li>
 					</th:block>
 					<!-- 비회원일 때 -->
-					<th:block th:if="${user == null}">
-						<li><a href="/login">로그인</a></li>
-						<li class="break"><a href="/join">회원가입</a></li>
+					<th:block th:if="${session.isLoggedIn == null}">
 						<li><a href="/">기부를 진행하고 싶어요</a></li>
+						<li class="break"><a href="/login">로그인</a></li>
+						<li><a href="/join">회원가입</a></li>
 					</th:block>
-					
 				</ul>
 			</nav>
-			<!-- 로그인이 되어있지 않은 경우 -->
-			<!-- <div class="login-logout" th:if="${session.isLoggedIn == null}">
-				<a th:href="@{/login}">로그인</a>
-				<a th:href="@{/join}">회원가입</a>
-			</div> -->
 			<!--로그인이 되어있는 경우-->
 			<div class="header-button-wrapper" th:if="${session.isLoggedIn != null}">
 				<a id="email" th:text="${session.email}">Email</a>
-				<form action="#" th:action="@{/logout}" method="post">
+				<form action="/logout" method="post">
 					<button id ="logout-button" type="submit">Logout</button>
 				</form>
-				<br>
-				<!-- <div class="a-button-wrapper">
-					<a class="button" href="/applicationList">전체 신청서</a>
-					<a class="button" href="/waitingList">대기 신청서</a>
-					<a class="button" href="/endList">마감 신청서</a>
-				</div> -->
 			</div>
-
 		</div>
 	</div>
 </div>
