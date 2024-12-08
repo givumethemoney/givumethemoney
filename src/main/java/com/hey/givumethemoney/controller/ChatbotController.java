@@ -15,8 +15,13 @@ import com.hey.givumethemoney.service.ChatbotService;
 @Controller
 public class ChatbotController {
 
+    private final ChatbotService chatbotService;
+
     @Autowired
-    private ChatbotService chatbotService;
+    public ChatbotController(ChatbotService chatbotService) {
+        this.chatbotService = chatbotService;
+    }
+
 
     @GetMapping("/chatbot")
     public String chatbot() {

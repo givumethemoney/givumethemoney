@@ -52,6 +52,7 @@ public abstract class DonationBase {
     protected boolean isRejected = false;
 
     @Column(name="rejection_reason")
+    @Builder.Default
     protected String rejectionReason = "";
 
 //    //@Builder

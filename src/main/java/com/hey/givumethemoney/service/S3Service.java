@@ -1,6 +1,8 @@
 package com.hey.givumethemoney.service;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hey.givumethemoney.repository.S3Repository;
@@ -8,10 +10,14 @@ import com.hey.givumethemoney.repository.S3Repository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class S3Service {
 
     private final S3Repository s3Repository;
+
+    @Autowired
+    public S3Service(S3Repository s3Repository) {
+        this.s3Repository = s3Repository;
+    }
 
     /**
      * 파일 업로드
