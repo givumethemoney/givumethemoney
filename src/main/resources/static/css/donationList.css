@@ -1,9 +1,6 @@
 /* Body */
 .content-wrapper {
     justify-content: center;
-}
-
-donation.content-wrapper {
     padding: 50px;
     max-width: 1200px;
     margin: 0 auto;
@@ -37,8 +34,8 @@ donation.content-wrapper {
 }
 
 
-
-    .donation-list-wrapper {
+    /* donation-list-wrapper */
+    .donation-list-wrapper{
         display: flex;
         flex-direction: column; /* 자식 요소를 세로로 정렬 */
         align-items: flex-start; /* 수직 정렬: 왼쪽 정렬 */
@@ -46,21 +43,23 @@ donation.content-wrapper {
         width: 100%;
         gap: 30px; /* 자식 요소 간의 간격 조정 */
         padding: 20px; /* 내부 여백 추가 */
-        margin-bottom: 40px; /* 다른 요소들과의 간격 */
+        margin-bottom: 20px; /* 다른 요소들과의 간격 */
     }
+
     .givu-title{
-        font-size: 2rem; /* 제목 크기 */
-        font-weight: bold;
         margin: 10px;
         text-decoration: none; /* 밑줄 제거 */
         display: inline-block; /* block 요소로 설정 */
         text-align: left; /* 텍스트 왼쪽 정렬 */
+        margin-bottom:40px;
+        font-size:30px;
     }
+
     .donation-list {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
     }
+
     /* 카드 스타일 */
     .donation-card {
         display: flex;
@@ -73,15 +72,18 @@ donation.content-wrapper {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
     .donation-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
+
     a.donation-card {
         display: block; /* 블록 요소로 변경 */
         color: inherit; /* 텍스트 색상 상속 */
         text-decoration: none; /* 밑줄 제거 */
     }
+
     /* 카드 내부 레이아웃 */
     .donation-card-inner {
         display: flex;
@@ -98,9 +100,13 @@ donation.content-wrapper {
         background-color: #f0f0f0;
         border: 1px solid #ccc;
         border-radius: 8px;
-        flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
+        flex-shrink: 0;
         margin:10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
+
     .thumbnail-placeholder img{
         width:100%;
         height:100%;
@@ -114,61 +120,94 @@ donation.content-wrapper {
         justify-content: space-between; /* info와 date 간격 자동 배분 */
         align-items: center; /* 세로 가운데 정렬 */
         gap: 20px; /* info와 date 간격 */
+
     }
 
     /* 정보 영역 스타일 */
     .donation-info,
     .donation-date,
-    .donation-price{
-        display: flex; /* 가로 정렬 */
+    .donation-price {
+        padding:5px;
+        display: flex; /* 플렉스박스 활성화 */
         flex-direction: column; /* 세로 정렬 */
+        align-items: center; /* 수평 가운데 정렬 */
         justify-content: center; /* 수직 가운데 정렬 */
-        gap: 2px;
+        gap: 2px; /* 각 요소 간 간격 */
     }
+
     .donation-info p,
     .donation-date p,
     .donation-price p{
-        font-size: clamp(0.8rem, 0.8rem, 1rem); /* 최소, 반응형, 최대 폰트 크기 */
         max-height: 50px; /* 각 <p> 태그의 최대 높이 */
         overflow: hidden; /* 넘치는 텍스트는 숨김 */
         line-height: 1.2; /* 줄 간격 조정 */
         margin: 0; /* 불필요한 여백 제거 */
+        font-size:20px;
     }
 
+    /* Hover 효과 */
+    .donation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
 
-/* 버튼 스타일 */
-.give-btn,
-.receipt-btn{
-    width: 100px;
-    height: 50px;
-    background-color: #677d6a;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 12px;
-    justify-self: end;
-    align-self: center;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
+    /* 버튼 스타일 */
+    .give-btn,
+    .receipt-btn{
+        width: 110px;
+        height: 50px;
+        background-color: #677d6a;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        font-size: 14px;
+        justify-self: end;
+        align-self: center;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
 
-.give-btn:hover,
-.receipt-btn:hover{
-    background-color: #45a049;
-    transform: translateY(-2px);
-}
+    .give-btn:hover,
+    .receipt-btn:hover{
+        background-color: #45a049;
+        transform: translateY(-2px);
+    }
 
+/*
 
+        반응형 처리
 
+*/
 
+    /* 모바일에서 헤더와 슬라이더 사이의 여백 제거 */
+    @media screen and (max-width: 767px) {
+        #page-wrapper {
+            margin: 0 auto; /* 중앙 정렬 */
+            padding: 10px 5px; /* 상하 10px, 좌우 5px */
+        }
 
-/* 반응형 처리 */
-/* 카드 및 콘텐츠 스타일 (모바일 최적화) */
-@media (max-width: 736px) {
+    .content-wrapper {
+        margin: 0 auto; /* 가로 중앙 정렬 */
+        padding: 5px; /* 최소한의 내부 패딩 */
+        width: 100%; /* 부모 요소의 너비에 맞춤 */
+        overflow-x: hidden; /* 가로 넘침 방지 */
+    }
+
+    .donation-list-wrapper {
+            gap: 3px; /* 요소 간 간격 축소 */
+            padding: 1px; /* 내부 여백 */
+            margin: 2px; /* 외부 여백 */
+    }
+
+    .givu-title {
+        margin: 10px 0; /* 위아래 간격 조정 */
+        text-align: left; /* 왼쪽 정렬 */
+    }
+
     .donation-card {
         flex: 1 1 calc(100% - 20px); /* 카드가 한 줄에 꽉 차게 설정 */
-        margin: 10px;
+        margin: 2px;
         padding: 2px; /* 내부 여백 축소 */
     }
 
@@ -187,7 +226,7 @@ donation.content-wrapper {
 
     .donation-content {
         display: flex;
-        flex-direction: row; /* 세로 정렬 */
+        flex-direction: row;
         align-items: center;
         gap: 8px; /* 정보와 날짜 간격 */
     }
@@ -199,20 +238,21 @@ donation.content-wrapper {
         padding: 0px; /* 정보 간 여백 축소 */
     }
 
-    .donation-info h3,
+    .donation-info h3{
+    font-size: 1rem;
+    }
     .donation-info p,
     .donation-date p,
-     .donation-price p{
-        font-size: 0.8rem; /* 폰트 크기 축소 */
-        padding: 0; /* 내부 여백 */
+    .donation-price p{
+        font-size: 0.8rem;
+        padding: 2px;
         margin:0;
-        line-height: 1.2; /* 줄 간격 축소 */
-        }
-
-    .givu-title {
-        font-size: 1rem; /* 타이틀 폰트 크기 */
-        margin: 10px 0; /* 위아래 간격 조정 */
-        text-align: left; /* 왼쪽 정렬 */
     }
 
+    .give-btn,
+    .receipt-btn{
+        width: 70px;
+        height: 30px;
+        font-size: 10px;
+    }
 }

@@ -15,17 +15,15 @@
 
     <div class="content-wrapper">
         <!-- Slider -->
-        <div id="body-wrapper">
             <div class="slider">
                 <div class="slides">
                     <a href="https://link1.com" class="slide">
                         <img src="https://gmtm-receipt-bucket.s3.ap-northeast-2.amazonaws.com/IMG_3350.JPG"
                              alt="Image 1">
-
                     </a>
                 </div>
             </div>
-        </div>
+
             <!-- 진행 중인 GIVU -->
             <div class="givuing">
                 <a class="givu-title" href="/donationList">
@@ -37,8 +35,6 @@
                             <!--썸네일-->
                             <div class="thumbnail-placeholder">
                                 <img th:src="${thumbnails[donation.id] != null ? thumbnails[donation.id] : '/image/default-thumbnail.jpeg'}" alt="thumbnail" />
-
-<!--                                <img th:src="${thumbnails[donation.id]}" alt="thumbnail" />-->
                             </div>
                             <!--donation 내용-->
                             <div class="donation-content">
