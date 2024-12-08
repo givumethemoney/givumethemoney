@@ -25,7 +25,7 @@ public class Receipt {
     @Column(name = "donation_id", nullable = false)
     private Long donationId;
 
-    @Column(name = "imgae_url", nullable = false)
+    @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
 
