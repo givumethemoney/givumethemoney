@@ -1,5 +1,17 @@
 package com.hey.givumethemoney.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.hey.givumethemoney.domain.Donation;
 import com.hey.givumethemoney.domain.NicknameDonation;
 import com.hey.givumethemoney.domain.WaitingDonation;
@@ -7,22 +19,13 @@ import com.hey.givumethemoney.repository.DonationRepository;
 import com.hey.givumethemoney.repository.NicknameDonationRepository;
 import com.hey.givumethemoney.repository.WaitingDonationRepository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Transactional
 public class DonationService {
 
     private final DonationRepository donationRepository;
     private final WaitingDonationRepository waitingDonationRepository;
     private final NicknameDonationRepository nicknameDonationRepository;
+
 
     @Autowired
     public DonationService(DonationRepository donationRepository, 
@@ -184,5 +187,24 @@ public class DonationService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<String> findDonationsByKeyword(String keyword) {
+        try {
+            List<Donation> donations = donationRepository.findByNameContaining(keyword);
+    
+            if (donations.isEmpty()) {
+                return List.of("관련된 기부가 없습니다.");
+            }
+    
+            return donations.stream()
+                            .map(donation -> "🍀[\"" + donation.getTitle() + "\"](https://34.64.104.188:8080/detail/" + donation.getId() + ")")
+                            .toList();
+        } catch (Exception e) {
+            System.out.println("예외 발생: " + e.getMessage());
+            e.printStackTrace();
+            return List.of("오류가 발생했습니다.");
+        }
+    }
+    
 
 }

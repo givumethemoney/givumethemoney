@@ -1,17 +1,16 @@
 package com.hey.givumethemoney.repository;
 
-import com.hey.givumethemoney.domain.Donation;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
-
 import java.util.Optional;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.hey.givumethemoney.domain.Donation;
 
 @Repository
 public interface DonationRepository extends JpaRepository<Donation, Long> {
@@ -22,8 +21,9 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
     // Pageable을 사용하는 방식으로 수정
     @Query("SELECT d FROM Donation d ORDER BY d.startDate DESC")
     List<Donation> findTop3Donations(Pageable pageable);
-//
-//    @Query(value = "SELECT * FROM donation_confirmed ORDER BY start_date DESC LIMIT 3", nativeQuery = true)
-//    List<Donation> findTop3Donations();
+
+    @Query("SELECT d FROM Donation d WHERE d.title LIKE %:keyword%")
+    List<Donation> findByNameContaining(@Param("keyword") String keyword);
+
 }
 

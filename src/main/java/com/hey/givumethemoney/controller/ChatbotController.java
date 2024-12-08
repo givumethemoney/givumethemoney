@@ -22,7 +22,6 @@ public class ChatbotController {
         this.chatbotService = chatbotService;
     }
 
-
     @GetMapping("/chatbot")
     public String chatbot() {
         return "chatbot";
@@ -37,4 +36,5 @@ public class ChatbotController {
         response.put("answer", answer);
         return response;
     }
+
 }

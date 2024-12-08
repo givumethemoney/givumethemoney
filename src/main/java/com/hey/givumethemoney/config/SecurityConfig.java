@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // RESTful API에서는 보통 CSRF가 필요하지 않으므로
                 .authorizeHttpRequests(auth -> auth
                         // 특정 URL은 인증 없이 접근 가능(permitAll())
-                        .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/*", "/error", "/webfonts/*", "/chatbot/**").permitAll()
+                        .requestMatchers("/login", "/join", "/", "/css/**", "/js/**", "/images/**", "/image/*", "/error", "/webfonts/*", "/chatbot/**", "/json/**").permitAll()
                         .requestMatchers("/detail/*", "/payments", "/pay", "/success","/receipts/**", "/receiptList/*","/donationList", "/donationList/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login-fail").permitAll()
                         // 특정 역할이 있어야만 접근 가능한 URL(hasRole("ROLE"))
