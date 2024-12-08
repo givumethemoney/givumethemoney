@@ -28,6 +28,14 @@
     height: auto; /* 비율 유지 */
 }
 
+.my-givu-title{
+    margin: 10px;
+    text-decoration: none; /* 밑줄 제거 */
+    display: inline-block; /* block 요소로 설정 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    margin-bottom:40px;
+    font-size:30px;
+}
 /* GIVUING */
     .givuing,
     .ending {

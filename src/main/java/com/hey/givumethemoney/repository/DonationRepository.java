@@ -25,5 +25,9 @@ public interface DonationRepository extends JpaRepository<Donation, Long> {
     @Query("SELECT d FROM Donation d WHERE d.title LIKE %:keyword%")
     List<Donation> findByNameContaining(@Param("keyword") String keyword);
 
+    @Query("SELECT d FROM Donation d WHERE d.userId = :userId")
+    List<Donation> findByUserId(@Param("userId") String userId);
+
+
 }
 

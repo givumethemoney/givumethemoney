@@ -14,7 +14,7 @@
 				<ul>
 					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'COMPANY')}">
 						<li><a href="/application/agree">기부 신청하기</a></li>
-						<li><a href="/donationList">나의 기부</a></li>
+						<li><a href="/myDonationList">나의 기부</a></li>
 						<li class="break"><a href="/applicationList">전체 신청서</a></li>
 						<li><a href="/waitingList">대기 신청서</a></li>
 						<li><a href="/endList">마감 신청서</a></li>

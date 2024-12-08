@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>기부 목록</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" href="/css/home.css"/>
+    <link rel="stylesheet" href="/css/chatbot.css" />
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <!-- Header -->
+    <div th:replace="~{layouts/header::header}"></div>
+
+    <!-- Content -->
+    <div class="content-wrapper">
+
+        <div class="givuing">
+            <h2 class="my-givu-title">나의 GIVU</h2>
+            <div th:each="donation : ${donations}" class="donation-card">
+                <a th:href="@{'/detail/' + ${donation.id}}">
+                    <div class="donation-card-inner">
+                        <!--썸네일-->
+                        <div class="thumbnail-placeholder">
+                            <img th:src="${thumbnails[donation.id] != null ? thumbnails[donation.id] : '/image/default-thumbnail.jpeg'}" alt="thumbnail" />
+                        </div>
+                        <!--donation 내용-->
+                        <div class="donation-content">
+                            <div class="donation-info">
+                                <h3 th:text="${donation.title}"></h3>
+                                <p th:text="'후원기업: ' + ${donation.enterName}"></p>
+                            </div>
+                            <div class="donation-date">
+                                <p th:text="'시작일: ' + ${donation.startDate}"></p>
+                                <p th:text="'마감일: ' + ${donation.endDate}"></p>
+                            </div>
+                            <div class="donation-price">
+                                <p th:text="'목표 금액: ' + ${donation.getGoal()}"></p>
+                                <p th:text="'모금된 금액: ' + ${donation.getCurrentAmount()}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<header th:replace="layouts/footer::footer"></header>
+<div th:insert="~{chatbot :: chatbot}"></div>
+
+<!-- Scripts -->
+<script type="text/javascript" th:src="@{/js/donation.list.js}"></script>
+<script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/util.js}"></script>
+<script type="text/javascript" th:src="@{/js/main.js}"></script>
+
+</body>
+</html>
+
