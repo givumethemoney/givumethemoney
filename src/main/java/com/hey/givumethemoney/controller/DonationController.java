@@ -51,8 +51,23 @@ public class DonationController {
         List<Donation> allDonations = donationService.getDonations(); // 전체 기부 목록 가져오기
         List<Donation> ongoingDonations = donationService.getOngoingDonations();
         List<Donation> finishedDonations = donationService.getFinishedDonations();
+
+        // 썸네일 매핑
+        Map<Long, String> thumbnailMap = new HashMap<>();
+        for (Donation donation : ongoingDonations) {
+            List<Image> images = imageService.findImagesByDonationId(donation.getId());
+            model.addAttribute("images", images);
+        }
+
+        for (Donation donation : finishedDonations) {
+            List<Image> images = imageService.findImagesByDonationId(donation.getId());
+            model.addAttribute("images", images);
+        }
+
+
         model.addAttribute("ongoingDonations", ongoingDonations);
         model.addAttribute("finishedDonations", finishedDonations);
+        model.addAttribute("thumbnails", thumbnailMap);
 
         return "donationList";
     }

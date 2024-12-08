@@ -90,18 +90,7 @@ donation.content-wrapper {
         width: 100%; /* 전체 공간 사용 */
         gap: 20px;
     }
-/* 카드 내부 레이아웃
-.donation-card-inner {
-    display: grid;
-    grid-template-columns: 150px auto 100px;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    gap: 20px;
-    margin:20px;
-    box-sizing: border-box;
-}
-*/
+
     /* 썸네일 스타일 */
     .thumbnail-placeholder {
         width: 150px;
@@ -112,18 +101,12 @@ donation.content-wrapper {
         flex-shrink: 0; /* 크기가 줄어들지 않도록 고정 */
         margin:10px;
     }
+    .thumbnail-placeholder img{
+        width:100%;
+        height:100%;
+        object-fit:cover;
+    }
 
-/* 썸네일 스타일
-.thumbnail-placeholder {
-    width: 150px;
-    height: 150px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    flex-shrink: 0;
-    grid-column: 1;
-}
-*/
     /* 콘텐츠 스타일 */
     .donation-content {
         display: flex; /* 가로 정렬 */
@@ -132,17 +115,7 @@ donation.content-wrapper {
         align-items: center; /* 세로 가운데 정렬 */
         gap: 20px; /* info와 date 간격 */
     }
-/* 콘텐츠 스타일
-.donation-content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    grid-column: 2;
-    gap: 5px;
-    padding:10px 0;
-    align-items: center; /* 세로 가운데 정렬 */
-}
-*/
+
     /* 정보 영역 스타일 */
     .donation-info,
     .donation-date,

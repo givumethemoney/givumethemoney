@@ -34,7 +34,13 @@
                 <div th:each="donation : ${ongoingDonations}" class="donation-card">
                     <a th:href="@{'/detail/' + ${donation.id}}">
                         <div class="donation-card-inner">
-                            <div class="thumbnail-placeholder"></div>
+                            <!--썸네일-->
+                            <div class="thumbnail-placeholder">
+                                <img th:src="${thumbnails[donation.id] != null ? thumbnails[donation.id] : '/image/default-thumbnail.jpeg'}" alt="thumbnail" />
+
+<!--                                <img th:src="${thumbnails[donation.id]}" alt="thumbnail" />-->
+                            </div>
+                            <!--donation 내용-->
                             <div class="donation-content">
                                 <div class="donation-info">
                                     <h3 th:text="${donation.title}"></h3>
@@ -62,7 +68,10 @@
             <div th:each="donation : ${finishedDonations}" class="donation-card">
                 <a th:href="@{'/detail/' + ${donation.id}}" >
                     <div class="donation-card-inner">
-                        <div class="thumbnail-placeholder"></div>
+                        <!--썸네일-->
+                        <div class="thumbnail-placeholder">
+                            <img th:src="${thumbnails[donation.id] != null ? thumbnails[donation.id] : '/image/default-thumbnail.jpeg'}" alt="thumbnail" />
+                        </div>
                         <div class="donation-content">
                             <div class="donation-info">
                                 <h3 th:text="${donation.title}"></h3>

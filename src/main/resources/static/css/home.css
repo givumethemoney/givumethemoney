@@ -140,6 +140,12 @@ a.donation-card {
     margin:10px;
 }
 
+.thumbnail-placeholder img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
 /* 콘텐츠 스타일 */
 .donation-content {
     display: flex; /* 가로 정렬 */
