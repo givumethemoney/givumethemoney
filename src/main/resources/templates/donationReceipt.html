@@ -85,8 +85,6 @@
       <div class="text-container">
         <h2 class="text-center">기부 영수증 확인</h2>
       </div>
-
-
        <!-- 영수증 이미지와 데이터 -->
       <div class="container receipt-container">
         <!-- 영수증 이미지 -->
@@ -100,10 +98,10 @@
             <table class="table table-hover mb-0">
               <thead>
                 <tr class="align-self-center">
-                  <th>Product Name</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Total Amount</th>
+                  <th>물품명</th>
+                  <th>수량</th>
+                  <th>단가</th>
+                  <th>총액</th>
                 </tr>
               </thead>
               <tbody>
@@ -122,47 +120,9 @@
       <div class="text-center">
         <a class="button" th:href="@{/detail/{id}(id=${donationId})}">돌아가기</a>
       </div>
+    </div>
 
-      <!-- <div class="row">
-          <div class="col-xl-12">
-              <div class="card">
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table class="table table-hover mb-0">
-                        <thead>
-                            <tr class="align-self-center">
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="ocrResult : ${ocrResults}">
-                                <td th:text="${ocrResult.productName}"></td>
-                                <td th:text="${ocrResult.quantity}"></td>
-                                <td th:text="${ocrResult.unitPrice}"></td>
-                                <td th:text="${ocrResult.totalAmount}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div>
-                  </div>
-              </div>
-            </div>
-      </div> -->
-
-
-      </div>
-
-
-    <!-- <ul th:each="r : ${receipts}">
-      <li><img class="receipts" th:src="@{${r.getImageUrl()}}" /></li>
-    </ul> -->
-    
-
-    <!-- <a class="button" th:href="@{/detail/{id}(id = ${donationId})}">돌아가기</a> -->
-  </div>
+    </div>
 
   <header th:replace="layouts/footer::footer"></header>
   <div th:insert="~{chatbot :: chatbot}"></div>

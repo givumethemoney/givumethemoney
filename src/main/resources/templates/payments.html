@@ -7,72 +7,76 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/header.css" />
     <link rel="stylesheet" href="/css/payments.css" />
     <link rel="stylesheet" href="/css/chatbot.css" />
 
   </head>
 
   <body class="homepage is-preload">
-
     <div id="page-wrapper">
-      <div th:replace="~{layouts/header::header}" th:with="user=${user}"></div>
-      <div class="container">
-        <!-- <h1>GIVU ME THE MONEY</h1> -->
-        <hr>
-        <!-- <h2>기부 금액</h2> -->
-        <div class="payment-info">
-          <h1>기부 금액</h1>
+      <div th:replace="~{layouts/header::header}"></div>
+      <div class="content-wrapper">
+        <div class="container">
+          <div class="payment-info">
+            <h1>기부 금액</h1>
+          </div>
+          <div id="form-container">
+            <form action="/pay" method="get" id="payment-form">
+              <div class="donation-amounts">
+                  <button type="button" class="amount" value="500" 
+                  th:onclick="setAmount(this.value)">500원</button>
+  
+                  <button type="button" class="amount" value="1000"
+                  th:onclick="setAmount(this.value)">1,000원</button>
+  
+                  <button type="button" class="amount" value="3000"
+                  th:onclick="setAmount(this.value)">3,000원</button>
+  
+                  <button type="button" class="amount" value="5000" 
+                  th:onclick="setAmount(this.value)">5,000원</button>
+  
+                  <button type="button" class="amount" value="10000"
+                  th:onclick="setAmount(this.value)">10,000원</button>
+                  
+                  <button type="button" class="amount" value="15000"
+                  th:onclick="setAmount(this.value)">15,000원</button>
+  
+                  <button type="button" class="amount" value="30000"
+                  th:onclick="setAmount(this.value)">30,000원</button>
+  
+                  <button type="button" class="amount" value="50000"
+                  th:onclick="setAmount(this.value)">50,000원</button>
+              </div>
+  
+              <div class="input-container">
+                <div class="custom-amount">
+                  <input type="text" name="customAmount" placeholder="직접 입력" aria-label="Custom Amount">
+                </div>
+                <!-- 닉네임 입력받기 -->
+                <div class="custom-amount">
+                  <input type="text" name="nickName" placeholder="(선택)기부 닉네임" aria-label="Nick Name">
+                </div>
+  
+                <!-- 실제 전송될 금액을 저장하는 숨겨진 input -->
+                <input type="hidden" name="amount" id="selectedAmount" value="">
+                <input type="hidden" name="donationId" id="donationId" th:value="${donationId}">
+  
+                <!-- 결제하기 버튼을 submit으로 변경 -->
+                <button type="submit" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
+              </div>
+                
+            </form>
+          </div>
+          
         </div>
-        <form action="/pay" method="get" id="payment-form">
-          <div class="donation-amounts">
-              <button type="button" class="amount" value="500" 
-              th:onclick="setAmount(this.value)">500원</button>
-
-              <button type="button" class="amount" value="1000"
-              th:onclick="setAmount(this.value)">1,000원</button>
-
-              <button type="button" class="amount" value="3000"
-              th:onclick="setAmount(this.value)">3,000원</button>
-
-              <button type="button" class="amount" value="5000" 
-              th:onclick="setAmount(this.value)">5,000원</button>
-
-              <button type="button" class="amount" value="10000"
-              th:onclick="setAmount(this.value)">10,000원</button>
-              
-              <button type="button" class="amount" value="15000"
-              th:onclick="setAmount(this.value)">15,000원</button>
-
-              <button type="button" class="amount" value="30000"
-              th:onclick="setAmount(this.value)">30,000원</button>
-
-              <button type="button" class="amount" value="50000"
-              th:onclick="setAmount(this.value)">50,000원</button>
-          </div>
-          <div class="custom-amount">
-              <input type="text" name="customAmount" placeholder="직접 입력" aria-label="Custom Amount">
-          </div>
-
-          <!-- 닉네임 입력받기 -->
-          <div class="custom-amount">
-            <input type="text" name="nickName" placeholder="(선택)기부 닉네임" aria-label="Nick Name">
-          </div>
-
-          <!-- 실제 전송될 금액을 저장하는 숨겨진 input -->
-          <input type="hidden" name="amount" id="selectedAmount" value="">
-          <input type="hidden" name="donationId" id="donationId" th:value="${donationId}">
-
-
-          <!-- 결제하기 버튼을 submit으로 변경 -->
-          <button type="submit" class="button" id="payment-button" style="margin-top: 30px">결제하기</button>
-        </form>
       </div>
+      <footer th:replace="~{layouts/footer :: footer}"></footer>
+      <div th:insert="~{chatbot :: chatbot}"></div>
     </div>
     
     
-    <footer th:replace="~{layouts/footer :: footer}"></footer>
-
-    <div th:insert="~{chatbot :: chatbot}"></div>
+    
     <script>
       var currentAmount;
       var amount = document.querySelectorAll('.amount');
