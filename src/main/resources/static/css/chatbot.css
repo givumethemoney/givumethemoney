@@ -22,8 +22,8 @@
     position: fixed;
     bottom: 90px;
     right: 20px;
-    width: 300px;
-    max-height: 400px;
+    width: 350px;
+    max-height: 500px;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -31,11 +31,13 @@
     display: none; /* 초기에는 숨김 */
     flex-direction: column;
     padding: 10px;
+    resize: both; /* 채팅창 크기 조절 가능 */
+    overflow: hidden;
 }
 
 #chat-popup #chatbox {
     overflow-y: auto;
-    height: 250px;
+    height: 300px;
     border: 1px solid #ddd;
     margin-bottom: 10px;
     padding: 10px;
@@ -48,7 +50,7 @@
     position: fixed;
     bottom: 20px;        /* 화면 하단에 고정 */
     right: 20px;         /* 화면 오른쪽에 고정 */
-    width: 300px;        /* 기본 너비 */
+    width: 350px;        /* 기본 너비 */
     max-width: 100%;      /* 모바일에서 너비가 화면을 넘어가지 않도록 */
     background-color: #f5f7fa;  /* 배경색 */
     border: 1px solid #ccc;
@@ -86,6 +88,8 @@
     font-size: 14px;
     line-height: 1.4;
     color: #40534c;  /* 글자 색 */
+    word-wrap: break-word; /* 텍스트가 칸을 넘지 않게 */
+    word-break: break-word; /* 단어가 칸을 넘지 않게 */
 }
 
 /* 답변(챗봇) 스타일 */
@@ -99,6 +103,8 @@
     font-size: 14px;
     line-height: 1.4;
     align-self: flex-start; /* 왼쪽 정렬 */
+    word-wrap: break-word; /* 텍스트가 칸을 넘지 않게 */
+    word-break: break-word; /* 단어가 칸을 넘지 않게 */
 }
 
 /* 메시지 입력창 스타일 */

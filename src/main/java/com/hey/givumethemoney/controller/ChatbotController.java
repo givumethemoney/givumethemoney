@@ -16,7 +16,12 @@ import com.hey.givumethemoney.service.ChatbotService;
 public class ChatbotController {
 
     @Autowired
-    private ChatbotService chatbotService;
+    private final ChatbotService chatbotService;
+
+    @Autowired
+    public ChatbotController(ChatbotService chatbotService) {
+        this.chatbotService = chatbotService;
+    }
 
     @GetMapping("/chatbot")
     public String chatbot() {
@@ -32,4 +37,5 @@ public class ChatbotController {
         response.put("answer", answer);
         return response;
     }
+
 }

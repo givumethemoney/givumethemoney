@@ -1,10 +1,5 @@
 package com.hey.givumethemoney.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.auth.oauth2.GoogleCredentials;
-import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -13,7 +8,15 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.auth.oauth2.GoogleCredentials;
 
 @Service
 public class ChatbotService {
@@ -21,6 +24,12 @@ public class ChatbotService {
     private final String dialogflowProjectId = "givumethemoney";
     private final String sessionId = UUID.randomUUID().toString(); // 세션 ID를 고유하게 설정
     private final String dialogflowApiUrl = "https://dialogflow.googleapis.com/v2/projects/{your-project-id}/agent/sessions/{session-id}:detectIntent";
+    private final DonationService donationService;
+
+    @Autowired
+    public ChatbotService(DonationService donationService) {
+        this.donationService = donationService;
+    }
 
 
     public String getAnswerFromChatbot(String question) {
@@ -99,8 +108,34 @@ public class ChatbotService {
             
             // queryResult -> fulfillmentText 추출
             JsonNode queryResultNode = rootNode.path("queryResult");
+            String intent = queryResultNode.path("intent").path("displayName").asText();  // intent 확인
             String fulfillmentText = queryResultNode.path("fulfillmentText").asText();
             
+            if ("find-donations".equals(intent)) {
+                JsonNode parametersNode = queryResultNode.path("parameters");
+                JsonNode donationThemeNode = parametersNode.path("donationtheme");
+            
+                // donationThemeNode가 배열이면 첫 번째 값을 추출
+                String keyword = "";
+                if (donationThemeNode.isArray() && donationThemeNode.size() > 0) {
+                    keyword = donationThemeNode.get(0).asText(); // 배열의 첫 번째 값 추출
+                }
+                System.out.println("\n\n\nkeyword: " + keyword);
+
+                List<String> donationLinks = donationService.findDonationsByKeyword(keyword);
+                System.out.println("donationLinks: " + donationLinks);
+
+                if (donationLinks.isEmpty() || "관련된 기부가 없습니다.".equals(donationLinks.get(0))) {
+                    return "관련된 기부가 없습니다.";
+                } else {
+                    StringBuilder responseText = new StringBuilder();
+                    responseText.append(keyword + "와 관련된 기부는 다음에서 확인할 수 있습니다: <br>");
+                    for (String link : donationLinks) {
+                        responseText.append("<a href='" + link + "'>" + link + "</a><br>");
+                    }
+                    return responseText.toString();
+                }
+            }
             // fulfillmentText 값 반환
             if (fulfillmentText != null && !fulfillmentText.isEmpty()) {
                 return fulfillmentText;
