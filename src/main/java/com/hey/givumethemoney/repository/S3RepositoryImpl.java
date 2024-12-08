@@ -11,10 +11,13 @@ import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.pdmodel.PDPage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -62,42 +65,109 @@ public class S3RepositoryImpl implements S3Repository {
         return imgUrl;
     }
 
+    // @Override
+    // public String uploadReceiptFile(MultipartFile multipartFile, Receipt receipt) {
+    //     System.out.println("uploadFile 시작!!!\n\n");
+    //     // 1. 파일 이름 추출
+    //     // S3 버킷에 저장될 파일의 이름으로 사용됨
+    //     String originalFilename = multipartFile.getOriginalFilename();
+
+    //     // 2. 파일 이름에 UUID 추가 (중복 방지)
+    //     String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+    //     String fileName = UUID.randomUUID().toString() + originalFilename;
+
+    //     // 3. 메타데이터 생성
+    //     ObjectMetadata metadata = new ObjectMetadata();
+    //     // 파일 크기를 설정
+    //     metadata.setContentLength(multipartFile.getSize());
+    //     // 파일의 MIME 타입을 설정
+    //     metadata.setContentType(multipartFile.getContentType());
+
+    //     // 4. S3에 파일 업로드
+    //     try {
+    //         amazonS3.putObject(bucket, fileName, multipartFile.getInputStream(), metadata);
+    //     } catch (IOException e) {
+    //         throw new RuntimeException("Failed to upload file to S3", e);
+    //     }
+
+    //     String imgUrl = amazonS3.getUrl(bucket, fileName).toString();
+    //     System.out.println("s3에 이미지 업로드 완료!!!!\n\n");
+    //     System.out.println("imgUrl: " + imgUrl);
+
+    //     // 5. image 정보 저장
+    //     receipt.setImageUrl(imgUrl);
+    //     receipt.setSavedName(fileName);
+
+
+    //     return imgUrl;
+    // }
     @Override
-    public String uploadReceiptFile(MultipartFile multipartFile, Receipt receipt) {
-        System.out.println("uploadFile 시작!!!\n\n");
-        // 1. 파일 이름 추출
-        // S3 버킷에 저장될 파일의 이름으로 사용됨
-        String originalFilename = multipartFile.getOriginalFilename();
+public String uploadReceiptFile(MultipartFile multipartFile, Receipt receipt) {
+    System.out.println("uploadFile 시작!!!\n\n");
+    String originalFilename = multipartFile.getOriginalFilename();
+    String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+    String fileName = UUID.randomUUID().toString() + originalFilename + fileExtension;
 
-        // 2. 파일 이름에 UUID 추가 (중복 방지)
-        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String fileName = UUID.randomUUID().toString() + originalFilename + fileExtension;
+    // 1. PDF 파일 처리: PDF 파일일 경우, 이미지를 변환 후 S3에 업로드
+    if (fileExtension.equalsIgnoreCase(".pdf")) {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            // PDF 문서 로드
+            PDDocument document = PDDocument.load(inputStream);
+            PDFRenderer pdfRenderer = new PDFRenderer(document);
+            
+            // 첫 번째 페이지를 이미지로 변환 (여러 페이지를 처리하려면 반복문을 추가)
+            BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(0, 300); // 300 DPI로 렌더링
 
-        // 3. 메타데이터 생성
-        ObjectMetadata metadata = new ObjectMetadata();
-        // 파일 크기를 설정
-        metadata.setContentLength(multipartFile.getSize());
-        // 파일의 MIME 타입을 설정
-        metadata.setContentType(multipartFile.getContentType());
+            // 이미지 파일로 변환하여 ByteArray로 변환
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(bufferedImage, "JPEG", byteArrayOutputStream); // JPEG 포맷으로 저장
 
-        // 4. S3에 파일 업로드
+            // ByteArray를 S3에 업로드
+            byte[] imageBytes = byteArrayOutputStream.toByteArray();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(imageBytes.length);
+            metadata.setContentType("image/jpeg");
+
+            String newFileName = UUID.randomUUID().toString() + ".jpg"; // 이미지 파일 이름
+
+            // S3에 업로드
+            amazonS3.putObject(bucket, newFileName, new ByteArrayInputStream(imageBytes), metadata);
+
+            String imgUrl = amazonS3.getUrl(bucket, newFileName).toString();
+            document.close(); // PDF 문서 닫기
+
+            // 이미지 URL 저장
+            receipt.setImageUrl(imgUrl);
+            receipt.setSavedName(newFileName);
+            System.out.println("PDF가 이미지로 변환되어 업로드 완료!!!!\n\n");
+            System.out.println("imgUrl: " + imgUrl);
+
+            return imgUrl;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to convert PDF to image", e);
+        }
+    } else {
+        // PDF가 아닌 파일 처리 (기존의 방식)
         try {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(multipartFile.getSize());
+            metadata.setContentType(multipartFile.getContentType());
+
             amazonS3.putObject(bucket, fileName, multipartFile.getInputStream(), metadata);
+
+            String imgUrl = amazonS3.getUrl(bucket, fileName).toString();
+            receipt.setImageUrl(imgUrl);
+            receipt.setSavedName(fileName);
+            System.out.println("이미지 파일 업로드 완료!!!!\n\n");
+            System.out.println("imgUrl: " + imgUrl);
+
+            return imgUrl;
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload file to S3", e);
         }
-
-        String imgUrl = amazonS3.getUrl(bucket, fileName).toString();
-        System.out.println("s3에 이미지 업로드 완료!!!!\n\n");
-        System.out.println("imgUrl: " + imgUrl);
-
-        // 5. image 정보 저장
-        receipt.setImageUrl(imgUrl);
-        receipt.setSavedName(fileName);
-
-
-        return imgUrl;
     }
+}
 
     @Override
     public String createThumbNail(Image image) {
@@ -107,7 +177,7 @@ public class S3RepositoryImpl implements S3Repository {
         System.out.println("imgUrl: " + imgUrl);
         
         // 3. 원본 이미지 파일을 S3에서 다운로드하여 InputStream을 받기
-        S3ObjectInputStream s3InputStream = downloadFile(image); // S3에서 파일을 다운로드하는 메서드
+        S3ObjectInputStream s3InputStream = downloadFile(image); 
         if (s3InputStream == null) {
             throw new RuntimeException("S3에서 파일을 다운로드할 수 없습니다.");
         }
@@ -131,12 +201,10 @@ public class S3RepositoryImpl implements S3Repository {
     
         try {
             // 6. Thumbnailator로 썸네일 생성 (메모리 상에서)
-            // 썸네일 생성: createThumbnail(BufferedImage, int width, int height, OutputStream outputStream)
             BufferedImage thumbnail = Thumbnailator.createThumbnail(originalImage, 200, 200);
         
             // 7. 썸네일을 ByteArrayOutputStream에 저장
-            ImageIO.write(thumbnail, "png", byteArrayOutputStream);  // JPG 형식으로 저장 (원하는 형식에 맞게 조정)
-            //byteArrayOutputStream.flush();  // 버퍼 비우기
+            ImageIO.write(thumbnail, "png", byteArrayOutputStream); 
             
             // 썸네일 생성 완료 후, ByteArrayOutputStream에서 InputStream으로 변환
             ByteArrayInputStream thumbInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
@@ -170,94 +238,6 @@ public class S3RepositoryImpl implements S3Repository {
         }
     }
 
-
-//     @Override
-// public String createThumbNail(Image image) {
-//     System.out.println("createThumbNail 시작!!!\n\n");
-
-//     // 2. 원본 이미지의 S3 URL 가져오기
-//     String imgUrl = image.getImgUrl(); // S3 URL (경로)
-//     System.out.println("imgUrl: " + imgUrl);
-
-//     // 3. 원본 이미지 파일을 S3에서 다운로드하여 InputStream을 받기
-//     InputStream s3InputStream = downloadFile(imgUrl); // S3에서 파일을 다운로드하는 메서드
-//     if (s3InputStream == null) {
-//         throw new RuntimeException("S3에서 파일을 다운로드할 수 없습니다.");
-//     }
-
-//     // 4. 원본 이미지 InputStream을 BufferedImage로 읽기
-//     BufferedImage originalImage = null;
-//     try {
-//         originalImage = ImageIO.read(s3InputStream);
-//     } catch (IOException e) {
-//         throw new RuntimeException("원본 이미지를 읽을 수 없습니다.", e);
-//     }
-
-//     if (originalImage == null) {
-//         throw new RuntimeException("원본 이미지를 읽을 수 없습니다.");
-//     }
-
-//     // 5. 썸네일 파일 이름 생성
-//     String thumbFileName = "th_" + image.getSavedName();
-    
-//     // 6. 로컬에 썸네일 파일 저장
-//     File thumbnailFile = new File("/tmp/" + thumbFileName); // 로컬 임시 경로에 저장
-//     try {
-//         // 7. Thumbnailator로 썸네일 생성 (로컬 파일로 저장)
-//         BufferedImage thumbnail = Thumbnailator.createThumbnail(originalImage, 200, 200);
-        
-//         // 8. 썸네일을 로컬 파일로 저장
-//         ImageIO.write(thumbnail, "jpg", thumbnailFile);  // JPG 형식으로 저장 (원하는 형식에 맞게 조정)
-//         System.out.println("로컬에 썸네일 저장 완료: " + thumbnailFile.getAbsolutePath());
-//     } catch (IOException e) {
-//         throw new RuntimeException("썸네일을 로컬에 저장하는 데 실패했습니다.", e);
-//     }
-
-//     // 9. 썸네일 파일을 S3에 업로드
-//     try {
-//         // 10. 메타데이터 생성 (썸네일 파일 업로드를 위한)
-//         ObjectMetadata metadata = new ObjectMetadata();
-//         metadata.setContentLength(thumbnailFile.length());
-
-//         // 11. 썸네일을 S3에 업로드
-//         String thumbUrl = uploadInputStreamFile(new FileInputStream(thumbnailFile), thumbFileName, metadata); // 수정된 부분
-//         System.out.println("s3에 이미지 업로드 완료!!!!\n\n");
-//         System.out.println("thumbUrl: " + thumbUrl);
-
-//         // 12. 썸네일 정보 DB에 저장
-//         ThumbNail thumbNail = ThumbNail.builder()
-//                 .savedName(thumbFileName)
-//                 .thumbUrl(thumbUrl)
-//                 .donationId(image.getDonationId())
-//                 .imgId(image.getId())
-//                 .build();
-
-//         thumbNailRepository.save(thumbNail);
-
-//         // 13. 썸네일 URL 반환
-//         return thumbUrl;
-
-//     } catch (IOException e) {
-//         throw new RuntimeException("썸네일을 S3에 업로드하는 데 실패했습니다.", e);
-//     } finally {
-//         // 14. 리소스 해제
-//         try {
-//             if (s3InputStream != null) {
-//                 s3InputStream.close();  // 리소스 해제
-//             }
-//         } catch (IOException e) {
-//             e.printStackTrace();
-//         }
-//     }
-// }
-
-
-
-    // @Override
-    // public S3ObjectInputStream downloadFile(String fileName) {
-    //     S3Object s3Object = amazonS3.getObject(bucket, fileName);
-    //     return s3Object.getObjectContent();
-    // }
 
     // S3에서 파일을 다운로드하는 메서드 (입력 받은 URL로 파일을 다운로드하여 InputStream 반환)
     @Override

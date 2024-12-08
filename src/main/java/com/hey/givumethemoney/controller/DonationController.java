@@ -82,6 +82,29 @@ public class DonationController {
         return "donationList";
     }
 
+    @GetMapping("/myDonationList")
+    public String myDonationList(Model model) {
+        String email = customUserService.getEmail();
+        List<Donation> myDonations = donationService.getDonationsByUserId(email);
+        
+        // 썸네일 매핑
+        Map<Long, String> thumbnailMap = new HashMap<>();
+        // 진행 중 기부에 대해 썸네일(첫 번째 이미지) 추가
+        for (Donation donation : myDonations) {
+            List<Image> images = imageService.findImagesByDonationId(donation.getId());
+            if (!images.isEmpty()) {
+                // 첫 번째 이미지를 썸네일로 설정
+                thumbnailMap.put(donation.getId(), images.get(0).getThumbUrl());
+            }
+        }
+        
+        System.out.println("images: " + thumbnailMap);
+        model.addAttribute("donations", myDonations);
+        model.addAttribute("thumbnails", thumbnailMap);
+
+        return "myDonationList";
+    }
+
 
 
     @GetMapping("/detail/{id}")

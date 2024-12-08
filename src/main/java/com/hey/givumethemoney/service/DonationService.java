@@ -88,16 +88,7 @@ public class DonationService {
     }
 
     public List<Donation> getDonationsByUserId(String userId) {
-        List<Donation> donations = getDonations();
-        List<Donation> result = new ArrayList<>();
-
-        for (Donation d : donations) {
-            if (d.getUserId().equals(userId)) {
-                result.add(d);
-            }
-        }
-
-        return result;
+        return donationRepository.findByUserId(userId);
     }
 
     public void deleteWaitingDonationById(Long id) {

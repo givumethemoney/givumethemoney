@@ -89,7 +89,9 @@
       <div class="container receipt-container">
         <!-- 영수증 이미지 -->
         <div class="receipt-image">
-          <img th:src="@{${receipts[0].getImageUrl()}}" alt="Receipt Image" />
+          <div th:each="receipt : ${receipts}">
+            <img th:src="@{${receipt.getImageUrl()}}" alt="Receipt Image" />
+          </div>
         </div>
 
         <!-- 영수증 데이터 테이블 -->

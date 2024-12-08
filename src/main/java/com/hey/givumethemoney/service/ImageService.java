@@ -71,15 +71,7 @@ public class ImageService {
     }
 
     public List<Image> findImagesByDonationId(Long donationId) {
-        List<Image> result = new ArrayList<>();
-
-        for (Image image : imageRepository.findAll()) {
-            if (image.getDonationId().equals(donationId)) {
-                result.add(image);
-            }
-        }
-
-        return result;
+        return imageRepository.findImagesByDonationId(donationId);
     }
 
     public void deleteImageById(Long id) {
