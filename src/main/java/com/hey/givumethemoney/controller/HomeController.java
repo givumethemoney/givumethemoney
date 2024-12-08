@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,14 +44,23 @@ public class HomeController {
 
         // 썸네일 매핑
         Map<Long, String> thumbnailMap = new HashMap<>();
+
+        // 진행 중 기부에 대해 썸네일(첫 번째 이미지) 추가
         for (Donation donation : ongoingDonations) {
             List<Image> images = imageService.findImagesByDonationId(donation.getId());
-            model.addAttribute("images", images);
+            if (!images.isEmpty()) {
+                // 첫 번째 이미지를 썸네일로 설정
+                thumbnailMap.put(donation.getId(), images.get(0).getThumbUrl());
+            }
         }
 
+        // 마감된 기부에 대해 썸네일(첫 번째 이미지) 추가
         for (Donation donation : finishedDonations) {
             List<Image> images = imageService.findImagesByDonationId(donation.getId());
-            model.addAttribute("images", images);
+            if (!images.isEmpty()) {
+                // 첫 번째 이미지를 썸네일로 설정
+                thumbnailMap.put(donation.getId(), images.get(0).getThumbUrl());
+            }
         }
 
 
