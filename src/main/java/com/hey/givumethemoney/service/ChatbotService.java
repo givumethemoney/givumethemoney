@@ -21,8 +21,8 @@ import java.util.UUID;
 @Service
 public class ChatbotService {
 
-    // @Value("${chatbot.credentials.path}") // application.properties에서 경로를 읽어옴
-    // private String credentialsPath;
+    @Value("${chatbot.credentials.path}") // application.properties에서 경로를 읽어옴
+    private String credentialsPath;
 
     private final String dialogflowProjectId = "givumethemoney";
     private final String sessionId = UUID.randomUUID().toString(); // 세션 ID를 고유하게 설정
@@ -38,8 +38,8 @@ public class ChatbotService {
 
 
             // classpath 경로에서 파일 읽기
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("json/givumethemoney-40f84b2585de.json");
-            Objects.requireNonNull(inputStream, "Resource file not found: data/chatbot_config.json");
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(credentialsPath);
+            Objects.requireNonNull(inputStream, "Resource file not found");
 
             GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream)
                 .createScoped("https://www.googleapis.com/auth/cloud-platform");
