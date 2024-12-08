@@ -56,7 +56,7 @@
 
         <!-- 전해진 GIVU -->
         <div class="ending">
-            <a class="givu-title" href="/donationList">
+            <a class="givu-title" href="/donationList?tab=completed">
                 <h1>전해진 GIVU ❯</h1>
             </a>
             <div th:each="donation : ${finishedDonations}" class="donation-card">
@@ -83,8 +83,11 @@
         </div>
     </div>
 </div>
+
 <!-- 진행률 표시 -->
 <!-- 남은 일수 표시 -->
+<!-- Footer -->
+<header th:replace="layouts/footer::footer"></header>
 
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
@@ -94,9 +97,6 @@
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 <script type="text/javascript" th:src="@{/js/home.js}"></script>
-
-<!-- Footer -->
-<header th:replace="layouts/footer::footer"></header>
 
 <!--navigation bar-->
 <!-- <div th:replace="~{navBar :: navBar}"></div> -->

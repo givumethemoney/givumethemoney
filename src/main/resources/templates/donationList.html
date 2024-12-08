@@ -85,6 +85,26 @@
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // URL에서 매개변수 읽기
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get("tab");
+
+        // 기본값은 '진행 중인 GIVU' 탭
+        if (tab === "completed") {
+          // 전해진 GIVU 탭 활성화
+        document.getElementById('ongoing-donations').style.display = 'none';
+        document.getElementById('completed-donations').style.display = 'block';
+        document.getElementById('completedButton').classList.add('active');
+        document.getElementById('ongoingButton').classList.remove('active');
+    } else {
+        // 진행 중인 GIVU 탭 활성화
+        document.getElementById('ongoing-donations').style.display = 'block';
+        document.getElementById('completed-donations').style.display = 'none';
+        document.getElementById('ongoingButton').classList.add('active');
+        document.getElementById('completedButton').classList.remove('active');
+    }
+});
     // 버튼 클릭 이벤트
     document.getElementById('ongoingButton').addEventListener('click', function () {
         document.getElementById('ongoing-donations').style.display = 'block';
