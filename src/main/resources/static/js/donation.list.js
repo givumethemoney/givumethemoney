@@ -1,35 +1,38 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // 초기 상태 설정
+    // 1. 탭 전환 관련 설정
     const ongoingDonations = document.getElementById("ongoing-donations");
     const completedDonations = document.getElementById("completed-donations");
     const ongoingButton = document.getElementById("ongoingButton");
     const completedButton = document.getElementById("completedButton");
-    const cards = document.querySelectorAll(".donation-card");
 
-    // 기본 보이기 설정
-    ongoingDonations.style.display = "block";
-    completedDonations.style.display = "none";
-    ongoingButton.classList.add("active");
+    // URL 파라미터에서 탭 확인
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
 
-    // 진행 중/전해진 버튼 클릭 이벤트
-    ongoingButton.addEventListener("click", function () {
-        ongoingDonations.style.display = "block";
-        completedDonations.style.display = "none";
-        this.classList.add("active");
-        completedButton.classList.remove("active");
+    // 초기 탭 설정 함수
+    function setActiveTab(tab) {
+        if (tab === "completed") {
+            ongoingDonations.classList.remove("active");
+            completedDonations.classList.add("active");
+            ongoingButton.classList.remove("active");
+            completedButton.classList.add("active");
+        } else {
+            completedDonations.classList.remove("active");
+            ongoingDonations.classList.add("active");
+            completedButton.classList.remove("active");
+            ongoingButton.classList.add("active");
+        }
+    }
+
+    // 초기 활성 탭 설정
+    setActiveTab(tab || "ongoing");
+
+    // 버튼 클릭 이벤트
+    ongoingButton.addEventListener("click", () => {
+        window.location.search = "?tab=ongoing";
     });
 
-    completedButton.addEventListener("click", function () {
-        ongoingDonations.style.display = "none";
-        completedDonations.style.display = "block";
-        this.classList.add("active");
-        ongoingButton.classList.remove("active");
-    });
-
-    // 카드 레이아웃 강제 설정
-    cards.forEach((card) => {
-        card.style.display = "flex";
-        card.style.alignItems = "center";
-        card.style.justifyContent = "space-between";
+    completedButton.addEventListener("click", () => {
+        window.location.search = "?tab=completed";
     });
 });

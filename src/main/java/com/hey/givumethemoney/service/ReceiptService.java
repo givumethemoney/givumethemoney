@@ -4,6 +4,7 @@ import com.hey.givumethemoney.domain.Receipt;
 import com.hey.givumethemoney.repository.ReceiptRepository;
 import com.hey.givumethemoney.repository.S3Repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,7 @@ public class ReceiptService {
     private final ReceiptRepository receiptRepository;
     private final S3Repository s3Repository;
 
+    @Autowired
     public ReceiptService(ReceiptRepository receiptRepository, S3Repository s3Repository) {
         this.receiptRepository = receiptRepository;
         this.s3Repository = s3Repository;

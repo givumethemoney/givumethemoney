@@ -61,6 +61,11 @@ public class GMTMConfig {
     public NaverOCRService naverOCRService() {
         return new NaverOCRService(naverOCRRepository, receiptRepository);
     }
+    
+    @Bean
+    public NicknameDonationService nicknameDonationService() {
+        return new NicknameDonationService(nicknameDonationRepository);
+    }
 
     @Autowired
     GMTMConfig(DonationRepository donationRepository,

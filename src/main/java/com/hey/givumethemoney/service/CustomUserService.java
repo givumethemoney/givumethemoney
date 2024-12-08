@@ -1,6 +1,7 @@
 package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Role;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,7 @@ public class CustomUserService implements UserDetailsService {
 
     private final MemberService memberService;
 
+    @Autowired
     public CustomUserService(MemberService memberService) {
         this.memberService = memberService;
     }

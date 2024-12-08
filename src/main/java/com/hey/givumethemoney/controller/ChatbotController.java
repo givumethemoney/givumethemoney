@@ -15,7 +15,6 @@ import com.hey.givumethemoney.service.ChatbotService;
 @Controller
 public class ChatbotController {
 
-    @Autowired
     private final ChatbotService chatbotService;
 
     @Autowired

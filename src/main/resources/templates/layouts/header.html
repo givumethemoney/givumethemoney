@@ -27,7 +27,7 @@
 					</th:block>
 					<!-- 비회원일 때 -->
 					<th:block th:if="${session.isLoggedIn == null}">
-						<li><a href="/">기부를 진행하고 싶어요</a></li>
+						<li><a href="/donationList">기부를 진행하고 싶어요</a></li>
 						<li class="break"><a href="/login">로그인</a></li>
 						<li><a href="/join">회원가입</a></li>
 					</th:block>

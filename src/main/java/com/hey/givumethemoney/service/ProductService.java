@@ -2,6 +2,7 @@ package com.hey.givumethemoney.service;
 
 import com.hey.givumethemoney.domain.Product;
 import com.hey.givumethemoney.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    @Autowired
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }

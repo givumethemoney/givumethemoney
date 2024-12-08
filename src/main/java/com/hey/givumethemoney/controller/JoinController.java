@@ -4,6 +4,8 @@ import com.hey.givumethemoney.dto.MemberDTO;
 import com.hey.givumethemoney.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.Join;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,10 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@RequiredArgsConstructor
 public class JoinController {
 
     private final MemberService memberService;
+
+    @Autowired
+    public JoinController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     // 회원가입 화면 반환
     @GetMapping("/join")

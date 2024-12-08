@@ -42,7 +42,7 @@ public class ChatbotService {
             }
             GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream)
                 .createScoped("https://www.googleapis.com/auth/cloud-platform");
-           
+
             // 액세스 토큰 얻기
             String accessToken = credentials.refreshAccessToken().getTokenValue();
 
