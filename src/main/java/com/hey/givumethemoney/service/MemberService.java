@@ -4,6 +4,7 @@ import com.hey.givumethemoney.dto.MemberDTO;
 import com.hey.givumethemoney.domain.MemberDomain;
 import com.hey.givumethemoney.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ public class MemberService{
     private final PasswordEncoder passwordEncoder;
 
     // 초기화
+    @Autowired
     public MemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;

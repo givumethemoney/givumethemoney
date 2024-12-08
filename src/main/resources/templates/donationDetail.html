@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/donationDetail.css" />
     <!-- <link rel="stylesheet" href="/css/header.css" /> -->
+    <link rel="stylesheet" href="/css/chatbot.css" />
     <link href="https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css" rel="stylesheet">
 </head>
 <body class="homepage is-preload">
@@ -181,6 +182,7 @@
                         <input type="text" id="rejectionReason" name="rejectionReason" required>
                         <input type="submit" value="반려">
                     </form>
+                    <br>
                     <a class="button" th:href="@{/application/confirm/{id}(id = ${donation.getId()})}">수락</a>
                 </th:block>
     
@@ -216,12 +218,14 @@
     </th:block>
 
 
+    
     <header th:replace="layouts/footer::footer"></header>
+
+    <div th:insert="~{chatbot :: chatbot}"></div>
 </div>
 
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
@@ -250,8 +254,34 @@
     function popup(id) {
         var url = "/receiptPopup?id=" + id.toString();
         var name = "Givu me the money";
-        var option = "width = 500, height = 500, top = 100, left = 200, location = no";
+        var option = "width = 200, height = 200, top = 100, left = 200, location = no";
         window.open(url, name, option);
+    }
+
+    function sendQuestion() {
+                var question = document.getElementById("userQuestion").value;
+                fetch("/chatbot/ask", {
+                    method: "POST",
+                    body: JSON.stringify({ question: question }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var messages = document.getElementById("messages");
+                    messages.innerHTML += "<div class='question'>Q: " + question + "</div>";
+                    messages.innerHTML += "<div class='answer'>A: " + data.answer + "</div>";
+                });
+            }
+
+    function toggleChat() {
+        const chatPopup = document.getElementById("chat-popup");
+        if (chatPopup.style.display === "none" || chatPopup.style.display === "") {
+            chatPopup.style.display = "flex"; // 보이기
+        } else {
+            chatPopup.style.display = "none"; // 숨기기
+        }
     }
 </script>
 </body>

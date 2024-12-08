@@ -1,5 +1,6 @@
 package com.hey.givumethemoney.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,9 +11,10 @@ import com.hey.givumethemoney.service.*;
 @Controller
 public class InquiryController {
 
-    InquiryService inquiryService;
+    private final InquiryService inquiryService;
 
     // 생성자 주입
+    @Autowired
     public InquiryController(InquiryService inquiryService) {
         this.inquiryService = inquiryService;
     }

@@ -20,8 +20,8 @@ import java.util.Optional;
 @Controller
 public class ReceiptController {
 
-    ReceiptService receiptService;
-    NaverOCRService naverOCRService;
+    private final ReceiptService receiptService;
+    private final NaverOCRService naverOCRService;
 
     @Autowired
     public ReceiptController(ReceiptService receiptService, NaverOCRService naverOCRService) {

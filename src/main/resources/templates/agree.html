@@ -11,6 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
   <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="/css/applicationAgree.css" />
+  <link rel="stylesheet" href="/css/chatbot.css" />
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -96,11 +97,11 @@
     </form>
   </div>
   <header th:replace="~{layouts/footer::footer}"></header>
+  <div th:insert="~{chatbot :: chatbot}"></div>
 </div>
 
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/jquery.dropotron.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/util.js}"></script>

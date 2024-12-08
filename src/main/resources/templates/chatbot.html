@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/chatbot.css" />
+</head>
+<body>
+    <div id="chat-widget-container" th:fragment="chatbot">
+        <button id="chat-button" onclick="toggleChat()">💬</button>
+        <div id="chat-popup">
+            <div id="chatbox">
+                <div id="messages"></div>
+            </div>
+            <input type="text" id="userQuestion" placeholder="궁금한 점을 입력하세요">
+            <button id="send-message" onclick="sendQuestion()">send</button>
+        </div>
+    </div>
+        
+
+        <script>
+            function sendQuestion() {
+                var question = document.getElementById("userQuestion").value;
+                fetch("/chatbot/ask", {
+                    method: "POST",
+                    body: JSON.stringify({ question: question }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var messages = document.getElementById("messages");
+                    messages.innerHTML += "<div class='question'>Q: " + question + "</div>";
+                    messages.innerHTML += "<div class='answer'>A: " + data.answer + "</div>";
+                });
+            }
+
+            function toggleChat() {
+                const chatPopup = document.getElementById("chat-popup");
+                if (chatPopup.style.display === "none" || chatPopup.style.display === "") {
+                    chatPopup.style.display = "flex"; // 보이기
+                } else {
+                    chatPopup.style.display = "none"; // 숨기기
+                }
+            }
+
+        </script>
+    </div>
+</body>
+</html>
