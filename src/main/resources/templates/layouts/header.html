@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Header -->
+<div th:fragment="header">
+	<div id="header-wrapper">
+		<div id="header" class="container">
+
+			<!-- Logo -->
+			<h1 id="logo">
+				<a href="/">GIVU ME THE MONEY</a>
+			</h1>
+			<!-- Nav -->
+			<nav id="nav">
+				<ul>
+					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'COMPANY')}">
+						<li><a href="/application/agree">기부 신청하기</a></li>
+						<li><a href="/myDonationList">나의 기부</a></li>
+						<li class="break"><a href="/applicationList">전체 신청서</a></li>
+						<li><a href="/waitingList">대기 신청서</a></li>
+						<li><a href="/endList">마감 신청서</a></li>
+					</th:block>
+					<!-- 관리자일 때 -->
+					<th:block th:if="${session.isLoggedIn != null} and ${#strings.equals(session.role, 'ADMIN')}">
+						<li><a href="/applicationList">전체 신청서</a></li>
+						<li class="break"><a href="/waitingList">대기 신청서</a></li>
+						<li><a href="/endList">마감 신청서</a></li>
+					</th:block>
+					<!-- 비회원일 때 -->
+					<th:block th:if="${session.isLoggedIn == null}">
+						<li><a href="/donationIntro">기부를 진행하고 싶어요</a></li>
+						<li class="break"><a href="/login">로그인</a></li>
+						<li><a href="/join">회원가입</a></li>
+					</th:block>
+				</ul>
+			</nav>
+			<!--로그인이 되어있는 경우-->
+			<div class="header-button-wrapper" th:if="${session.isLoggedIn != null}">
+				<a id="email" th:text="${session.email}">Email</a>
+				<form action="/logout" method="post">
+					<button id ="logout-button" type="submit">Logout</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

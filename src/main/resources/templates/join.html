@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Join</title>
+    <link rel="stylesheet" th:href="@{/css/join.css}"/>
+</head>
+
+<body>
+    <div class="container">
+        <div class="join form">
+            <header>Join</header>
+            <form action="/join" method="post">
+                <input type="hidden" name="_csrf" th:value="${csrfToken}"/>
+
+                <!--사용자 입력 필드-->
+                이메일: <input type="email" name="email"> <br>
+                비밀번호: <input type="password" name="password"> <br>
+                이름: <input type="text" name="userName"> <br>
+                기업이름: <input type="text" name="companyName"><br>
+                <input type="submit" class=button value="회원가입">
+            </form>
+            <div class="login">
+    <span class="login"> 회원가입이 되어있다면?
+    <label><a href="/login">Login!</a></label>
+      </span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

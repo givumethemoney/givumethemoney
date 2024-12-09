@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Givu Me The Money</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <form action="/receipt/submit" method="POST" enctype="multipart/form-data">
+    <label class="image">영수증 첨부:</label><br>
+    <input type="hidden" name="donationId" th:value="${donationId}">
+    <input type="file" id="receipt" name="receipt" multiple="multiple"><br><br>
+    <input type="submit" value="첨부">
+  </form>
+</body>
+</html>

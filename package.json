@@ -1,0 +1,14 @@
+{
+  "name": "givumethemoney-main",
+  "version": "1.0.0",
+  "description": "2024-1 융합캡스톤디자인",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tosspayments/tosspayments-sdk": "^2.3.2"
+  }
+}
