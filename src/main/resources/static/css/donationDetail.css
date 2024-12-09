@@ -79,6 +79,15 @@
 #progress {
     margin-bottom: 30px;
 }
+progress::-webkit-progress-bar {
+    background-color: #c2c7cc;
+    border-radius: 30px;
+    overflow: hidden;
+}
+progress::-webkit-progress-value {
+    background-color: #677D6A;
+    border-radius: 30px;
+}
 
 .ranking {
     margin-top: 40px;
