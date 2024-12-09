@@ -188,7 +188,7 @@ public class DonationService {
             }
     
             return donations.stream()
-                            .map(donation -> "🍀[\"" + donation.getTitle() + "\"](https://34.64.104.188:8080/detail/" + donation.getId() + ")")
+                            .map(donation -> "🍀<a href='https://34.64.104.188:8080/detail/" + donation.getId() + "'>" + donation.getTitle() + "</a>")
                             .toList();
         } catch (Exception e) {
             System.out.println("예외 발생: " + e.getMessage());
@@ -196,6 +196,7 @@ public class DonationService {
             return List.of("오류가 발생했습니다.");
         }
     }
+    
     
 
 }
