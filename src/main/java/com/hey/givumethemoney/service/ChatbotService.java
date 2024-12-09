@@ -1,6 +1,7 @@
 package com.hey.givumethemoney.service;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,6 +9,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +28,9 @@ public class ChatbotService {
     private final String dialogflowApiUrl = "https://dialogflow.googleapis.com/v2/projects/{your-project-id}/agent/sessions/{session-id}:detectIntent";
     private final DonationService donationService;
 
+    // JSON 파일 상대 경로
+    private final String jsonFilePath = "config/givumethemoney-40f84b2585de.json";
+
     @Autowired
     public ChatbotService(DonationService donationService) {
         this.donationService = donationService;
@@ -36,10 +41,13 @@ public class ChatbotService {
         try {
 
             // 서비스 계정 키 파일을 사용하여 OAuth 2.0 인증
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("json/givumethemoney-40f84b2585de.json");
-            if (inputStream == null) {
-                throw new FileNotFoundException("Resource not found: json/givumethemoney-40f84b2585de.json");
-            }
+            // InputStream inputStream = getClass().getClassLoader().getResourceAsStream("json/givumethemoney-40f84b2585de.json");
+            // if (inputStream == null) {
+            //     throw new FileNotFoundException("Resource not found: json/givumethemoney-40f84b2585de.json");
+            // }
+            // JSON 파일 경로를 동적으로 설정
+            InputStream inputStream = new FileInputStream("/home/ubuntu/givumethemoney/config/givumethemoney-40f84b2585de.json");
+
             GoogleCredentials credentials = GoogleCredentials.fromStream(inputStream)
                 .createScoped("https://www.googleapis.com/auth/cloud-platform");
 
