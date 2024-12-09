@@ -16,7 +16,7 @@ pipeline {
           		}
             echo 'Clonning Repository'
             git url: 'git@github.com:givumethemoney/givumethemoney.git',
-              branch: 'test',
+              branch: 'main',
               credentialsId: 'github'
             }
             post {
@@ -44,7 +44,7 @@ pipeline {
                 sshagent(credentials: ['operation']) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no root@34.64.104.188 uptime
-                        scp -o StrictHostKeyChecking=no /var/jenkins_home/workspace/gmtm-test/build/libs/givumethemoney-0.0.1-SNAPSHOT.jar root@34.64.104.188:/home/ubuntu/givumethemoney
+                        scp -o StrictHostKeyChecking=no /var/jenkins_home/workspace/gmtm-main/build/libs/givumethemoney-0.0.1-SNAPSHOT.jar root@34.64.104.188:/home/ubuntu/givumethemoney
                         ssh -o StrictHostKeyChecking=no -t root@34.64.104.188 /home/ubuntu/givumethemoney/deploy.sh
                     '''
                 }
