@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="stylesheet" th:href="@{/css/main.css}"/>
     <link rel="stylesheet" th:href="@{/css/donationList.css}"/>
+    <link rel="stylesheet" href="/css/chatbot.css" />
 </head>
 <body class="homepage is-preload">
 <div id="page-wrapper">
@@ -80,6 +81,7 @@
 
 <!-- Footer -->
 <header th:replace="layouts/footer::footer"></header>
+<div th:insert="~{chatbot :: chatbot}"></div>
 
 <!-- Scripts -->
 <script type="text/javascript" th:src="@{/js/donation.list.js}"></script>
@@ -89,6 +91,7 @@
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 <script type="text/javascript" th:src="@{/js/donation-list.js}"></script>
+<script type="text/javascript" th:src="@{/js/chatbot.js}"></script>
 
 </body>
 </html>
