@@ -110,5 +110,13 @@
 <script type="text/javascript" th:src="@{/js/util.js}"></script>
 <script type="text/javascript" th:src="@{/js/main.js}"></script>
 <script type="text/javascript" th:src="@{/js/chatbot.js}"></script>
+<script>
+    function popup(id) {
+        var url = "/receiptPopup?id=" + id.toString();
+        var name = "Givu me the money";
+        var option = "width = 200, height = 200, top = 100, left = 200, location = no";
+        window.open(url, name, option);
+    }
+</script>
 </body>
 </html>
