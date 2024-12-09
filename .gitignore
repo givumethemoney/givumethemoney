@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 application.properties
 # JSON 파일이 포함된 폴더를 무시
-/src/main/resources/json/*.json
+# /src/main/resources/json/*.json
 
 
 ### STS ###
