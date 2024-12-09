@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>GIVU ME THE MONEY - 기부 진행 안내</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/home.css"/>
+    <link rel="stylesheet" href="/css/chatbot.css" />
+    <link rel="stylesheet" href="/css/donationIntro.css"/>
+</head>
+<body class="homepage is-preload">
+<div id="page-wrapper">
+    <!--  header-->
+    <div th:replace="~{layouts/header::header}"></div>
+
+    <div class="content-wrapper">
+        <section class="intro-section">
+            <div class="container">
+                <h1 class="title">기부를 진행하고 싶어요</h1>
+                <p class="subtitle">쉽고 간편한 기부 시스템으로 세상을 변화시키세요!</p>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="container">
+                <h2 class="section-title">우리는 누구인가요?</h2>
+                <p class="section-content">
+                    <strong>GIVU ME THE MONEY</strong>는 기부 문화를 대중화하고, 누구나 쉽게 기부에 참여할 수 있도록 돕는 플랫폼입니다.<br> 
+                    우리의 목표는 복잡한 절차를 단순화하여 모두가 즐겁게 기부를 경험할 수 있는 환경을 만드는 것입니다.
+                </p>
+            </div>
+        </section>
+
+        <section class="how-to-section">
+            <div class="container">
+                <h2 class="section-title">기부 진행 방법</h2>
+                <ol class="step-list">
+                    <li><strong>회원가입:</strong> 기업 회원으로 회원가입을 진행하세요.</li>
+                    <li><strong>로그인:</strong> 등록된 계정으로 로그인합니다.</li>
+                    <li><strong>기부 신청서 작성:</strong> 원하는 기부 내용을 작성합니다.</li>
+                    <li><strong>기부 승인:</strong> 신청서가 수락되면 기부를 시작할 수 있습니다.</li>
+                    <li><strong>기부 완료:</strong> 기부가 완료되면 사용 계획에 따라 자금을 집행하고 영수증을 제출합니다.</li>
+                </ol>
+            </div>
+        </section>
+    </div>
+
+    <!-- footer -->
+    <header th:replace="layouts/footer::footer"></header>
+    <div th:insert="~{chatbot :: chatbot}"></div>
+
+    <!-- Scripts -->
+    <script type="text/javascript" th:src="@{/js/breakpoints.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/browser.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/home.js}"></script>
+    <script type="text/javascript" th:src="@{/js/util.js}"></script>
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
+    <script type="text/javascript" th:src="@{/js/chatbot.js}"></script>
+</div>
+</body>
+</html>
